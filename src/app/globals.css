@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 72 14% 97%;
+  --foreground: 150 7% 19%;
+  --surface: 72 14% 97%;
+  --surface-low: 72 11% 95%;
+  --surface-high: 0 0% 100%;
+  --surface-soft: 120 7% 93%;
+  --muted: 84 9% 94%;
+  --muted-foreground: 145 6% 39%;
+  --border: 135 8% 73%;
+  --input: 0 0% 100%;
+  --ring: 4 30% 43%;
+  --line: 132 9% 67%;
+  --primary: 2 31% 43%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 157 40% 29%;
+  --secondary-foreground: 145 100% 95%;
+  --accent: 43 49% 30%;
+  --accent-foreground: 48 100% 97%;
+  --peach: 4 98% 83%;
+  --mint: 157 68% 82%;
+  --sun: 43 85% 77%;
+  --success: 146 42% 36%;
+  --warning: 38 82% 58%;
+  --danger: 9 67% 47%;
+}
+
+.dark {
+  --background: 168 11% 9%;
+  --foreground: 72 20% 94%;
+  --surface: 168 11% 9%;
+  --surface-low: 168 8% 13%;
+  --surface-high: 168 8% 18%;
+  --surface-soft: 168 8% 15%;
+  --muted: 168 7% 16%;
+  --muted-foreground: 72 9% 71%;
+  --border: 168 7% 24%;
+  --input: 168 8% 18%;
+  --ring: 4 72% 82%;
+  --line: 168 7% 31%;
+  --primary: 4 82% 79%;
+  --primary-foreground: 10 24% 18%;
+  --secondary: 157 36% 69%;
+  --secondary-foreground: 168 14% 12%;
+  --accent: 43 66% 74%;
+  --accent-foreground: 28 28% 14%;
+  --peach: 4 82% 79%;
+  --mint: 157 36% 69%;
+  --sun: 43 66% 74%;
+  --success: 146 42% 55%;
+  --warning: 38 82% 68%;
+  --danger: 9 67% 62%;
+}
+
+*,
+*::before,
+*::after {
+  @apply border-border;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  min-height: 100svh;
+  font-family:
+    'Pretendard',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Segoe UI',
+    system-ui,
+    sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(254, 171, 167, 0.22), transparent 26%),
+    radial-gradient(circle at top right, rgba(177, 239, 216, 0.2), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(249, 249, 247, 0.96));
+}
+
+main {
+  @apply min-h-screen;
+}
+
+a {
+  @apply text-inherit no-underline;
+}
+
+::selection {
+  background: hsla(var(--primary), 0.18);
+}
+
+.app-shell-frame {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at top left, rgba(254, 171, 167, 0.12), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(177, 239, 216, 0.16), transparent 28%),
+    hsl(var(--surface));
+}
+
+.app-shell-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.64), transparent 20%),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.24), transparent 38%);
+}
+
+.cta-gradient {
+  background-image: linear-gradient(135deg, #8d4c4a 0%, #feaba7 100%);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(18px);
+}
+
+.dark .glass-nav {
+  background: rgba(19, 24, 22, 0.82);
+}
+
+.soft-panel {
+  background: rgba(255, 255, 255, 0.74);
+  backdrop-filter: blur(14px);
+}
+
+.dark .soft-panel {
+  background: rgba(28, 32, 30, 0.82);
+}
+
+.editorial-rule {
+  position: relative;
+}
+
+.editorial-rule::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 0.28rem;
+  margin-top: 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(141, 76, 74, 0.95), rgba(254, 171, 167, 0.8));
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.soft-ring-track {
+  stroke: rgba(140, 140, 140, 0.14);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+input[type='range'] {
+  accent-color: #8d4c4a;
+}
+
+@supports (padding: max(0px)) {
+  .safe-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

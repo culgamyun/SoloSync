@@ -1,0 +1,71 @@
+{
+  "app": {
+    "name": "SoloSync",
+    "tagline": "실세계 연결을 위한 소셜 헬스 코치."
+  },
+  "nav": {
+    "home": "홈",
+    "challenges": "챌린지",
+    "coach": "코치",
+    "progress": "성장",
+    "settings": "설정"
+  },
+  "common": {
+    "continue": "계속",
+    "back": "뒤로",
+    "save": "저장",
+    "loading": "불러오는 중...",
+    "complete": "완료",
+    "skip": "건너뛰기",
+    "start": "시작",
+    "optional": "선택",
+    "weekly": "이번 주",
+    "viewAll": "전체 보기",
+    "signIn": "로그인",
+    "signOut": "로그아웃"
+  },
+  "welcome": {
+    "eyebrow": "AI 기반 소셜 헬스",
+    "title": "한 주씩, 현실의 관계를 더 단단하게 만드세요.",
+    "body": "SoloSync는 당신의 사회적 에너지를 점수와 실천형 챌린지, 그리고 실제 사람에게 다시 연결해 주는 코칭으로 바꿉니다.",
+    "cta": "Google로 시작하기"
+  },
+  "auth": {
+    "title": "SoloSync 시작하기",
+    "subtitle": "점수, 챌린지, 코칭 기록을 저장하려면 로그인하세요.",
+    "google": "Google로 계속하기",
+    "apple": "Apple로 계속하기",
+    "appleSoon": "Apple 로그인은 자격 증명 설정 후 표시됩니다."
+  },
+  "home": {
+    "headline": "나의 소셜 헬스",
+    "insight": "AI 인사이트",
+    "checkIn": "주간 체크인",
+    "momentum": "이번 주 흐름",
+    "latest": "최신 점수",
+    "currentChallenge": "이번 주 챌린지"
+  },
+  "challenges": {
+    "headline": "주간 챌린지",
+    "empty": "아직 챌린지가 없습니다. 온보딩을 마치면 첫 챌린지가 생성됩니다.",
+    "reflection": "반추 기록",
+    "starters": "대화 시작 문장"
+  },
+  "coach": {
+    "headline": "코치",
+    "placeholder": "오늘 있었던 일, 막히는 지점, 다음에 시도해 보고 싶은 것을 적어보세요.",
+    "hint": "코치는 결국 실제 사람과의 연결로 이어지도록 도와줍니다."
+  },
+  "progress": {
+    "headline": "성장",
+    "scoreHistory": "점수 추이",
+    "level": "레벨",
+    "streak": "스트릭"
+  },
+  "settings": {
+    "headline": "설정",
+    "profile": "프로필",
+    "notifications": "알림",
+    "language": "언어"
+  }
+}

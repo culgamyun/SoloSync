@@ -1,0 +1,71 @@
+{
+  "app": {
+    "name": "SoloSync",
+    "tagline": "A social health coach for real-world connection."
+  },
+  "nav": {
+    "home": "Home",
+    "challenges": "Challenges",
+    "coach": "Coach",
+    "progress": "Growth",
+    "settings": "Settings"
+  },
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "save": "Save",
+    "loading": "Loading...",
+    "complete": "Complete",
+    "skip": "Skip",
+    "start": "Start",
+    "optional": "Optional",
+    "weekly": "This week",
+    "viewAll": "View all",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "welcome": {
+    "eyebrow": "AI-guided social health",
+    "title": "Build stronger real-life relationships one week at a time.",
+    "body": "SoloSync turns your social energy into a clear score, practical nudges and a coach that always points back to real people.",
+    "cta": "Start with Google"
+  },
+  "auth": {
+    "title": "Continue into SoloSync",
+    "subtitle": "Sign in to save your score, challenges and coaching history.",
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "appleSoon": "Apple sign-in will appear once credentials are configured."
+  },
+  "home": {
+    "headline": "Your social health",
+    "insight": "AI insight",
+    "checkIn": "Weekly check-in",
+    "momentum": "Momentum",
+    "latest": "Latest score",
+    "currentChallenge": "Current challenges"
+  },
+  "challenges": {
+    "headline": "Weekly challenges",
+    "empty": "No challenges yet. Finish onboarding to generate your first set.",
+    "reflection": "Reflection",
+    "starters": "Conversation starters"
+  },
+  "coach": {
+    "headline": "Coach",
+    "placeholder": "Tell SoloSync what happened, what feels hard or what you would like to try next.",
+    "hint": "The coach is here to move your energy toward real-world action."
+  },
+  "progress": {
+    "headline": "Growth",
+    "scoreHistory": "Score history",
+    "level": "Level",
+    "streak": "Streak"
+  },
+  "settings": {
+    "headline": "Settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "language": "Language"
+  }
+}
