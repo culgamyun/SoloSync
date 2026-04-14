@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { publicEnv } from '@/lib/env';
 
@@ -71,8 +71,5 @@ export function usePushNotifications() {
     await subscription.unsubscribe();
   }
 
-  return useMemo(
-    () => ({ supported, permission, loading, subscribe, unsubscribe }),
-    [supported, permission, loading]
-  );
+  return { supported, permission, loading, subscribe, unsubscribe };
 }
