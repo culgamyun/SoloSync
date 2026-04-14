@@ -5,8 +5,6 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Analytics } from '@vercel/analytics/react';
 
-import '@/app/globals.css';
-
 import { routing } from '@/i18n/routing';
 
 export const metadata: Metadata = {
@@ -30,13 +28,9 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <Analytics />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      {children}
+      <Analytics />
+    </NextIntlClientProvider>
   );
 }
