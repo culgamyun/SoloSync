@@ -1,5 +1,3 @@
-import { MoreVertical } from 'lucide-react';
-
 import { AppShell } from '@/components/common/app-shell';
 import { ChatPanel } from '@/components/coach/chat-panel';
 import { MobileHeader } from '@/components/common/mobile-header';
@@ -17,8 +15,8 @@ export default async function CoachPage({ params }: { params: Promise<{ locale: 
         <MobileHeader
           title={locale === 'ko' ? '코치' : 'Coach'}
           subtitle={locale === 'ko' ? '실행 중심 세션' : 'Action-oriented session'}
+          backHref='/home'
           centered
-          trailing={<MoreVertical className='h-4 w-4 text-primary' />}
         />
       }
     >

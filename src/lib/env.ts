@@ -21,16 +21,26 @@ const serverSchema = z.object({
   VAPID_SUBJECT: z.string().optional(),
   SENTRY_AUTH_TOKEN: z.string().optional(),
   SENTRY_ORG: z.string().optional(),
-  SENTRY_PROJECT: z.string().optional()
+  SENTRY_PROJECT: z.string().optional(),
+  SOLOSYNC_QA_AUTH_BYPASS: z.union([z.literal('true'), z.literal('false')]).catch('false')
 });
 
 export const publicEnv = publicSchema.parse(process.env);
 export const serverEnv = serverSchema.parse(process.env);
+export const QA_AUTH_BYPASS_COOKIE = 'solosync_qa_auth_bypass';
 
 export function isSupabaseConfigured() {
   return Boolean(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL && publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   );
+}
+
+export function isQaAuthBypassEnabled() {
+  return process.env.NODE_ENV !== 'production' && serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true';
+}
+
+export function shouldUseDemoData() {
+  return isQaAuthBypassEnabled() || !isSupabaseConfigured();
 }
 
 export function arePushKeysConfigured() {

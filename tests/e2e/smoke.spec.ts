@@ -28,3 +28,21 @@ test.describe('smoke routes', () => {
     });
   }
 });
+
+test.describe('weekly micro-mission', () => {
+  test('renders Korean mission detail copy', async ({ page }) => {
+    await page.goto('/ko/challenges/challenge-1');
+
+    await expect(page.getByText('이번 주 작은 접촉')).toBeVisible();
+    await expect(page.getByText('눈 마주치고 인사만 해도 성공')).toBeVisible();
+    await expect(page.getByText('안녕하세요. 오늘도 늦게까지 하시네요.')).toBeVisible();
+  });
+
+  test('renders a non-shaming reflection outcome', async ({ page }) => {
+    await page.goto('/ko/challenges/challenge-1/reflect');
+
+    await expect(page.getByText('어디까지 해냈나요?')).toBeVisible();
+    await expect(page.getByText('오늘은 못 했어요')).toBeVisible();
+    await expect(page.getByText('멈춘 지점을 알게 된 것도 다음 시도의 재료입니다.')).toBeVisible();
+  });
+});

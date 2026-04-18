@@ -4,11 +4,12 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { isSupabaseConfigured } from '@/lib/env';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 
 export async function updateProfileAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     revalidatePath(`/${locale}/settings/profile`);
     return;
   }
@@ -40,7 +41,7 @@ export async function updateProfileAction(formData: FormData) {
 
 export async function updateLanguageAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
-  if (isSupabaseConfigured()) {
+  if (!(await shouldUseDemoDataForRequest()) && isSupabaseConfigured()) {
     const supabase = await createClient();
     const {
       data: { user }

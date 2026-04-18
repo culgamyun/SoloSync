@@ -19,14 +19,15 @@ export function ChatPanel({
 }) {
   const { messages, input, setInput, sendMessage, isPending, error, quickReplies } = useCoachStream(
     initialMessages,
-    sessionType
+    sessionType,
+    locale
   );
 
   return (
     <div className='flex min-h-[calc(100svh-8.75rem)] flex-col'>
       <div className='flex-1 space-y-4 overflow-y-auto px-4 pb-6 pt-4'>
         <div className='flex justify-center'>
-          <span className='rounded-full bg-surface-low px-3 py-1 text-[11px] font-semibold text-muted-foreground'>
+          <span className='rounded border border-line bg-surface-low px-3 py-1 font-data text-[11px] font-bold text-muted-foreground'>
             {locale === 'ko' ? '코칭 세션이 시작되었어요' : 'Coaching session started'}
           </span>
         </div>
@@ -38,7 +39,7 @@ export function ChatPanel({
               <div className={cn('max-w-[88%]', assistant ? 'space-y-2' : 'space-y-1')}>
                 {assistant ? (
                   <div className='flex items-center gap-2 px-1'>
-                    <div className='flex h-7 w-7 items-center justify-center rounded-full bg-mint/65 text-secondary'>
+                    <div className='flex h-7 w-7 items-center justify-center rounded-md border border-observation/25 bg-observation/16 text-foreground'>
                       <Sparkles className='h-3.5 w-3.5' />
                     </div>
                     <span className='text-[11px] font-bold text-secondary'>AI 코치</span>
@@ -46,10 +47,10 @@ export function ChatPanel({
                 ) : null}
                 <div
                   className={cn(
-                    'rounded-[1.8rem] px-4 py-3 text-[15px] leading-7 shadow-ambient',
+                    'rounded-md border px-4 py-3 text-[15px] leading-7 shadow-ambient',
                     assistant
-                      ? 'rounded-tl-[0.55rem] bg-white/92 text-foreground'
-                      : 'rounded-tr-[0.55rem] bg-peach/80 text-primary'
+                      ? 'border-line bg-surface-high text-foreground'
+                      : 'border-primary/20 bg-primary/10 text-primary'
                   )}
                 >
                   <p className='whitespace-pre-wrap'>{message.content}</p>
@@ -60,7 +61,7 @@ export function ChatPanel({
         })}
       </div>
 
-      <div className='glass-nav mt-auto border-t border-white/60 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4'>
+      <div className='glass-nav mt-auto border-t border-line px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4'>
         <div className='no-scrollbar flex gap-2 overflow-x-auto pb-3'>
           {quickReplies.map((chip) => (
             <Button key={chip} type='button' variant='chip' size='sm' onClick={() => void sendMessage(chip)}>
@@ -68,7 +69,7 @@ export function ChatPanel({
             </Button>
           ))}
         </div>
-        <div className='rounded-[1.8rem] bg-white/92 p-2 shadow-ambient'>
+        <div className='rounded-lg border border-line bg-surface-high p-2 shadow-ambient'>
           <div className='flex items-end gap-2'>
             <Textarea
               value={input}

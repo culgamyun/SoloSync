@@ -33,7 +33,7 @@ export function ChallengeList({
 }) {
   if (challenges.length === 0) {
     return (
-      <div className='rounded-[1.8rem] bg-white/78 px-5 py-6 text-sm text-muted-foreground shadow-ambient'>
+      <div className='rounded-md border border-line bg-surface-high px-5 py-6 text-sm text-muted-foreground'>
         {locale === 'ko'
           ? '아직 챌린지가 없어요. 온보딩을 마치면 첫 제안이 도착합니다.'
           : 'No challenges yet. Finish onboarding to generate the first suggestions.'}
@@ -46,46 +46,67 @@ export function ChallengeList({
       {challenges.map((challenge) => {
         const Icon = categoryIcons[challenge.category];
         const xp = getChallengeXp(challenge.difficulty);
+        const isMicroMission = challenge.missionKind === 'micro_social';
+        const primaryLabel = isMicroMission
+          ? locale === 'ko'
+            ? '작은 접촉'
+            : 'Micro-mission'
+          : getChallengeCategoryLabel(challenge.category, locale);
 
         return (
           <article
             key={challenge.id}
-            className='overflow-hidden rounded-[1.9rem] bg-white/84 px-5 py-5 shadow-ambient transition hover:-translate-y-0.5'
+            className='overflow-hidden rounded-lg border border-line bg-surface-high px-5 py-5 shadow-ambient transition hover:border-primary/30'
           >
-            <div className='flex items-start justify-between gap-4'>
-              <div className='min-w-0'>
-                <div className='flex items-center gap-3'>
-                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-surface-low text-primary'>
-                    <Icon className='h-5 w-5' />
-                  </div>
-                  <div className='min-w-0'>
-                    <div className='flex flex-wrap items-center gap-2'>
-                      <Badge variant='warning'>{getChallengeCategoryLabel(challenge.category, locale)}</Badge>
-                      <Badge className={challengeDifficultyTone[challenge.difficulty]}>
-                        {getChallengeDifficultyLabel(challenge.difficulty, locale)}
-                      </Badge>
-                      <Badge variant='neutral'>{getEstimatedTimeLabel(challenge.estimatedTime, locale)}</Badge>
-                    </div>
-                    <h3 className='mt-2 text-[1.08rem] font-bold leading-6 tracking-[-0.02em] text-foreground'>
-                      {challenge.title}
-                    </h3>
-                  </div>
-                </div>
-                <p className='mt-3 text-[14px] leading-6 text-muted-foreground'>{challenge.description}</p>
+            <div className='relative'>
+              <div className='absolute right-0 top-0 whitespace-nowrap rounded bg-observation/18 px-3 py-1.5 font-data text-[11px] font-bold leading-none text-foreground'>
+                +{xp} XP
               </div>
-              <div className='rounded-full bg-sun/35 px-3 py-1.5 text-[11px] font-bold text-accent'>+{xp} XP</div>
+              <div className='flex flex-wrap items-center gap-2 pr-20'>
+                <Badge variant={isMicroMission ? 'neutral' : 'warning'}>{primaryLabel}</Badge>
+                <Badge className={challengeDifficultyTone[challenge.difficulty]}>
+                  {getChallengeDifficultyLabel(challenge.difficulty, locale)}
+                </Badge>
+                <Badge variant='neutral'>{getEstimatedTimeLabel(challenge.estimatedTime, locale)}</Badge>
+              </div>
+              <div className='mt-4 flex h-10 w-10 items-center justify-center rounded-md border border-line bg-surface-low text-primary'>
+                <Icon className='h-5 w-5' />
+              </div>
+              <h3
+                className={cn(
+                  'mt-3 min-w-0 text-[1.08rem] font-bold leading-6 tracking-normal text-foreground',
+                  locale === 'ko' ? 'break-keep' : 'break-normal'
+                )}
+              >
+                {challenge.title}
+              </h3>
             </div>
+
+            <p className='mt-3 break-words text-[14px] leading-6 text-muted-foreground'>{challenge.description}</p>
 
             <div className='mt-4 flex flex-wrap items-center gap-2'>
               <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
-              {challenge.conversationStarters.slice(0, variant === 'home' ? 1 : 2).map((starter) => (
-                <span key={starter} className='text-[11px] text-muted-foreground'>
-                  • {starter}
+              {isMicroMission && challenge.minimumWin ? (
+                  <span className='text-[11px] font-bold text-primary'>
+                  {locale === 'ko' ? `최소 성공: ${challenge.minimumWin}` : `Minimum win: ${challenge.minimumWin}`}
                 </span>
-              ))}
+              ) : (
+                challenge.conversationStarters.slice(0, variant === 'home' ? 1 : 2).map((starter) => (
+                  <span key={starter} className='text-[11px] text-muted-foreground'>
+                    &quot;{starter}&quot;
+                  </span>
+                ))
+              )}
             </div>
 
-            <div className='mt-5 flex flex-wrap items-center gap-3'>
+            {isMicroMission && challenge.safeLine ? (
+              <div className='mt-4 rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-sm leading-6 text-muted-foreground'>
+                <span className='font-semibold text-foreground'>{locale === 'ko' ? '안전한 한마디' : 'Safe line'}: </span>
+                &quot;{challenge.safeLine}&quot;
+              </div>
+            ) : null}
+
+            <div className='mt-5 flex flex-nowrap items-center gap-2'>
               <Button asChild variant='secondary' size='sm'>
                 <Link href={`/challenges/${challenge.id}`}>
                   {locale === 'ko' ? '자세히 보기' : 'View details'}
@@ -93,7 +114,7 @@ export function ChallengeList({
                 </Link>
               </Button>
 
-              {challenge.status === 'pending' ? (
+              {['pending', 'skipped'].includes(challenge.status) ? (
                 <form action={updateChallengeStatusAction}>
                   <input type='hidden' name='challengeId' value={challenge.id} />
                   <input type='hidden' name='status' value='in_progress' />
@@ -104,7 +125,7 @@ export function ChallengeList({
                 </form>
               ) : null}
 
-              {challenge.status !== 'completed' ? (
+              {challenge.status === 'in_progress' ? (
                 <form action={updateChallengeStatusAction}>
                   <input type='hidden' name='challengeId' value={challenge.id} />
                   <input type='hidden' name='status' value='completed' />
@@ -115,7 +136,7 @@ export function ChallengeList({
                 </form>
               ) : null}
 
-              {challenge.status !== 'skipped' ? (
+              {!['completed', 'skipped'].includes(challenge.status) ? (
                 <form action={updateChallengeStatusAction}>
                   <input type='hidden' name='challengeId' value={challenge.id} />
                   <input type='hidden' name='status' value='skipped' />

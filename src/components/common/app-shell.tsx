@@ -22,7 +22,7 @@ export function AppShell({
   return (
     <main
       className={cn(
-        'app-shell-frame mx-auto flex min-h-screen w-full max-w-[430px] flex-col overflow-hidden md:my-5 md:min-h-[calc(100svh-2.5rem)] md:rounded-[2.75rem] md:shadow-sanctuary md:ring-1 md:ring-white/70',
+        'app-shell-frame mx-auto flex min-h-screen w-full max-w-[430px] flex-col overflow-hidden border-x border-line md:my-5 md:min-h-[calc(100svh-2.5rem)] md:rounded-lg md:border md:shadow-sanctuary',
         surfaceClassName,
         className
       )}
