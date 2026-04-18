@@ -1,10 +1,10 @@
 ﻿import { NextResponse } from 'next/server';
 
 import { createClient } from '@/lib/supabase/server';
-import { isSupabaseConfigured } from '@/lib/env';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 
 export async function POST(request: Request) {
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     return NextResponse.json({ ok: true, demo: true });
   }
 

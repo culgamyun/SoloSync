@@ -3,29 +3,29 @@ import { cn } from '@/lib/utils';
 const breakdownMeta = {
   connection_frequency: {
     icon: '🤝',
-    tone: 'bg-mint/75',
+    tone: 'bg-primary',
     labels: { ko: '연결 빈도', en: 'Connection frequency' }
   },
   relationship_diversity: {
     icon: '🌈',
-    tone: 'bg-peach/80',
+    tone: 'bg-observation',
     labels: { ko: '관계 다양성', en: 'Relationship diversity' }
   },
   challenge_completion: {
     icon: '✅',
-    tone: 'bg-surface-soft',
+    tone: 'bg-success',
     labels: { ko: '활동', en: 'Challenge completion' }
   },
   satisfaction: {
     icon: '😊',
-    tone: 'bg-sun/70',
+    tone: 'bg-reflection',
     labels: { ko: '만족도', en: 'Subjective satisfaction' }
   }
 } as const;
 
 const fallbackMeta = {
   icon: '•',
-  tone: 'bg-primary/50',
+  tone: 'bg-primary',
   labels: { ko: '기타', en: 'Other' }
 } as const;
 
@@ -56,8 +56,8 @@ export function ScoreBreakdown({
     return (
       <div className='grid grid-cols-2 gap-3'>
         {items.map((item) => (
-          <div key={item.key} className='rounded-[1.35rem] bg-white/78 px-4 py-3 shadow-ambient'>
-            <div className='flex items-center justify-between text-[13px] font-semibold'>
+          <div key={item.key} className='rounded-md border border-line bg-surface-high px-4 py-3'>
+            <div className='flex items-center justify-between font-data text-[13px] font-bold'>
               <span>
                 {item.icon} {item.value}
               </span>
@@ -78,10 +78,10 @@ export function ScoreBreakdown({
             <span className='text-[13px] font-semibold text-foreground'>
               {item.icon} {item.label}
             </span>
-            <span className='font-mono text-[12px] text-muted-foreground'>{item.value}/25</span>
+            <span className='font-data text-[12px] font-bold text-muted-foreground'>{item.value}/25</span>
           </div>
-          <div className='h-2.5 overflow-hidden rounded-full bg-surface-soft'>
-            <div className={cn('h-full rounded-full', item.tone)} style={{ width: `${item.percent}%` }} />
+          <div className='h-2 overflow-hidden rounded bg-surface-soft'>
+            <div className={cn('h-full rounded', item.tone)} style={{ width: `${item.percent}%` }} />
           </div>
           {item.key === 'challenge_completion' && item.value <= 2 ? (
             <p className='text-[10px] font-semibold text-muted-foreground'>

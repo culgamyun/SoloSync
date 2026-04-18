@@ -1,4 +1,4 @@
-﻿create or replace function public.current_week_start_for_timezone(tz text)
+create or replace function public.current_week_start_for_timezone(tz text)
 returns timestamptz
 language sql
 stable

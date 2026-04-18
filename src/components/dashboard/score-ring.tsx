@@ -22,10 +22,11 @@ export function ScoreRing({
   const config = ringSizes[variant];
   const circumference = 2 * Math.PI * config.radius;
   const dashOffset = circumference - (score / 100) * circumference;
+  const showDeltaInsideRing = typeof delta === 'number' && variant !== 'compact';
 
   return (
     <div className={cn('relative flex flex-col items-center justify-center', config.wrapper, className)}>
-      <div className='absolute inset-0 rounded-full bg-peach/20 blur-3xl' />
+      <div className='absolute inset-0 rounded-full bg-observation/10' />
       <svg className='relative h-full w-full -rotate-90' viewBox='0 0 200 200' aria-hidden>
         <circle
           className='soft-ring-track'
@@ -48,20 +49,20 @@ export function ScoreRing({
         />
         <defs>
           <linearGradient id='solo-sync-ring' x1='0%' y1='0%' x2='100%' y2='100%'>
-            <stop offset='0%' stopColor='#FEABA7' />
-            <stop offset='100%' stopColor='#8D4C4A' />
+            <stop offset='0%' stopColor='#73A8EE' />
+            <stop offset='100%' stopColor='#126B5A' />
           </linearGradient>
         </defs>
       </svg>
       <div className='absolute inset-0 flex flex-col items-center justify-center text-center'>
-        <span className={cn('font-display font-bold tracking-[-0.05em] text-foreground', config.scoreClass)}>
+        <span className={cn('font-data font-bold tracking-normal text-foreground', config.scoreClass)}>
           {score}
         </span>
-        <span className='mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground'>
+        <span className='mt-1 font-data text-[11px] font-bold uppercase tracking-normal text-muted-foreground'>
           {label ?? 'Social score'}
         </span>
-        {typeof delta === 'number' ? (
-          <span className={cn('mt-4 text-[12px] font-semibold', delta >= 0 ? 'text-secondary' : 'text-primary')}>
+        {showDeltaInsideRing ? (
+          <span className={cn('mt-3 font-data text-[12px] font-bold', delta >= 0 ? 'text-success' : 'text-reflection')}>
             {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)}
           </span>
         ) : null}

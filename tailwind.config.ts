@@ -23,6 +23,8 @@ const config: Config = {
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         line: 'hsl(var(--line))',
+        observation: 'hsl(var(--observation))',
+        reflection: 'hsl(var(--reflection))',
         peach: 'hsl(var(--peach))',
         mint: 'hsl(var(--mint))',
         sun: 'hsl(var(--sun))',
@@ -43,19 +45,20 @@ const config: Config = {
         danger: 'hsl(var(--danger))'
       },
       fontFamily: {
-        sans: ['Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', 'system-ui', 'sans-serif'],
-        display: ['Plus Jakarta Sans', 'Pretendard', 'Apple SD Gothic Neo', 'system-ui', 'sans-serif']
+        sans: ['IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Noto Sans KR', 'system-ui', 'sans-serif'],
+        display: ['IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Noto Sans KR', 'system-ui', 'sans-serif'],
+        data: ['Geist Mono', 'IBM Plex Mono', 'monospace']
       },
       boxShadow: {
-        sanctuary: '0 28px 70px rgba(47, 51, 50, 0.08)',
-        ambient: '0 16px 42px rgba(47, 51, 50, 0.06)',
-        float: '0 24px 56px rgba(141, 76, 74, 0.14)'
+        sanctuary: '0 18px 42px rgba(32, 38, 34, 0.08)',
+        ambient: '0 10px 28px rgba(32, 38, 34, 0.07)',
+        float: '0 16px 34px rgba(32, 38, 34, 0.1)'
       },
       borderRadius: {
-        xl: '1.5rem',
-        '2xl': '2rem',
-        '3xl': '2.5rem',
-        '4xl': '3rem'
+        xl: '0.5rem',
+        '2xl': '0.5rem',
+        '3xl': '0.5rem',
+        '4xl': '0.5rem'
       },
       keyframes: {
         float: {

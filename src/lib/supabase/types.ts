@@ -105,6 +105,12 @@ export type Database = {
           category: 'reach_out' | 'deepen' | 'explore' | 'maintain';
           estimated_time: '10min' | '30min' | '1hr' | '2hr+';
           conversation_starters: string[];
+          mission_kind: 'standard' | 'micro_social';
+          mission_context: string | null;
+          safe_line: string | null;
+          minimum_win: string | null;
+          fear: string | null;
+          reframe: string | null;
           status: 'pending' | 'in_progress' | 'completed' | 'skipped';
           started_at: string | null;
           completed_at: string | null;
@@ -122,6 +128,12 @@ export type Database = {
           category: 'reach_out' | 'deepen' | 'explore' | 'maintain';
           estimated_time?: '10min' | '30min' | '1hr' | '2hr+';
           conversation_starters?: string[];
+          mission_kind?: 'standard' | 'micro_social';
+          mission_context?: string | null;
+          safe_line?: string | null;
+          minimum_win?: string | null;
+          fear?: string | null;
+          reframe?: string | null;
           status?: 'pending' | 'in_progress' | 'completed' | 'skipped';
           started_at?: string | null;
           completed_at?: string | null;
@@ -139,6 +151,12 @@ export type Database = {
           category?: 'reach_out' | 'deepen' | 'explore' | 'maintain';
           estimated_time?: '10min' | '30min' | '1hr' | '2hr+';
           conversation_starters?: string[];
+          mission_kind?: 'standard' | 'micro_social';
+          mission_context?: string | null;
+          safe_line?: string | null;
+          minimum_win?: string | null;
+          fear?: string | null;
+          reframe?: string | null;
           status?: 'pending' | 'in_progress' | 'completed' | 'skipped';
           started_at?: string | null;
           completed_at?: string | null;
@@ -155,6 +173,7 @@ export type Database = {
           mood_before: number | null;
           mood_after: number | null;
           difficulty_felt: number | null;
+          outcome: 'greeted' | 'said_line' | 'could_not_do_it' | null;
           reflection_text: string | null;
           ai_feedback: string | null;
           created_at: string;
@@ -166,6 +185,7 @@ export type Database = {
           mood_before?: number | null;
           mood_after?: number | null;
           difficulty_felt?: number | null;
+          outcome?: 'greeted' | 'said_line' | 'could_not_do_it' | null;
           reflection_text?: string | null;
           ai_feedback?: string | null;
           created_at?: string;
@@ -177,6 +197,7 @@ export type Database = {
           mood_before?: number | null;
           mood_after?: number | null;
           difficulty_felt?: number | null;
+          outcome?: 'greeted' | 'said_line' | 'could_not_do_it' | null;
           reflection_text?: string | null;
           ai_feedback?: string | null;
           created_at?: string;
@@ -370,18 +391,20 @@ export type Database = {
         Relationships: [];
       };
     };
-    Views: {
-      [_ in never]: never;
-    };
+    Views: Record<string, never>;
     Functions: {
-      [_ in never]: never;
+      micro_mission_return_report: {
+        Args: Record<string, never>;
+        Returns: {
+          failed_week_start_date: string;
+          failed_or_skipped_users: number;
+          returned_next_week_users: number;
+          next_week_return_rate: number;
+        }[];
+      };
     };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 };
 
