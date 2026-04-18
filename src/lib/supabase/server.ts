@@ -1,10 +1,13 @@
 import { createServerClient, type SetAllCookies } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 import { publicEnv } from '@/lib/env';
 import type { Database } from '@/lib/supabase/types';
 
-export async function createClient(): Promise<ReturnType<typeof createServerClient<Database>>> {
+type TypedSupabaseClient = SupabaseClient<Database, 'public', 'public', Database['public'], Database['__InternalSupabase']>;
+
+export async function createClient(): Promise<TypedSupabaseClient> {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
@@ -24,5 +27,5 @@ export async function createClient(): Promise<ReturnType<typeof createServerClie
         }
       }
     }
-  );
+  ) as unknown as TypedSupabaseClient;
 }

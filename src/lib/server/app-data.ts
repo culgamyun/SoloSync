@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { startOfWeek, subWeeks } from 'date-fns';
 
 import { isSupabaseConfigured } from '@/lib/env';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 import { calculateBreakdown, sumBreakdown } from '@/lib/utils/score';
 import { getLevelFromXp } from '@/lib/utils/xp';
@@ -14,12 +15,18 @@ import type { RelationshipMap } from '@/types/onboarding';
 const demoChallenges: ChallengeRecord[] = [
   {
     id: 'challenge-1',
-    title: 'Send one warm check-in message',
-    description: 'Reach out to someone you have not talked to in a while and make the message specific.',
+    title: '단골 카페에서 눈 마주치고 인사하기',
+    description: '이번 주에는 이미 지나치는 생활 공간에서 20초짜리 작은 접촉 하나만 만들어봅니다.',
     difficulty: 'easy',
-    category: 'maintain',
+    category: 'reach_out',
     estimatedTime: '10min',
-    conversationStarters: ['I thought of you when...', 'How has your week been really?', 'Want to grab coffee soon?'],
+    conversationStarters: ['안녕하세요. 오늘도 늦게까지 하시네요.'],
+    missionKind: 'micro_social',
+    missionContext: '자주 가는 편의점 또는 카페',
+    safeLine: '안녕하세요. 오늘도 늦게까지 하시네요.',
+    minimumWin: '눈 마주치고 인사만 해도 성공',
+    fear: '상대가 이상하게 볼까 봐',
+    reframe: '상대가 짧게 대답해도 실패가 아닙니다. 낯선 사람에게 예의를 건넨 것만으로 이번 주의 반례는 생겼어요.',
     status: 'in_progress',
     weekNumber: 12,
     weekStartDate: startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString(),
@@ -34,6 +41,12 @@ const demoChallenges: ChallengeRecord[] = [
     category: 'deepen',
     estimatedTime: '30min',
     conversationStarters: ['Want to eat together tomorrow?', 'How are you finding the project lately?', 'Anything fun planned this weekend?'],
+    missionKind: 'standard',
+    missionContext: null,
+    safeLine: null,
+    minimumWin: null,
+    fear: null,
+    reframe: null,
     status: 'pending',
     weekNumber: 12,
     weekStartDate: startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString(),
@@ -48,6 +61,12 @@ const demoChallenges: ChallengeRecord[] = [
     category: 'explore',
     estimatedTime: '30min',
     conversationStarters: ['Have you been here before?', 'What brought you to this event?', 'Do you know similar groups nearby?'],
+    missionKind: 'standard',
+    missionContext: null,
+    safeLine: null,
+    minimumWin: null,
+    fear: null,
+    reframe: null,
     status: 'pending',
     weekNumber: 12,
     weekStartDate: startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString(),
@@ -81,6 +100,12 @@ function mapChallenge(row: Database['public']['Tables']['challenges']['Row']): C
     category: row.category,
     estimatedTime: row.estimated_time,
     conversationStarters: row.conversation_starters,
+    missionKind: row.mission_kind,
+    missionContext: row.mission_context,
+    safeLine: row.safe_line,
+    minimumWin: row.minimum_win,
+    fear: row.fear,
+    reframe: row.reframe,
     status: row.status,
     weekNumber: row.week_number,
     weekStartDate: row.week_start_date,
@@ -90,7 +115,7 @@ function mapChallenge(row: Database['public']['Tables']['challenges']['Row']): C
 }
 
 export const getViewer = cache(async () => {
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     return {
       id: 'demo-user',
       email: 'demo@solosync.app',

@@ -4,6 +4,7 @@ import { MobileHeader } from '@/components/common/mobile-header';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { getChallengeDetail } from '@/lib/server/app-data';
+import type { ChallengeReflectionOutcome } from '@/types/challenge';
 
 const moods = [
   { value: 1, emoji: '😟' },
@@ -21,6 +22,28 @@ const difficultyOptions = [
   { value: 5, ko: '꽤 어려웠어요', en: 'Quite hard' }
 ] as const;
 
+const outcomeOptions: {
+  value: ChallengeReflectionOutcome;
+  label: Record<'ko' | 'en', string>;
+  helper: Record<'ko' | 'en', string>;
+}[] = [
+  {
+    value: 'greeted',
+    label: { ko: '눈 마주치고 인사했어요', en: 'I made eye contact and greeted them' },
+    helper: { ko: '오늘의 최소 성공입니다.', en: 'That is today\'s minimum win.' }
+  },
+  {
+    value: 'said_line',
+    label: { ko: '한마디까지 건넸어요', en: 'I said the line' },
+    helper: { ko: '작지만 분명한 접촉을 만들었어요.', en: 'You made a small but real point of contact.' }
+  },
+  {
+    value: 'could_not_do_it',
+    label: { ko: '오늘은 못 했어요', en: 'I could not do it today' },
+    helper: { ko: '멈춘 지점을 알게 된 것도 다음 시도의 재료입니다.', en: 'Knowing where you stopped helps the next attempt.' }
+  }
+];
+
 export default async function ChallengeReflectionPage({
   params
 }: {
@@ -29,15 +52,17 @@ export default async function ChallengeReflectionPage({
   const { locale, id } = await params;
   const challenge = await getChallengeDetail(id);
   const language = locale === 'en' ? 'en' : 'ko';
+  const isMicroMission = challenge?.missionKind === 'micro_social';
 
   return (
     <AppShell
       padded={false}
-      header={<MobileHeader title={language === 'ko' ? 'Challenge Reflection' : 'Challenge Reflection'} backHref={`/challenges/${id}`} centered />}
+      tabBarInset={false}
+      header={<MobileHeader title={language === 'ko' ? '회고' : 'Challenge Reflection'} backHref={`/challenges/${id}`} centered />}
     >
       <div className='px-5 pb-10 pt-6'>
         <div className='max-w-[18rem]'>
-          <h1 className='text-balance font-display text-[2.35rem] font-bold leading-[1.02] tracking-[-0.05em]'>
+          <h1 className='whitespace-pre-line break-keep font-display text-[2.2rem] font-bold leading-[1.08] tracking-normal'>
             {language === 'ko' ? '어땠는지\n기록해볼까요?' : 'How did it feel?'}
           </h1>
           <div className='editorial-rule' />
@@ -48,7 +73,37 @@ export default async function ChallengeReflectionPage({
           <input type='hidden' name='locale' value={locale} />
           <input type='hidden' name='challengeId' value={id} />
 
-          <section className='rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+          {isMicroMission ? (
+            <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+              <h2 className='font-display text-[1.25rem] font-bold'>
+                {language === 'ko' ? '어디까지 해냈나요?' : 'How far did you get?'}
+              </h2>
+              <div className='mt-4 space-y-3'>
+                {outcomeOptions.map((option) => (
+                  <label key={option.value} className='block cursor-pointer'>
+                    <input
+                      className='peer sr-only'
+                      type='radio'
+                      name='outcome'
+                      value={option.value}
+                      required
+                    />
+                    <span className='block rounded-md border border-line bg-surface-low px-4 py-4 text-sm transition peer-checked:border-primary/30 peer-checked:bg-primary/10'>
+                      <span className='font-semibold text-foreground'>{option.label[language]}</span>
+                      <span className='mt-1 block leading-6 text-muted-foreground'>{option.helper[language]}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {challenge?.reframe ? (
+                <p className='mt-4 rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-sm leading-6 text-muted-foreground'>
+                  {challenge.reframe}
+                </p>
+              ) : null}
+            </section>
+          ) : null}
+
+          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
               {language === 'ko' ? '시작 전 기분' : 'Mood before'}
             </h2>
@@ -56,7 +111,7 @@ export default async function ChallengeReflectionPage({
               {moods.map((mood, index) => (
                 <label key={`before-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodBefore' value={mood.value} defaultChecked={index === 2} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-2xl text-2xl grayscale opacity-50 transition peer-checked:bg-peach peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
@@ -64,7 +119,7 @@ export default async function ChallengeReflectionPage({
             </div>
           </section>
 
-          <section className='rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
               {language === 'ko' ? '마치고 난 뒤 기분' : 'Mood after'}
             </h2>
@@ -72,7 +127,7 @@ export default async function ChallengeReflectionPage({
               {moods.map((mood, index) => (
                 <label key={`after-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodAfter' value={mood.value} defaultChecked={index === 4} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-2xl text-2xl grayscale opacity-50 transition peer-checked:bg-peach peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
@@ -80,7 +135,7 @@ export default async function ChallengeReflectionPage({
             </div>
           </section>
 
-          <section className='rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
               {language === 'ko' ? '체감 난이도' : 'Difficulty felt'}
             </h2>
@@ -94,7 +149,7 @@ export default async function ChallengeReflectionPage({
                     value={option.value}
                     defaultChecked={index === 2}
                   />
-                  <span className='flex rounded-[1.3rem] bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition peer-checked:bg-peach peer-checked:text-primary'>
+                  <span className='flex rounded-md border border-line bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition peer-checked:border-reflection/25 peer-checked:bg-reflection/10 peer-checked:text-reflection'>
                     {option[language]}
                   </span>
                 </label>
@@ -102,7 +157,7 @@ export default async function ChallengeReflectionPage({
             </div>
           </section>
 
-          <section className='rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
               {language === 'ko' ? '어떤 점이 달라졌나요?' : 'What shifted?'}
             </h2>

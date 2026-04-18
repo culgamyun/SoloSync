@@ -5,22 +5,22 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[1.15rem] text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'cta-gradient px-5 py-3 text-primary-foreground shadow-float hover:brightness-105',
-        secondary: 'bg-white/88 px-5 py-3 text-foreground shadow-ambient hover:bg-white',
-        ghost: 'bg-transparent px-3 py-2 text-muted-foreground hover:bg-white/45 hover:text-foreground',
-        outline: 'border border-line/20 bg-white/70 px-5 py-3 text-foreground shadow-ambient hover:bg-white',
-        chip: 'bg-surface-low px-4 py-2 text-muted-foreground hover:bg-white hover:text-foreground',
-        tonal: 'bg-mint/65 px-5 py-3 text-secondary shadow-ambient hover:bg-mint/80'
+        primary: 'border border-primary bg-primary px-5 py-3 text-primary-foreground shadow-none hover:bg-primary/90',
+        secondary: 'border border-line bg-surface-high px-5 py-3 text-foreground shadow-none hover:bg-surface-low',
+        ghost: 'bg-transparent px-3 py-2 text-muted-foreground hover:bg-surface-low hover:text-foreground',
+        outline: 'border border-line bg-transparent px-5 py-3 text-foreground shadow-none hover:bg-surface-low',
+        chip: 'border border-line bg-surface-low px-4 py-2 text-muted-foreground shadow-none hover:border-primary/40 hover:bg-surface-high hover:text-foreground',
+        tonal: 'border border-observation/25 bg-observation/18 px-5 py-3 text-foreground shadow-none hover:bg-observation/24'
       },
       size: {
-        default: 'h-12',
-        sm: 'h-10 px-4 text-sm',
-        lg: 'h-14 px-6 text-base',
-        icon: 'h-10 w-10 rounded-full'
+        default: 'h-11',
+        sm: 'h-11 px-4 text-sm',
+        lg: 'h-12 px-6 text-base',
+        icon: 'h-11 w-11 rounded-md'
       }
     },
     defaultVariants: {

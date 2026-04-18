@@ -3,16 +3,19 @@
 import { revalidatePath } from 'next/cache';
 
 import { getSuggestedWeekLabel } from '@/lib/server/app-data';
-import { isSupabaseConfigured } from '@/lib/env';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 import { getChallengeXp, getReflectionXp, getLevelFromXp } from '@/lib/utils/xp';
+import type { ChallengeReflectionOutcome } from '@/types/challenge';
+
+const reflectionOutcomes = new Set<ChallengeReflectionOutcome>(['greeted', 'said_line', 'could_not_do_it']);
 
 export async function updateChallengeStatusAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
   const challengeId = String(formData.get('challengeId'));
   const nextStatus = String(formData.get('status')) as 'pending' | 'in_progress' | 'completed' | 'skipped';
 
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     revalidatePath(`/${locale}/challenges`);
     return;
   }
@@ -30,7 +33,7 @@ export async function updateChallengeStatusAction(formData: FormData) {
     return;
   }
 
-  await supabase
+  const challengeUpdate = supabase
     .from('challenges')
     .update({
       status: nextStatus,
@@ -39,7 +42,11 @@ export async function updateChallengeStatusAction(formData: FormData) {
     })
     .eq('id', challengeId);
 
-  if (nextStatus === 'completed') {
+  const { data: updatedChallenge } = await (nextStatus === 'completed' ? challengeUpdate.neq('status', 'completed') : challengeUpdate)
+    .select('id')
+    .maybeSingle();
+
+  if (nextStatus === 'completed' && updatedChallenge) {
     const { data: streak } = await supabase.from('streaks').select('*').eq('user_id', user.id).maybeSingle();
     const currentXp = streak?.xp ?? 0;
     const currentStreak = (streak?.current_streak ?? 0) + 1;
@@ -61,7 +68,7 @@ export async function updateChallengeStatusAction(formData: FormData) {
 
 export async function submitReflectionAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     revalidatePath(`/${locale}/challenges`);
     return;
   }
@@ -75,14 +82,32 @@ export async function submitReflectionAction(formData: FormData) {
   }
 
   const challengeId = String(formData.get('challengeId'));
-  await supabase.from('challenge_reflections').insert({
-    challenge_id: challengeId,
-    user_id: user.id,
-    mood_before: Number(formData.get('moodBefore') ?? 3),
-    mood_after: Number(formData.get('moodAfter') ?? 3),
-    difficulty_felt: Number(formData.get('difficultyFelt') ?? 3),
-    reflection_text: String(formData.get('reflectionText') ?? '')
-  });
+  const rawOutcome = String(formData.get('outcome') ?? '');
+  const outcome = reflectionOutcomes.has(rawOutcome as ChallengeReflectionOutcome)
+    ? (rawOutcome as ChallengeReflectionOutcome)
+    : null;
+
+  const { data: insertedReflection } = await supabase
+    .from('challenge_reflections')
+    .upsert(
+      {
+        challenge_id: challengeId,
+        user_id: user.id,
+        mood_before: Number(formData.get('moodBefore') ?? 3),
+        mood_after: Number(formData.get('moodAfter') ?? 3),
+        difficulty_felt: Number(formData.get('difficultyFelt') ?? 3),
+        outcome,
+        reflection_text: String(formData.get('reflectionText') ?? '')
+      },
+      { onConflict: 'user_id,challenge_id', ignoreDuplicates: true }
+    )
+    .select('id')
+    .maybeSingle();
+
+  if (!insertedReflection) {
+    revalidatePath(`/${locale}/challenges`);
+    return;
+  }
 
   const { data: streak } = await supabase.from('streaks').select('*').eq('user_id', user.id).maybeSingle();
   const xp = (streak?.xp ?? 0) + getReflectionXp();
@@ -98,7 +123,7 @@ export async function submitReflectionAction(formData: FormData) {
 
 export async function submitWeeklyCheckInAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     revalidatePath(`/${locale}/home`);
     return;
   }

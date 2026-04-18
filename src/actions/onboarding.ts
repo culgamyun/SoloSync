@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { requestOnboardingAnalysis, getWeekContext } from '@/lib/ai/client';
-import { isSupabaseConfigured } from '@/lib/env';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 import type { OnboardingDraft, RelationshipMap } from '@/types/onboarding';
 
@@ -30,7 +30,7 @@ export async function completeOnboardingAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
   const draft = parseDraft(formData);
 
-  if (!isSupabaseConfigured()) {
+  if (await shouldUseDemoDataForRequest()) {
     redirect(`/${locale}/onboarding/result`);
   }
 

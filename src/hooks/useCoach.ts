@@ -7,11 +7,12 @@ import { getSupabaseFunctionsUrl } from '@/lib/env';
 import { quickReplies } from '@/lib/constants/coach';
 import type { CoachMessage, CoachSessionType, CoachStreamEvent } from '@/types/coach';
 
-export function useCoachStream(initialMessages: CoachMessage[], sessionType: CoachSessionType) {
+export function useCoachStream(initialMessages: CoachMessage[], sessionType: CoachSessionType, locale: string) {
   const [messages, setMessages] = useState<CoachMessage[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const language = locale === 'en' ? 'en' : 'ko';
 
   async function sendMessage(prompt = input) {
     if (!prompt.trim()) {
@@ -44,7 +45,10 @@ export function useCoachStream(initialMessages: CoachMessage[], sessionType: Coa
             const copy = [...current];
             copy[copy.length - 1] = {
               ...copy[copy.length - 1],
-              content: 'Start with one specific person and one low-pressure invitation this week.'
+              content:
+                language === 'ko'
+                  ? '이번 주에는 한 사람과 부담 낮은 접점 하나만 정해도 충분해요.'
+                  : 'Start with one specific person and one low-pressure invitation this week.'
             };
             return copy;
           });
@@ -121,6 +125,6 @@ export function useCoachStream(initialMessages: CoachMessage[], sessionType: Coa
     sendMessage,
     isPending,
     error,
-    quickReplies: [...quickReplies]
+    quickReplies: [...quickReplies[language]]
   };
 }
