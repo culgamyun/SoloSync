@@ -25,37 +25,37 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   return (
     <AppShell>
       <section className='text-center'>
-        <p className='text-[12px] font-semibold uppercase tracking-[0.24em] text-primary/70'>
+        <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
           {language === 'ko' ? '설정' : 'Settings'}
         </p>
-        <h1 className='mt-3 font-display text-[2.2rem] font-bold tracking-[-0.05em]'>
+        <h1 className='mt-3 font-display text-[2.2rem] font-bold tracking-normal'>
           {language === 'ko' ? '환경과 보호 설정' : 'Preferences and safety'}
         </h1>
       </section>
 
-      <section className='mt-8 rounded-[2rem] bg-white/84 p-5 shadow-sanctuary'>
-        <div className='mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-peach text-[2rem] font-bold text-primary'>
+      <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-sanctuary'>
+        <div className='mx-auto flex h-20 w-20 items-center justify-center rounded-md border border-primary/15 bg-primary/10 text-[2rem] font-bold text-primary'>
           {displayName.slice(0, 1)}
         </div>
         <h2 className='mt-4 text-center text-[1.3rem] font-bold'>{displayName}</h2>
         <p className='mt-1 text-center text-sm text-muted-foreground'>{email}</p>
-        <Link href='/settings/profile' className='mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary'>
+        <Link href='/settings/profile' className='mt-4 inline-flex min-h-11 items-center gap-1 rounded-md px-3 text-sm font-bold text-primary transition hover:bg-surface-low'>
           {language === 'ko' ? '프로필 편집' : 'Edit profile'}
           <ChevronRight className='h-4 w-4' />
         </Link>
       </section>
 
       <section className='mt-8 space-y-3'>
-        <h2 className='px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground'>
+        <h2 className='px-2 font-data text-[11px] font-bold uppercase tracking-normal text-muted-foreground'>
           {language === 'ko' ? '환경설정' : 'Preferences'}
         </h2>
-        <div className='overflow-hidden rounded-[1.8rem] bg-white/84 shadow-ambient'>
+        <div className='overflow-hidden rounded-lg border border-line bg-surface-high shadow-ambient'>
           {accountItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link key={item.href} href={item.href} className='flex items-center justify-between px-4 py-4 transition hover:bg-surface-low'>
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-low text-primary'>
+                  <div className='flex h-11 w-11 items-center justify-center rounded-md border border-line bg-surface-low text-primary'>
                     <Icon className='h-4 w-4' />
                   </div>
                   <span className='font-medium'>{item.fallback[language]}</span>
@@ -66,12 +66,12 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
           })}
           <div className='flex items-center justify-between px-4 py-4'>
             <div className='flex items-center gap-3'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-low text-primary'>
+              <div className='flex h-11 w-11 items-center justify-center rounded-md border border-line bg-surface-low text-primary'>
                 <MoonStar className='h-4 w-4' />
               </div>
               <span className='font-medium'>{language === 'ko' ? '다크 모드' : 'Dark mode'}</span>
             </div>
-            <span className='rounded-full bg-surface-low px-3 py-1 text-xs font-semibold text-muted-foreground'>
+            <span className='rounded bg-surface-low px-3 py-1 text-xs font-bold text-muted-foreground'>
               {language === 'ko' ? '준비 중' : 'Soon'}
             </span>
           </div>
@@ -79,16 +79,16 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
       </section>
 
       <section className='mt-8 space-y-3'>
-        <h2 className='px-2 text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground'>
+        <h2 className='px-2 font-data text-[11px] font-bold uppercase tracking-normal text-muted-foreground'>
           {language === 'ko' ? '정보' : 'Information'}
         </h2>
-        <div className='overflow-hidden rounded-[1.8rem] bg-white/84 shadow-ambient'>
+        <div className='overflow-hidden rounded-lg border border-line bg-surface-high shadow-ambient'>
           {legalItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link key={item.href} href={item.href} className='flex items-center justify-between px-4 py-4 transition hover:bg-surface-low'>
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-low text-primary'>
+                  <div className='flex h-11 w-11 items-center justify-center rounded-md border border-line bg-surface-low text-primary'>
                     <Icon className='h-4 w-4' />
                   </div>
                   <span className='font-medium'>{item.label[language]}</span>

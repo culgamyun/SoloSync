@@ -1,4 +1,4 @@
-﻿alter table public.users enable row level security;
+alter table public.users enable row level security;
 alter table public.user_profiles enable row level security;
 alter table public.challenges enable row level security;
 alter table public.challenge_reflections enable row level security;

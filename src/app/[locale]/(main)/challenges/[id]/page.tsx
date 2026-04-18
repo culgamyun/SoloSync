@@ -36,22 +36,24 @@ export default async function ChallengeDetailPage({
   }
 
   const Icon = categoryIcons[challenge.category];
+  const isMicroMission = challenge.missionKind === 'micro_social';
 
   return (
     <AppShell
       padded={false}
+      tabBarInset={false}
       header={<MobileHeader title={locale === 'ko' ? '챌린지 상세' : 'Challenge details'} backHref='/challenges' centered />}
     >
       <div className='px-5 pb-10 pt-6'>
-        <section className='overflow-hidden rounded-[2.3rem] bg-[linear-gradient(155deg,rgba(141,76,74,0.95),rgba(254,171,167,0.82))] shadow-float'>
-          <div className='px-5 py-7 text-white'>
-            <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20'>
+        <section className='overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
+          <div className='px-5 py-7 text-primary-foreground'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-md border border-white/25 bg-white/12'>
               <Icon className='h-6 w-6' />
             </div>
-            <p className='mt-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/70'>
+            <p className='mt-5 font-data text-[11px] font-bold uppercase tracking-normal text-white/70'>
               {getChallengeCategoryLabel(challenge.category, locale)}
             </p>
-            <h1 className='mt-3 text-balance font-display text-[2.15rem] font-bold leading-[1.02] tracking-[-0.05em]'>
+            <h1 className='mt-3 break-keep font-display text-[2.15rem] font-bold leading-[1.08] tracking-normal'>
               {challenge.title}
             </h1>
             <p className='mt-4 max-w-[17rem] text-[15px] leading-7 text-white/84'>{challenge.description}</p>
@@ -67,21 +69,61 @@ export default async function ChallengeDetailPage({
           <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
         </section>
 
-        <section className='mt-8 rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
-          <h2 className='font-display text-[1.3rem] font-bold tracking-[-0.03em]'>
-            {locale === 'ko' ? '대화 시작 문장' : 'Conversation starters'}
-          </h2>
-          <div className='mt-4 space-y-3'>
-            {challenge.conversationStarters.map((starter) => (
-              <div key={starter} className='rounded-[1.4rem] bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground'>
-                {starter}
-              </div>
-            ))}
-          </div>
-        </section>
+        {isMicroMission ? (
+          <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+            <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
+              {locale === 'ko' ? '이번 주 작은 접촉' : 'This week\'s micro-mission'}
+            </p>
+            <h2 className='mt-2 font-display text-[1.3rem] font-bold tracking-normal'>
+              {locale === 'ko' ? '작게 시작해도 충분해요' : 'Small counts here'}
+            </h2>
+            <div className='mt-5 space-y-3 text-sm leading-6'>
+              {challenge.missionContext ? (
+                <div className='rounded-md border border-line bg-surface-low px-4 py-3'>
+                  <span className='font-semibold text-foreground'>{locale === 'ko' ? '장소' : 'Context'}: </span>
+                  <span className='text-muted-foreground'>{challenge.missionContext}</span>
+                </div>
+              ) : null}
+              {challenge.minimumWin ? (
+                <div className='rounded-md border border-primary/20 bg-primary/10 px-4 py-3'>
+                  <span className='font-semibold text-secondary'>{locale === 'ko' ? '최소 성공' : 'Minimum win'}: </span>
+                  <span className='text-secondary'>{challenge.minimumWin}</span>
+                </div>
+              ) : null}
+              {challenge.safeLine ? (
+                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3'>
+                  <span className='font-semibold text-foreground'>{locale === 'ko' ? '안전한 한마디' : 'Safe line'}: </span>
+                  <span className='text-muted-foreground'>&quot;{challenge.safeLine}&quot;</span>
+                </div>
+              ) : null}
+              {challenge.fear ? (
+                <div className='rounded-md border border-reflection/20 bg-reflection/10 px-4 py-3'>
+                  <span className='font-semibold text-primary'>{locale === 'ko' ? '걱정' : 'Fear'}: </span>
+                  <span className='text-primary'>{challenge.fear}</span>
+                </div>
+              ) : null}
+              {challenge.reframe ? (
+                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>{challenge.reframe}</div>
+              ) : null}
+            </div>
+          </section>
+        ) : (
+          <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+            <h2 className='font-display text-[1.3rem] font-bold tracking-normal'>
+              {locale === 'ko' ? '대화 시작 문장' : 'Conversation starters'}
+            </h2>
+            <div className='mt-4 space-y-3'>
+              {challenge.conversationStarters.map((starter) => (
+                <div key={starter} className='rounded-md border border-line bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground'>
+                  {starter}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className='mt-8 grid gap-3'>
-          {challenge.status === 'pending' ? (
+          {['pending', 'skipped'].includes(challenge.status) ? (
             <form action={updateChallengeStatusAction}>
               <input type='hidden' name='challengeId' value={challenge.id} />
               <input type='hidden' name='status' value='in_progress' />
@@ -92,7 +134,7 @@ export default async function ChallengeDetailPage({
             </form>
           ) : null}
 
-          {challenge.status !== 'completed' ? (
+          {challenge.status === 'in_progress' ? (
             <form action={updateChallengeStatusAction}>
               <input type='hidden' name='challengeId' value={challenge.id} />
               <input type='hidden' name='status' value='completed' />
@@ -103,7 +145,7 @@ export default async function ChallengeDetailPage({
             </form>
           ) : null}
 
-          {challenge.status !== 'skipped' ? (
+          {!['completed', 'skipped'].includes(challenge.status) ? (
             <form action={updateChallengeStatusAction}>
               <input type='hidden' name='challengeId' value={challenge.id} />
               <input type='hidden' name='status' value='skipped' />

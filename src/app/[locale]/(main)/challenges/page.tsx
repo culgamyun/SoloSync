@@ -38,10 +38,10 @@ export default async function ChallengesPage({
   return (
     <AppShell>
       <section>
-        <p className='text-[12px] font-semibold tracking-[0.02em] text-primary/80'>
+        <p className='font-data text-[12px] font-bold tracking-normal text-primary/80'>
           {locale === 'ko' ? '성장을 위한 발걸음' : 'Practical momentum'}
         </p>
-        <h1 className='whitespace-pre-line mt-3 text-balance font-display text-[2.35rem] font-bold leading-[1.02] tracking-[-0.05em] text-foreground'>
+        <h1 className='mt-3 whitespace-pre-line text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
           {locale === 'ko' ? `${displayName}님의\n새로운 도전들` : 'Your next real-world\nchallenges'}
         </h1>
         <div className='editorial-rule' />
@@ -55,8 +55,10 @@ export default async function ChallengesPage({
               key={filter.key}
               href={filter.key === 'current' ? '/challenges' : `/challenges?status=${filter.key}`}
               className={cn(
-                'rounded-full px-5 py-3 text-sm font-semibold shadow-ambient transition',
-                active ? 'bg-primary text-primary-foreground' : 'bg-white/78 text-muted-foreground hover:bg-white'
+                'rounded-md border px-5 py-3 text-sm font-bold transition',
+                active
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-line bg-surface-high text-muted-foreground hover:bg-surface-low'
               )}
             >
               {filter.label[locale === 'en' ? 'en' : 'ko']}
@@ -69,13 +71,13 @@ export default async function ChallengesPage({
         <ChallengeList challenges={filtered} locale={locale} variant='list' />
       </div>
 
-      <section className='mt-8 overflow-hidden rounded-[2rem] bg-[linear-gradient(145deg,rgba(119,67,64,0.96),rgba(145,76,74,0.98))] shadow-float'>
-        <div className='relative px-5 py-6 text-white'>
+      <section className='mt-8 overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
+        <div className='relative px-5 py-6 text-primary-foreground'>
           <div className='absolute bottom-[-28px] right-[-18px] text-[9rem] font-bold text-white/10'>★</div>
-          <p className='text-[11px] font-semibold uppercase tracking-[0.22em] text-white/60'>
+          <p className='font-data text-[11px] font-bold uppercase tracking-normal text-white/60'>
             {locale === 'ko' ? '다음 연결 추천' : 'Next move'}
           </p>
-          <h2 className='whitespace-pre-line mt-3 max-w-[12rem] text-[1.8rem] font-display font-bold leading-[1.02] tracking-[-0.04em]'>
+          <h2 className='mt-3 max-w-[12rem] whitespace-pre-line font-display text-[1.8rem] font-bold leading-[1.04] tracking-normal'>
             {locale === 'ko' ? '함께 성장하는\n솔로들의 챌린지 엿보기' : 'See what the coach\nsuggests next'}
           </h2>
           <Button asChild variant='secondary' className='mt-6 bg-white/18 text-white hover:bg-white/24'>

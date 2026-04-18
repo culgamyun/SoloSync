@@ -1,20 +1,15 @@
-import dynamic from 'next/dynamic';
 import { Flame, Sparkles } from 'lucide-react';
 
 import { submitWeeklyCheckInAction } from '@/actions/challenges';
 import { AppShell } from '@/components/common/app-shell';
 import { ChallengeList } from '@/components/challenges/challenge-list';
+import { ProgressChart } from '@/components/dashboard/progress-chart';
 import { ScoreBreakdown } from '@/components/dashboard/score-breakdown';
 import { ScoreRing } from '@/components/dashboard/score-ring';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { getHomeSnapshot } from '@/lib/server/app-data';
-
-const ProgressChart = dynamic(
-  () => import('@/components/dashboard/progress-chart').then((mod) => mod.ProgressChart),
-  { ssr: false }
-);
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,28 +19,29 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       ? snapshot.scoreHistory[snapshot.scoreHistory.length - 1].score - snapshot.scoreHistory[snapshot.scoreHistory.length - 2].score
       : 0;
   const displayName = snapshot.viewer?.displayName ?? (locale === 'ko' ? '친구' : 'friend');
+  const greeting = locale === 'ko' ? `좋은 아침이에요,\n${displayName}님` : `Good morning, ${displayName}.`;
 
   return (
     <AppShell>
       <section>
         <div className='flex items-start justify-between gap-4'>
           <div>
-            <h1 className='text-balance font-display text-[2.2rem] font-bold leading-[1.06] tracking-[-0.05em] text-foreground'>
-              {locale === 'ko' ? `좋은 아침이에요, ${displayName}님 👋` : `Good morning, ${displayName}.`}
+            <h1 className='whitespace-pre-line break-keep font-display text-[2.05rem] font-bold leading-[1.08] tracking-normal text-foreground'>
+              {greeting}
             </h1>
             <div className='editorial-rule' />
           </div>
-          <div className='flex h-9 w-9 items-center justify-center rounded-full bg-white/78 shadow-ambient'>
+          <div className='flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface-high'>
             <span className='text-lg'>🏠</span>
           </div>
         </div>
-        <div className='mt-5 inline-flex items-center gap-2 rounded-full bg-sun/35 px-4 py-2 text-[12px] font-semibold text-accent'>
+        <div className='mt-5 inline-flex items-center gap-2 rounded bg-observation/18 px-4 py-2 font-data text-[12px] font-bold text-foreground'>
           <Flame className='h-4 w-4' />
           {locale === 'ko' ? `${snapshot.streak.current}주 연속 달성` : `${snapshot.streak.current} week streak`}
         </div>
       </section>
 
-      <section className='mt-8 rounded-[2.2rem] bg-white/84 p-5 shadow-sanctuary'>
+      <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-sanctuary'>
         <div className='flex flex-col items-center gap-4'>
           <ScoreRing
             score={snapshot.latestScore}
@@ -54,24 +50,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             delta={weeklyDelta}
           />
           <ScoreBreakdown breakdown={snapshot.breakdown} locale={locale} variant='compact' />
-          <div className='rounded-full bg-mint/30 px-4 py-2 text-[13px] font-semibold text-secondary'>
+          <div className='rounded bg-primary/10 px-4 py-2 font-data text-[13px] font-bold text-primary'>
             {weeklyDelta >= 0 ? '↑' : '↓'}
             {locale === 'ko' ? ` 지난주 대비 ${Math.abs(weeklyDelta)}` : ` ${Math.abs(weeklyDelta)} vs last week`}
           </div>
         </div>
       </section>
 
-      <section className='mt-8 rounded-[2rem] bg-white/82 p-5 shadow-ambient'>
+      <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
         <div className='flex items-center justify-between gap-4'>
           <div>
-            <p className='text-[12px] font-semibold uppercase tracking-[0.24em] text-primary/70'>
+            <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
               {locale === 'ko' ? '여정 점수 변화' : 'Score change'}
             </p>
-            <h2 className='mt-2 text-[1.35rem] font-display font-bold tracking-[-0.03em]'>
+            <h2 className='mt-2 font-display text-[1.35rem] font-bold tracking-normal'>
               {locale === 'ko' ? `현재 ${snapshot.latestScore}점` : `Now ${snapshot.latestScore}`}
             </h2>
           </div>
-          <span className='rounded-full bg-peach/35 px-3 py-1 text-[11px] font-bold text-primary'>
+          <span className='rounded bg-reflection/12 px-3 py-1 font-data text-[11px] font-bold text-reflection'>
             {weeklyDelta >= 0 ? '+' : '-'}{Math.abs(weeklyDelta)}
           </span>
         </div>
@@ -80,7 +76,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <section className='mt-8'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-[1.45rem] font-display font-bold tracking-[-0.03em]'>
+          <h2 className='font-display text-[1.45rem] font-bold tracking-normal'>
             {locale === 'ko' ? '이번 주 챌린지' : 'This week\'s challenges'}
           </h2>
         </div>
@@ -89,7 +85,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      <section className='mt-8 rounded-[1.9rem] bg-mint/42 px-5 py-5 text-secondary shadow-ambient'>
+      <section className='mt-8 rounded-lg border border-observation/25 bg-observation/12 px-5 py-5 text-foreground shadow-ambient'>
         <div className='flex items-center gap-2 text-sm font-bold'>
           <Sparkles className='h-4 w-4' />
           {locale === 'ko' ? 'AI 인사이트' : 'AI insight'}
@@ -97,7 +93,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <p className='mt-3 text-[15px] leading-7'>{snapshot.latestInsight}</p>
       </section>
 
-      <section className='mt-8 rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+      <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
         <div className='flex items-center justify-between gap-3'>
           <div>
             <h2 className='text-[1.2rem] font-display font-bold'>
