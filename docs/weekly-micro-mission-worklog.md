@@ -8,31 +8,32 @@ Read these in order:
 
 1. `docs/01-plan/weekly-micro-mission-roadmap.md`
 2. this worklog
-3. the latest relevant checkpoint in `docs/checkpoints/`
-4. `git status --short`
-5. relevant diffs
+3. `docs/01-plan/features/phase-b-readiness.plan.md`
+4. the latest relevant checkpoint in `docs/checkpoints/`
+5. `git status --short`
+6. relevant diffs
 
 Related documents:
 
 - Roadmap: `docs/01-plan/weekly-micro-mission-roadmap.md`
-- Implementation plan: `docs/01-plan/features/weekly-micro-mission-v1.plan.md`
+- V1 implementation plan: `docs/01-plan/features/weekly-micro-mission-v1.plan.md`
+- Phase B readiness plan: `docs/01-plan/features/phase-b-readiness.plan.md`
 - Design system: `DESIGN.md`
 - Local environment guide: `ENV_LOCAL_SETUP.md`
 
 ## Current Slice Status
 
-Active slice: Slice 5, Phase B readiness.
+Active slice: Slice 5, Phase B Readiness Bundle.
 
-V1 weekly micro-mission work has shipped through PR #1 and post-merge QA hardening through PR #2. Local `main` is synced with `origin/main` as of merge commit `d493e86`.
+The bundle is planned and reviewed, but not implemented yet.
 
-The immediate product loop is ready for deeper validation:
+Implementation order is locked:
 
-- users can see a weekly routine-space micro-social mission,
-- start it,
-- reflect with success or non-completion outcomes,
-- and the database can derive whether failed/skipped users returned the following week.
+1. **5A Retention report visibility**
+2. **5B Smaller mission and swap mission**
+3. **5C Routine space and fear personalization**
 
-The next useful work is not a broader social product yet. It is making the V1 metric easier to inspect and making deployment/preview QA repeatable.
+The next branch should implement 5A first unless the user explicitly asks to batch all three.
 
 ## Implemented
 
@@ -71,6 +72,7 @@ The next useful work is not a broader social product yet. It is making the V1 me
   - `next_week_return_rate=0.6667`
 - Temporary sample users/data were cleaned up after verification.
 - Core docs were restored from mojibake into readable Korean/English on 2026-04-19.
+- Phase B Readiness plan was created and reviewed on 2026-04-19.
 
 ## Verification Status
 
@@ -103,28 +105,33 @@ Environment caveats:
 
 ## Active Backlog
 
-Recommended next items:
+### Ready To Implement
 
-1. Deployment setup
-   - Decide and document the deployment target.
-   - If using Vercel, link the project and record the minimal deploy/preview QA flow.
+1. **5A Retention report visibility**
+   - Add `scripts/micro-mission-return-report.mjs`.
+   - Add `npm run report:micro-missions`.
+   - Document env requirements and output.
 
-2. Retention report visibility
-   - Add an internal/admin-facing report page or script for `micro_mission_return_report()`.
-   - Alternative: document the exact Supabase RPC query for manual reporting.
+2. **5B Smaller mission and swap mission**
+   - Add migration `006_phase_b_readiness.sql`.
+   - Add `challenge_mission_adjustments`.
+   - Add deterministic micro-mission adjustment helper.
+   - Add `adjustMicroMissionAction`.
+   - Add challenge detail adjustment controls.
 
-3. ESLint config cleanup
-   - Move `.eslintignore` patterns into `eslint.config.mjs`.
-   - Remove the warning from routine checks.
+3. **5C Routine space and fear personalization**
+   - Add `routine_spaces` and `social_fears` to `user_profiles`.
+   - Add profile settings chips.
+   - Update profile action and snapshot mapping.
+   - Feed preferences into `generate-challenges`.
 
-4. Phase B planning
-   - Decide whether routine-space and fear should become selectable fields.
-   - Do not build matching or community surfaces yet.
+### Still Deferred
 
-5. Journal/community idea
-   - Candidate: private daily journal with AI comments by default.
-   - Optional future: explicit anonymous public sharing with supportive comments.
-   - Requires moderation, reporting, escalation, and anti-engagement guardrails before implementation.
+- Deployment setup and preview QA configuration.
+- ESLint `.eslintignore` cleanup.
+- Journal/community idea.
+- Admin dashboard visualization.
+- Matching/community/social graph features.
 
 ## Decisions Since Roadmap
 
@@ -134,6 +141,12 @@ Recommended next items:
 - QA auth bypass accepts only local/test use and must block protocol-relative open redirects.
 - `.gstack/` in the repo is generated local workflow output, not the Codex skill installation directory.
 - Skill definitions live under `C:\Users\culga\.codex\skills\...`.
+- Phase B Readiness should be one bundle with three ordered sub-slices: report visibility, mission adjustment, preference personalization.
+- Retention report visibility should start as an internal/local script, not an in-app admin page.
+- Mission adjustments should update the visible challenge row in place and log before/after payloads in a dedicated event table.
+- Instant mission adjustment should use deterministic templates, not LLM generation.
+- Routine spaces and fears should be explicit `user_profiles` arrays, not overloaded `barriers` or `goals`.
+- Personalization UI belongs in profile settings first, not onboarding.
 
 ## Tracking Rule
 
