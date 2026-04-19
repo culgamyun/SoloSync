@@ -77,8 +77,14 @@ export function ChatPanel({
               placeholder={locale === 'ko' ? '메시지를 입력하세요...' : 'Type a message...'}
               className='min-h-[56px] border-0 bg-transparent px-3 py-3 shadow-none focus:ring-0'
             />
-            <Button type='button' size='icon' onClick={() => void sendMessage()} disabled={isPending}>
-              <SendHorizontal className='h-4 w-4' />
+            <Button
+              type='button'
+              size='icon'
+              onClick={() => void sendMessage()}
+              disabled={isPending}
+              aria-label={locale === 'ko' ? '메시지 보내기' : 'Send message'}
+            >
+              <SendHorizontal aria-hidden='true' className='h-5 w-5' strokeWidth={2.5} />
             </Button>
           </div>
           <p className='px-3 pb-2 text-[12px] text-muted-foreground'>
