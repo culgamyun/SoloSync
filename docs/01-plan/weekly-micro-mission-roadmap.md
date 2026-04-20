@@ -25,6 +25,7 @@ The product earns trust by helping users create small counterexamples to "나는
 - Treat failure reflection as a success path for learning and return behavior.
 - Korean copy quality is a launch prerequisite because garbled or awkward copy breaks trust.
 - Keep public journal/community comments as a future candidate only; moderation and anti-engagement guardrails must come first.
+- Phase B Readiness starts with visibility and control: make return data inspectable, then let users make a mission smaller or safer, then let preferences guide future missions.
 
 ## Product Guardrails
 
@@ -34,6 +35,7 @@ The product earns trust by helping users create small counterexamples to "나는
 - Do not overbuild personalization before mission quality is validated.
 - Do not conflate "completed mission" with "product success"; the primary signal is failed-user return.
 - Do not use public comments, likes, rankings, or streak pressure to exploit vulnerability.
+- Do not make "smaller mission" feel like demotion, failure, or punishment.
 
 ## Current Implementation State
 
@@ -103,11 +105,29 @@ Acceptance criteria:
 - Data supports the V1 retention metric by joining failed/skipped outcomes to next-week activity.
 - Duplicate reflection submissions do not grant infinite XP.
 
-### Slice 5: Phase B Readiness
+### Slice 5: Phase B Readiness Bundle
 
-Status: partially shipped, next focus.
+Status: planned, next implementation focus.
 
-Goal: Prepare the next loop without building it.
+Plan: `docs/01-plan/features/phase-b-readiness.plan.md`
+
+Goal: Prepare the next loop without building matching or community.
+
+Sub-slices:
+
+1. **5A Retention report visibility**
+   - Add an internal/local report command for `micro_mission_return_report()`.
+   - No in-app admin page until admin roles exist.
+
+2. **5B Smaller mission and swap mission**
+   - Let users request a smaller mission, a different routine space, or a safer line.
+   - Update the current challenge row in place.
+   - Log before/after payloads in `challenge_mission_adjustments`.
+
+3. **5C Routine space and fear personalization**
+   - Add `routine_spaces` and `social_fears` to `user_profiles`.
+   - Add lightweight chips to profile settings.
+   - Feed preferences into future challenge generation and deterministic fallbacks.
 
 Already done:
 
@@ -116,18 +136,13 @@ Already done:
 - Sample-data probe returned `failed_or_skipped_users=3`, `returned_next_week_users=2`, and `next_week_return_rate=0.6667`.
 - Playwright e2e passed across desktop and mobile Chromium.
 
-Recommended next work:
-
-- Add a small internal/admin-facing way to inspect the return report, or document the exact SQL/RPC query for manual operations.
-- Decide whether routine-space and fear data should become selectable fields in Phase B.
-- Run preview/production QA once deployment configuration is known.
-- Keep public journal/community features deferred until moderation design is ready.
-
 Acceptance criteria:
 
-- Phase B can be planned from V1 data.
 - A human can inspect the V1 return metric without re-reading migration SQL.
-- No Phase B UI is built prematurely.
+- A user can make a current micro-mission smaller or safer without feeling judged.
+- A user can set practical routine-space and fear preferences.
+- Future mission generation can use those preferences.
+- No matching, public community, or therapy-style surface is built prematurely.
 
 ## Deferred
 
@@ -136,6 +151,7 @@ Acceptance criteria:
 - In-app ads: deferred due to trust risk in vulnerable reflection moments.
 - Full social recovery loop: deferred until failed/skipped users return.
 - Public anonymous journal/comments: deferred until moderation, reporting, and anti-engagement guardrails are designed.
+- Admin web dashboard: deferred until admin roles exist.
 - Broad redesign: deferred; reuse existing app shell and challenge surfaces.
 
 ## Validation Plan
@@ -147,8 +163,10 @@ Primary:
 Secondary:
 
 - Mission start rate.
+- Smaller/swap mission request rate.
 - Reflection after non-completion rate.
-- Alternate/smaller mission requests.
+- Alternate/smaller mission users who return next week.
+- Routine-space/fear preference completion rate.
 - Weekend/holiday reopen rate.
 - Qualitative responses such as "부담이 덜하다", "다시 해볼 수 있겠다", "내가 이상한 게 아니구나."
 
