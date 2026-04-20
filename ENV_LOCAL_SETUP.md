@@ -124,7 +124,25 @@ npx web-push generate-vapid-keys
 - production 환경에서는 라우트가 거부되도록 구현되어 있다.
 - Playwright e2e는 이 값을 자동으로 켜고 port `3100`에서 dev server를 띄운다.
 
-## 5. 외부 서비스 준비 순서
+## 5. 운영 리포트 명령
+
+### `npm run report:micro-missions`
+
+실패/스킵한 마이크로 미션 사용자가 다음 주에 돌아왔는지 확인하는 내부 운영 명령이다.
+
+```bash
+npm run report:micro-missions
+npm run report:micro-missions -- --json
+```
+
+필요한 값:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+이 명령은 `.env.local`을 자동으로 읽는다. service role key를 사용하므로 브라우저 기능이나 사용자용 화면으로 노출하지 않는다.
+
+## 6. 외부 서비스 준비 순서
 
 ### Supabase
 
@@ -164,7 +182,7 @@ npx web-push generate-vapid-keys
 2. DSN, auth token, org slug, project slug를 확인한다.
 3. 값이 없으면 앱은 Sentry 없이도 로컬 개발이 가능하다.
 
-## 6. 최소 로컬 예시
+## 7. 최소 로컬 예시
 
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000
