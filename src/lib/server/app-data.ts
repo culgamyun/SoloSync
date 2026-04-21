@@ -306,7 +306,9 @@ export const getProfileSnapshot = cache(async () => {
         } as RelationshipMap,
         barriers: ['busy_schedule'],
         goals: ['deepen_existing', 'build_confidence'],
-        comfortLevel: 'medium'
+        comfortLevel: 'medium',
+        routineSpaces: ['gym', 'cafe'],
+        socialFears: ['being_judged', 'awkward_silence']
       }
     };
   }
@@ -325,7 +327,9 @@ export const getProfileSnapshot = cache(async () => {
           relationshipMap: data.relationship_map as RelationshipMap,
           barriers: data.barriers,
           goals: data.goals,
-          comfortLevel: data.comfort_level
+          comfortLevel: data.comfort_level,
+          routineSpaces: data.routine_spaces,
+          socialFears: data.social_fears
         }
       : null
   };
