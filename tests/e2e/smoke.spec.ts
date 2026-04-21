@@ -38,11 +38,22 @@ test.describe('weekly micro-mission', () => {
     await expect(page.getByText('안녕하세요. 오늘도 늦게까지 하시네요.')).toBeVisible();
   });
 
-  test('renders a non-shaming reflection outcome', async ({ page }) => {
+  test('renders the reflection flow controls', async ({ page }) => {
     await page.goto('/ko/challenges/challenge-1/reflect');
 
-    await expect(page.getByText('어디까지 해냈나요?')).toBeVisible();
-    await expect(page.getByText('오늘은 못 했어요')).toBeVisible();
-    await expect(page.getByText('멈춘 지점을 알게 된 것도 다음 시도의 재료입니다.')).toBeVisible();
+    await expect(page.locator('input[name="outcome"]')).toHaveCount(3);
+    await expect(page.locator('input[name="outcome"][value="could_not_do_it"]')).toBeAttached();
+    await expect(page.locator('textarea[name="reflectionText"]')).toBeVisible();
+  });
+
+  test('lets the user scale the mission down in demo mode', async ({ page }) => {
+    await page.goto('/ko/challenges/challenge-1');
+
+    await expect(page.getByText('너무 크다면')).toBeVisible();
+    await expect(page.getByRole('button', { name: '조금 더 작게' })).toBeVisible();
+    await page.getByRole('button', { name: '조금 더 작게' }).click();
+
+    await expect(page.getByText('오늘 기준으로 더 작은 버전으로 바꿨어요.')).toBeVisible();
+    await expect(page.getByText('눈을 마주치고 고개만 살짝 끄덕여도 성공')).toBeVisible();
   });
 });

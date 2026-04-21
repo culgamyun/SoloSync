@@ -4,6 +4,7 @@ export type ChallengeStatus = 'pending' | 'in_progress' | 'completed' | 'skipped
 export type ChallengeEstimatedTime = '10min' | '30min' | '1hr' | '2hr+';
 export type ChallengeMissionKind = 'standard' | 'micro_social';
 export type ChallengeReflectionOutcome = 'greeted' | 'said_line' | 'could_not_do_it';
+export type ChallengeAdjustmentRequestType = 'smaller' | 'different_space' | 'safer_line';
 
 export type ChallengeRecord = {
   id: string;
