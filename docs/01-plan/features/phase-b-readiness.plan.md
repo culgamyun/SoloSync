@@ -1,7 +1,7 @@
 # Phase B Readiness Implementation Plan
 
 Last updated: 2026-04-21
-Status: partially implemented
+Status: implemented locally, ready to ship
 
 ## Goal
 
@@ -56,7 +56,7 @@ Acceptance criteria:
 
 ### Slice 5B: Smaller Mission And Swap Mission
 
-Status: implemented locally 2026-04-21. Remote Supabase migration apply is still pending.
+Status: implemented locally 2026-04-21. Remote Supabase migration applied 2026-04-21.
 
 Goal: Let the user reduce friction on the current micro-mission before they abandon it.
 
@@ -117,6 +117,8 @@ Acceptance criteria:
 - Demo/QA mode can still preview the adjusted mission after redirect.
 
 ### Slice 5C: Routine Space And Fear Personalization
+
+Status: implemented locally 2026-04-21. Remote Supabase migration applied 2026-04-21.
 
 Goal: Let the user set practical preferences that improve future mission quality.
 
@@ -326,14 +328,14 @@ Critical silent gaps: none after planned tests and error states.
 - [x] Add micro-mission option and adjustment helper module.
 - [x] Add `adjustMicroMissionAction`.
 - [x] Add adjustment controls and success/error copy to challenge detail.
-- [ ] Add profile routine/fear chip fields.
-- [ ] Update `updateProfileAction` and `getProfileSnapshot`.
-- [ ] Update `generate-challenges` profile context and fallback.
+- [x] Add profile routine/fear chip fields.
+- [x] Update `updateProfileAction` and `getProfileSnapshot`.
+- [x] Update `generate-challenges` profile context and fallback.
 - [x] Add report script and package script.
 - [x] Add unit tests for helpers/actions.
 - [x] Extend Playwright smoke coverage.
 - [x] Run `npm run check`, `npm run build`, `npm run test:e2e`.
-- [ ] Apply and verify Supabase migration before ship.
+- [x] Apply and verify Supabase migration before ship.
 
 ## GSTACK REVIEW REPORT
 

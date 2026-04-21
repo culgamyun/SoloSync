@@ -1,6 +1,11 @@
-﻿import { corsHeaders } from '../_shared/cors.ts';
+import { corsHeaders } from '../_shared/cors.ts';
 import { generateJson } from '../_shared/gemini.ts';
 import { createServiceClient, localClock, weekStartForTimezone } from '../_shared/helpers.ts';
+import {
+  buildPreferredMicroMissionSeed,
+  getRoutineSpaceLabels,
+  getSocialFearLabels
+} from '../../../src/lib/challenges/profile-personalization.ts';
 
 const allowedDifficulties = ['easy', 'medium', 'hard'];
 const allowedCategories = ['reach_out', 'deepen', 'explore', 'maintain'];
@@ -27,31 +32,24 @@ type ChallengeGeneration = {
   weekly_message: string;
 };
 
-function fallbackChallenges(locale: string): ChallengeGeneration {
+function fallbackChallenges(locale: string, routineSpaces: string[], socialFears: string[]): ChallengeGeneration {
+  const preferredMicroMission = buildPreferredMicroMissionSeed(locale, routineSpaces, socialFears);
+
   return {
     challenges: [
       {
-        title: locale === 'ko' ? '단골 카페에서 눈 마주치고 인사하기' : 'Greet someone at a regular cafe',
-        description:
-          locale === 'ko'
-            ? '이미 지나치는 생활 공간에서 20초짜리 작은 접촉 하나만 만들어보세요.'
-            : 'Create one tiny, low-pressure point of contact in a place you already visit.',
+        title: preferredMicroMission.title,
+        description: preferredMicroMission.description,
         difficulty: 'easy',
         category: 'reach_out',
-        conversation_starters:
-          locale === 'ko'
-            ? ['안녕하세요. 오늘도 늦게까지 하시네요.']
-            : ['Hi. You are here late today too.'],
+        conversation_starters: preferredMicroMission.conversationStarters,
         estimated_time: '10min',
         mission_kind: 'micro_social',
-        mission_context: locale === 'ko' ? '자주 가는 편의점 또는 카페' : 'A regular convenience store or cafe',
-        safe_line: locale === 'ko' ? '안녕하세요. 오늘도 늦게까지 하시네요.' : 'Hi. You are here late today too.',
-        minimum_win: locale === 'ko' ? '눈 마주치고 인사만 해도 성공' : 'Eye contact and a greeting count as success',
-        fear: locale === 'ko' ? '상대가 이상하게 볼까 봐' : 'They might think I am strange',
-        reframe:
-          locale === 'ko'
-            ? '상대가 짧게 대답해도 실패가 아닙니다. 낯선 사람에게 예의를 건넨 것만으로 이번 주의 반례는 생겼어요.'
-            : 'A short answer is not failure. Offering a small courtesy is already this week’s counterexample.'
+        mission_context: preferredMicroMission.missionContext,
+        safe_line: preferredMicroMission.safeLine,
+        minimum_win: preferredMicroMission.minimumWin,
+        fear: preferredMicroMission.fear,
+        reframe: preferredMicroMission.reframe
       },
       {
         title: locale === 'ko' ? '점심 제안 한 번 하기' : 'Invite one person to lunch',
@@ -140,8 +138,21 @@ function normalizeChallenge(candidate: unknown, fallback: ReturnType<typeof fall
 }
 
 async function createChallengesForUser(supabase: ReturnType<typeof createServiceClient>, userId: string, locale: string, timezone: string) {
-  const fallback = fallbackChallenges(locale);
-  const context = { userId, locale, timezone };
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('routine_spaces, social_fears')
+    .eq('user_id', userId)
+    .maybeSingle();
+  const routineSpaces = profile?.routine_spaces ?? [];
+  const socialFears = profile?.social_fears ?? [];
+  const fallback = fallbackChallenges(locale, routineSpaces, socialFears);
+  const context = {
+    userId,
+    locale,
+    timezone,
+    routine_spaces: getRoutineSpaceLabels(locale, routineSpaces),
+    social_fears: getSocialFearLabels(locale, socialFears)
+  };
   const generated = await generateJson(
     'You are SoloSync\'s challenge generator. Return JSON with challenges and weekly_message.',
     context,

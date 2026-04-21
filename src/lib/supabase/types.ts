@@ -60,6 +60,14 @@ export type Database = {
           barriers: string[];
           goals: string[];
           comfort_level: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+          routine_spaces: ('cafe' | 'convenience_store' | 'gym' | 'beauty_salon' | 'office_building')[];
+          social_fears: (
+            | 'being_judged'
+            | 'awkward_silence'
+            | 'feeling_pushy'
+            | 'bothering_busy_people'
+            | 'running_into_the_same_person'
+          )[];
           created_at: string;
           updated_at: string;
         };
@@ -74,6 +82,14 @@ export type Database = {
           barriers?: string[];
           goals?: string[];
           comfort_level?: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+          routine_spaces?: ('cafe' | 'convenience_store' | 'gym' | 'beauty_salon' | 'office_building')[];
+          social_fears?: (
+            | 'being_judged'
+            | 'awkward_silence'
+            | 'feeling_pushy'
+            | 'bothering_busy_people'
+            | 'running_into_the_same_person'
+          )[];
           created_at?: string;
           updated_at?: string;
         };
@@ -88,6 +104,14 @@ export type Database = {
           barriers?: string[];
           goals?: string[];
           comfort_level?: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+          routine_spaces?: ('cafe' | 'convenience_store' | 'gym' | 'beauty_salon' | 'office_building')[];
+          social_fears?: (
+            | 'being_judged'
+            | 'awkward_silence'
+            | 'feeling_pushy'
+            | 'bothering_busy_people'
+            | 'running_into_the_same_person'
+          )[];
           created_at?: string;
           updated_at?: string;
         };
