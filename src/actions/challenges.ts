@@ -1,14 +1,76 @@
-﻿'use server';
+'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
+import {
+  buildAdjustedMicroMission,
+  createMissionSnapshot,
+  isChallengeAdjustmentRequestType
+} from '@/lib/challenges/micro-mission-adjustments';
 import { getSuggestedWeekLabel } from '@/lib/server/app-data';
 import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
+import type { Database } from '@/lib/supabase/types';
 import { getChallengeXp, getReflectionXp, getLevelFromXp } from '@/lib/utils/xp';
-import type { ChallengeReflectionOutcome } from '@/types/challenge';
+import type { ChallengeRecord, ChallengeReflectionOutcome } from '@/types/challenge';
 
 const reflectionOutcomes = new Set<ChallengeReflectionOutcome>(['greeted', 'said_line', 'could_not_do_it']);
+
+function getChallengeDetailHref(locale: string, challengeId: string, params?: Record<string, string>) {
+  const basePath = `/${locale}/challenges/${challengeId}`;
+
+  if (!params || Object.keys(params).length === 0) {
+    return basePath;
+  }
+
+  const searchParams = new URLSearchParams(params);
+  return `${basePath}?${searchParams.toString()}`;
+}
+
+function mapChallengeRowToRecord(row: Database['public']['Tables']['challenges']['Row']): ChallengeRecord {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    difficulty: row.difficulty,
+    category: row.category,
+    estimatedTime: row.estimated_time,
+    conversationStarters: row.conversation_starters,
+    missionKind: row.mission_kind,
+    missionContext: row.mission_context,
+    safeLine: row.safe_line,
+    minimumWin: row.minimum_win,
+    fear: row.fear,
+    reframe: row.reframe,
+    status: row.status,
+    weekNumber: row.week_number,
+    weekStartDate: row.week_start_date,
+    startedAt: row.started_at,
+    completedAt: row.completed_at
+  };
+}
+
+function mapRecordToChallengeUpdate(challenge: ChallengeRecord): Database['public']['Tables']['challenges']['Update'] {
+  return {
+    title: challenge.title,
+    description: challenge.description,
+    difficulty: challenge.difficulty,
+    category: challenge.category,
+    estimated_time: challenge.estimatedTime,
+    conversation_starters: challenge.conversationStarters,
+    mission_kind: challenge.missionKind,
+    mission_context: challenge.missionContext,
+    safe_line: challenge.safeLine,
+    minimum_win: challenge.minimumWin,
+    fear: challenge.fear,
+    reframe: challenge.reframe
+  };
+}
+
+function redirectTo(href: string): never {
+  redirect(href as never);
+}
 
 export async function updateChallengeStatusAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
@@ -146,4 +208,76 @@ export async function submitWeeklyCheckInAction(formData: FormData) {
 
   revalidatePath(`/${locale}/home`);
   revalidatePath(`/${locale}/progress`);
+}
+
+export async function adjustMicroMissionAction(formData: FormData) {
+  const locale = String(formData.get('locale') ?? 'ko');
+  const challengeId = String(formData.get('challengeId') ?? '');
+  const rawRequestType = String(formData.get('requestType') ?? '');
+  const detailHref = getChallengeDetailHref(locale, challengeId);
+
+  if (!challengeId || !isChallengeAdjustmentRequestType(rawRequestType)) {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'invalid' }));
+  }
+
+  const requestType = rawRequestType;
+
+  if (await shouldUseDemoDataForRequest()) {
+    revalidatePath(detailHref);
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjusted: requestType }));
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'unavailable' }));
+  }
+
+  const { data: challenge } = await supabase
+    .from('challenges')
+    .select('*')
+    .eq('id', challengeId)
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (!challenge || challenge.mission_kind !== 'micro_social') {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'unavailable' }));
+  }
+
+  if (challenge.status === 'completed') {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'completed' }));
+  }
+
+  const currentMission = mapChallengeRowToRecord(challenge);
+  const nextMission = buildAdjustedMicroMission(currentMission, requestType, locale);
+
+  const { error: adjustmentInsertError } = await supabase.from('challenge_mission_adjustments').insert({
+    challenge_id: challenge.id,
+    user_id: user.id,
+    request_type: requestType,
+    previous_mission: createMissionSnapshot(currentMission),
+    next_mission: createMissionSnapshot(nextMission)
+  });
+
+  if (adjustmentInsertError) {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'unavailable' }));
+  }
+
+  const { error: challengeUpdateError } = await supabase
+    .from('challenges')
+    .update(mapRecordToChallengeUpdate(nextMission))
+    .eq('id', challenge.id)
+    .eq('user_id', user.id);
+
+  if (challengeUpdateError) {
+    redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'unavailable' }));
+  }
+
+  revalidatePath(detailHref);
+  revalidatePath(`/${locale}/challenges`);
+  revalidatePath(`/${locale}/home`);
+  redirectTo(getChallengeDetailHref(locale, challengeId, { adjusted: requestType }));
 }
