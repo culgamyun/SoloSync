@@ -204,6 +204,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      challenge_mission_adjustments: {
+        Row: {
+          id: string;
+          challenge_id: string;
+          user_id: string;
+          request_type: 'smaller' | 'different_space' | 'safer_line';
+          previous_mission: Json;
+          next_mission: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          challenge_id: string;
+          user_id: string;
+          request_type: 'smaller' | 'different_space' | 'safer_line';
+          previous_mission: Json;
+          next_mission: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          challenge_id?: string;
+          user_id?: string;
+          request_type?: 'smaller' | 'different_space' | 'safer_line';
+          previous_mission?: Json;
+          next_mission?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       social_health_scores: {
         Row: {
           id: string;

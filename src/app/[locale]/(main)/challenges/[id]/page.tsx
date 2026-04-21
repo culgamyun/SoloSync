@@ -1,11 +1,15 @@
 import { ArrowRight, Check, Compass, HeartHandshake, Sparkles } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-import { updateChallengeStatusAction } from '@/actions/challenges';
+import { adjustMicroMissionAction, updateChallengeStatusAction } from '@/actions/challenges';
 import { AppShell } from '@/components/common/app-shell';
 import { MobileHeader } from '@/components/common/mobile-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  buildAdjustedMicroMission,
+  isChallengeAdjustmentRequestType
+} from '@/lib/challenges/micro-mission-adjustments';
 import {
   challengeDifficultyTone,
   getChallengeCategoryLabel,
@@ -14,7 +18,9 @@ import {
   getEstimatedTimeLabel
 } from '@/lib/constants/social';
 import { getChallengeDetail } from '@/lib/server/app-data';
+import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { Link } from '@/i18n/navigation';
+import type { ChallengeAdjustmentRequestType } from '@/types/challenge';
 
 const categoryIcons = {
   reach_out: Sparkles,
@@ -23,20 +29,71 @@ const categoryIcons = {
   maintain: Check
 } as const;
 
+const adjustmentButtonCopy = {
+  ko: {
+    smaller: '조금 더 작게',
+    different_space: '장소 바꾸기',
+    safer_line: '한마디 더 안전하게'
+  },
+  en: {
+    smaller: 'Make it smaller',
+    different_space: 'Switch the place',
+    safer_line: 'Use a safer line'
+  }
+} as const;
+
+const adjustmentBannerCopy = {
+  ko: {
+    smaller: '오늘 기준으로 더 작은 버전으로 바꿨어요.',
+    different_space: '부담이 덜한 다른 생활 공간 버전으로 바꿨어요.',
+    safer_line: '같은 미션을 더 짧고 안전한 한마디 버전으로 바꿨어요.'
+  },
+  en: {
+    smaller: 'This mission now uses a smaller version for today.',
+    different_space: 'This mission now uses a lower-pressure place.',
+    safer_line: 'This mission now uses a shorter and safer line.'
+  }
+} as const;
+
+const adjustmentErrorCopy = {
+  ko: {
+    completed: '이미 완료한 미션은 바꾸지 않고 회고에 남겨둘게요.',
+    default: '지금은 이 미션을 바꾸지 못했어요. 화면을 다시 열고 한 번 더 시도해 주세요.'
+  },
+  en: {
+    completed: 'Completed missions stay as they are. Keep the note in your reflection instead.',
+    default: 'We could not adjust this mission right now. Please reopen the page and try again.'
+  }
+} as const;
+
 export default async function ChallengeDetailPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ adjusted?: string; adjustmentError?: string }>;
 }) {
   const { locale, id } = await params;
-  const challenge = await getChallengeDetail(id);
+  const resolvedSearchParams = await searchParams;
+  const language = locale === 'en' ? 'en' : 'ko';
+  const adjustedCandidate = resolvedSearchParams.adjusted;
+  const adjustedType: ChallengeAdjustmentRequestType | null =
+    adjustedCandidate && isChallengeAdjustmentRequestType(adjustedCandidate) ? adjustedCandidate : null;
+  const adjustmentError = String(resolvedSearchParams.adjustmentError ?? '');
+  let challenge = await getChallengeDetail(id);
 
   if (!challenge) {
     notFound();
   }
 
+  const isDemo = await shouldUseDemoDataForRequest();
+  if (isDemo && challenge.missionKind === 'micro_social' && challenge.status !== 'completed' && adjustedType) {
+    challenge = buildAdjustedMicroMission(challenge, adjustedType, locale);
+  }
+
   const Icon = categoryIcons[challenge.category];
   const isMicroMission = challenge.missionKind === 'micro_social';
+  const canAdjustMission = isMicroMission && challenge.status !== 'completed';
 
   return (
     <AppShell
@@ -69,10 +126,22 @@ export default async function ChallengeDetailPage({
           <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
         </section>
 
+        {adjustedType ? (
+          <div className='mt-6 rounded-lg border border-success/20 bg-success/10 px-4 py-3 text-sm font-medium leading-6 text-success'>
+            {adjustmentBannerCopy[language][adjustedType]}
+          </div>
+        ) : null}
+
+        {adjustmentError ? (
+          <div className='mt-6 rounded-lg border border-reflection/20 bg-reflection/10 px-4 py-3 text-sm font-medium leading-6 text-reflection'>
+            {adjustmentError === 'completed' ? adjustmentErrorCopy[language].completed : adjustmentErrorCopy[language].default}
+          </div>
+        ) : null}
+
         {isMicroMission ? (
           <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
-              {locale === 'ko' ? '이번 주 작은 접촉' : 'This week\'s micro-mission'}
+              {locale === 'ko' ? '이번 주 작은 접촉' : "This week's micro-mission"}
             </p>
             <h2 className='mt-2 font-display text-[1.3rem] font-bold tracking-normal'>
               {locale === 'ko' ? '작게 시작해도 충분해요' : 'Small counts here'}
@@ -103,7 +172,9 @@ export default async function ChallengeDetailPage({
                 </div>
               ) : null}
               {challenge.reframe ? (
-                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>{challenge.reframe}</div>
+                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>
+                  {challenge.reframe}
+                </div>
               ) : null}
             </div>
           </section>
@@ -121,6 +192,35 @@ export default async function ChallengeDetailPage({
             </div>
           </section>
         )}
+
+        {canAdjustMission ? (
+          <section className='mt-6 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+            <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
+              {locale === 'ko' ? '너무 크다면' : 'If this feels too much'}
+            </p>
+            <h2 className='mt-2 font-display text-[1.2rem] font-bold tracking-normal'>
+              {locale === 'ko' ? '이번 주 연결은 놓치지 않게 줄여볼 수 있어요' : 'You can scale this down without losing the week'}
+            </h2>
+            <p className='mt-3 text-sm leading-6 text-muted-foreground'>
+              {locale === 'ko'
+                ? '조금 더 작게, 장소 바꾸기, 더 짧은 한마디 중 하나로 다시 맞출 수 있어요.'
+                : 'Choose a smaller version, a different place, or a safer line.'}
+            </p>
+            <div className='mt-5 grid gap-2'>
+              {(['smaller', 'different_space', 'safer_line'] as const).map((requestType) => (
+                <form key={requestType} action={adjustMicroMissionAction}>
+                  <input type='hidden' name='challengeId' value={challenge.id} />
+                  <input type='hidden' name='locale' value={locale} />
+                  <input type='hidden' name='requestType' value={requestType} />
+                  <Button type='submit' variant='chip' className='h-11 w-full justify-between px-4 text-left text-sm text-foreground'>
+                    <span>{adjustmentButtonCopy[language][requestType]}</span>
+                    <ArrowRight className='h-4 w-4 shrink-0' />
+                  </Button>
+                </form>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className='mt-8 grid gap-3'>
           {['pending', 'skipped'].includes(challenge.status) ? (
@@ -167,4 +267,3 @@ export default async function ChallengeDetailPage({
     </AppShell>
   );
 }
-

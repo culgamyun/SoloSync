@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Worklog
 
-Last updated: 2026-04-19
+Last updated: 2026-04-21
 
 ## How To Resume
 
@@ -25,15 +25,15 @@ Related documents:
 
 Active slice: Slice 5, Phase B Readiness Bundle.
 
-The bundle is planned and reviewed, but not implemented yet.
+Slice 5A and 5B are implemented locally. Slice 5C is not implemented yet.
 
 Implementation order is locked:
 
-1. **5A Retention report visibility**
-2. **5B Smaller mission and swap mission**
+1. **5A Retention report visibility** - implemented 2026-04-20
+2. **5B Smaller mission and swap mission** - implemented locally 2026-04-21
 3. **5C Routine space and fear personalization**
 
-The next branch should implement 5A first unless the user explicitly asks to batch all three.
+The next implementation work should target 5C unless the user explicitly pauses to apply Supabase migration `006_phase_b_readiness.sql` first.
 
 ## Implemented
 
@@ -73,6 +73,17 @@ The next branch should implement 5A first unless the user explicitly asks to bat
 - Temporary sample users/data were cleaned up after verification.
 - Core docs were restored from mojibake into readable Korean/English on 2026-04-19.
 - Phase B Readiness plan was created and reviewed on 2026-04-19.
+- `npm run report:micro-missions` was added on 2026-04-20.
+  - It calls `micro_mission_return_report()` with `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+  - It prints a readable table by default.
+  - `--json` prints raw RPC output.
+  - Missing env vars return a clear non-zero error.
+- 5B mission adjustment flow was implemented locally on 2026-04-21.
+  - `challenge_mission_adjustments` migration was added in `006_phase_b_readiness.sql`.
+  - Micro-social missions can be changed to a smaller version, a different space, or a safer line.
+  - Adjustments update the visible challenge in place and log previous/next mission payloads.
+  - Challenge detail shows success/error feedback after adjustment redirects.
+  - Demo mode previews the adjusted mission so Playwright smoke coverage can verify the flow without a live write.
 
 ## Verification Status
 
@@ -108,16 +119,11 @@ Environment caveats:
 ### Ready To Implement
 
 1. **5A Retention report visibility**
-   - Add `scripts/micro-mission-return-report.mjs`.
-   - Add `npm run report:micro-missions`.
-   - Document env requirements and output.
+   - Implemented 2026-04-20.
 
 2. **5B Smaller mission and swap mission**
-   - Add migration `006_phase_b_readiness.sql`.
-   - Add `challenge_mission_adjustments`.
-   - Add deterministic micro-mission adjustment helper.
-   - Add `adjustMicroMissionAction`.
-   - Add challenge detail adjustment controls.
+   - Implemented locally 2026-04-21.
+   - Still needs remote migration apply/verification before ship.
 
 3. **5C Routine space and fear personalization**
    - Add `routine_spaces` and `social_fears` to `user_profiles`.
@@ -147,6 +153,8 @@ Environment caveats:
 - Instant mission adjustment should use deterministic templates, not LLM generation.
 - Routine spaces and fears should be explicit `user_profiles` arrays, not overloaded `barriers` or `goals`.
 - Personalization UI belongs in profile settings first, not onboarding.
+- Retention report visibility is an internal/operator command, not a browser admin page.
+- Mission adjustment should stay deterministic and should not call Gemini in the request path.
 
 ## Tracking Rule
 

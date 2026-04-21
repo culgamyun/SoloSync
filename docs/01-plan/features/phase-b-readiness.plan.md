@@ -1,7 +1,7 @@
 # Phase B Readiness Implementation Plan
 
-Last updated: 2026-04-19
-Status: plan locked
+Last updated: 2026-04-21
+Status: partially implemented
 
 ## Goal
 
@@ -19,6 +19,8 @@ The product goal is simple: if a user thinks "this is too much", SoloSync should
 
 ### Slice 5A: Retention Report Visibility
 
+Status: implemented 2026-04-20.
+
 Goal: Make `public.micro_mission_return_report()` inspectable without opening migration SQL or writing ad-hoc Supabase queries.
 
 Decision: implement a local/internal script first, not an in-app admin page.
@@ -34,6 +36,7 @@ Candidate files:
 - `scripts/micro-mission-return-report.mjs`
 - `package.json`
 - `README.md` or `ENV_LOCAL_SETUP.md`
+- `tests/unit/micro-mission-return-report.test.mjs`
 
 Behavior:
 
@@ -49,8 +52,11 @@ Acceptance criteria:
 - Missing env vars produce a clear non-zero error.
 - No browser or app route is needed.
 - No user-facing data is exposed in the product UI.
+- `--json` prints raw RPC output.
 
 ### Slice 5B: Smaller Mission And Swap Mission
+
+Status: implemented locally 2026-04-21. Remote Supabase migration apply is still pending.
 
 Goal: Let the user reduce friction on the current micro-mission before they abandon it.
 
@@ -108,6 +114,7 @@ Acceptance criteria:
 - Each adjustment logs previous and next mission payloads.
 - Current challenge fields update in place.
 - Tests cover deterministic transformation and action authorization/validation.
+- Demo/QA mode can still preview the adjusted mission after redirect.
 
 ### Slice 5C: Routine Space And Fear Personalization
 
@@ -314,18 +321,18 @@ Critical silent gaps: none after planned tests and error states.
 
 ## Implementation Checklist
 
-- [ ] Add migration `006_phase_b_readiness.sql`.
-- [ ] Update Supabase TS types.
-- [ ] Add micro-mission option and adjustment helper module.
-- [ ] Add `adjustMicroMissionAction`.
-- [ ] Add adjustment controls and success/error copy to challenge detail.
+- [x] Add migration `006_phase_b_readiness.sql`.
+- [x] Update Supabase TS types.
+- [x] Add micro-mission option and adjustment helper module.
+- [x] Add `adjustMicroMissionAction`.
+- [x] Add adjustment controls and success/error copy to challenge detail.
 - [ ] Add profile routine/fear chip fields.
 - [ ] Update `updateProfileAction` and `getProfileSnapshot`.
 - [ ] Update `generate-challenges` profile context and fallback.
-- [ ] Add report script and package script.
-- [ ] Add unit tests for helpers/actions.
-- [ ] Extend Playwright smoke coverage.
-- [ ] Run `npm run check`, `npm run build`, `npm run test:e2e`.
+- [x] Add report script and package script.
+- [x] Add unit tests for helpers/actions.
+- [x] Extend Playwright smoke coverage.
+- [x] Run `npm run check`, `npm run build`, `npm run test:e2e`.
 - [ ] Apply and verify Supabase migration before ship.
 
 ## GSTACK REVIEW REPORT
