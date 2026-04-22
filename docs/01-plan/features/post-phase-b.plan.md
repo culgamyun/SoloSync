@@ -103,6 +103,10 @@ Acceptance criteria:
 
 Goal: make product iteration less dependent on local-only QA hacks.
 
+Detailed plan: `docs/01-plan/features/post-phase-b-preview-qa.plan.md`
+
+Status: implemented locally on `codex/preview-qa-hardening`, review/merge pending.
+
 What to add:
 
 - repeatable preview QA checklist
@@ -153,7 +157,7 @@ merge/deploy
 
 ## Recommended First Move
 
-Current recommended move after 6B lands: **Slice 6C: Preview QA Hardening**.
+Current recommended move: **Slice 6C: Preview QA Hardening**.
 
 Reason:
 

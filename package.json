@@ -11,6 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts --project=chromium",
+    "qa:preview": "node scripts/preview-qa-smoke.mjs",
     "check": "npm run lint && npm run typecheck && npm run test",
     "report:micro-missions": "node scripts/micro-mission-return-report.mjs",
     "report:phase-b": "node scripts/phase-b-analytics-report.mjs"
