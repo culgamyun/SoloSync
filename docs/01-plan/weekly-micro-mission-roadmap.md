@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Roadmap
 
-Last updated: 2026-04-21
+Last updated: 2026-04-22
 Status: active
 
 ## How To Use This File
@@ -108,7 +108,7 @@ Acceptance criteria:
 
 ### Slice 5: Phase B Readiness Bundle
 
-Status: implemented locally 2026-04-21. Ship pending.
+Status: shipped on `main` 2026-04-22.
 
 Plan: `docs/01-plan/features/phase-b-readiness.plan.md`
 
@@ -147,6 +147,34 @@ Acceptance criteria:
 - Future mission generation can use those preferences.
 - No matching, public community, or therapy-style surface is built prematurely.
 
+### Slice 6: Post-Phase-B Learning Loop
+
+Status: planned, next focus.
+
+Plan: `docs/01-plan/features/post-phase-b.plan.md`
+
+Goal: turn Phase B controls into a measurable weekly recovery loop.
+
+Sub-slices:
+
+1. **6A Post-Phase-B analytics layer**
+   - Expand reporting so operators can see Phase B usage and return deltas.
+   - Detailed plan is locked in `docs/01-plan/features/post-phase-b-analytics.plan.md`.
+   - Implemented locally on `codex/phase-b-analytics`; merge is still pending.
+
+2. **6B Weekly recovery check-in**
+   - Make the next-week comeback experience acknowledge the prior week's outcome.
+
+3. **6C Preview QA hardening**
+   - Make preview verification repeatable enough for fast weekly iteration.
+
+Acceptance criteria:
+
+- Operators can inspect whether Phase B controls are being used.
+- Operators can compare next-week return for adjusted vs non-adjusted users.
+- Users get a calmer week-to-week re-entry experience after a rough mission.
+- Preview QA becomes documented and repeatable, not memory-based.
+
 ## Deferred
 
 - In-app matching: deferred due to moderation, safety, cold start, and trust risks.
@@ -170,6 +198,8 @@ Secondary:
 - Reflection after non-completion rate.
 - Alternate/smaller mission users who return next week.
 - Routine-space/fear preference completion rate.
+- Adjusted users vs non-adjusted users next-week return delta.
+- Personalized users vs non-personalized users mission start delta.
 - Weekend/holiday reopen rate.
 - Qualitative responses such as "부담이 덜하다", "다시 해볼 수 있겠다", "내가 이상한 게 아니구나."
 

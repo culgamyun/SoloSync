@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Worklog
 
-Last updated: 2026-04-21
+Last updated: 2026-04-22
 
 ## How To Resume
 
@@ -23,17 +23,17 @@ Related documents:
 
 ## Current Slice Status
 
-Active slice: Slice 5, Phase B Readiness Bundle.
+Active slice: Slice 6A implementation, Post-Phase-B Analytics Layer.
 
-Slice 5A, 5B, and 5C are implemented locally. Remote Supabase migrations through `007_profile_personalization.sql` are applied.
+Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied on the working branch.
 
 Implementation order is locked:
 
 1. **5A Retention report visibility** - implemented 2026-04-20
-2. **5B Smaller mission and swap mission** - implemented locally 2026-04-21
-3. **5C Routine space and fear personalization** - implemented 2026-04-21
+2. **5B Smaller mission and swap mission** - merged to `main` 2026-04-22
+3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
 
-The next implementation work should move beyond Phase B Readiness unless the user wants another QA/review pass on this bundle first.
+Slice 6A is implemented locally on `codex/phase-b-analytics` and verified. The next implementation work after merge should move to 6B Weekly recovery check-in.
 
 ## Implemented
 
@@ -91,6 +91,15 @@ The next implementation work should move beyond Phase B Readiness unless the use
   - `getProfileSnapshot` maps the new fields for demo and live profile rendering.
   - `generate-challenges` includes those preferences in Gemini context and deterministic fallback generation.
   - `007_profile_personalization.sql` was applied to the remote Supabase project.
+- Phase B was merged to `main` on 2026-04-22.
+- `docs/phase-b-readiness-report.md` now summarizes Phase B outcomes for quick handoff/reference.
+- `docs/01-plan/features/post-phase-b.plan.md` now defines the next planning frame after Phase B.
+- Slice 6A Phase B analytics was implemented locally on 2026-04-22.
+  - `008_phase_b_analytics.sql` adds `phase_b_usage_report()` and `phase_b_return_delta_report()`.
+  - `npm run report:phase-b` prints a combined operator report.
+  - `npm run report:micro-missions` restores the documented micro-mission return-only report entrypoint.
+  - The report scripts accept `--week=YYYY-MM-DD` and `--json`.
+  - Live execution against the connected dataset currently returns empty-state tables, confirming the path works even with no qualifying rows.
 
 ## Verification Status
 
@@ -104,6 +113,8 @@ Recent passing checks:
 - `npm run test:e2e`
 - `git diff --check`
 - `npx supabase db push`
+- `npm run report:phase-b -- --week=2026-04-20`
+- `npm run report:micro-missions -- --week=2026-04-20`
 
 Browser/design QA:
 
@@ -126,16 +137,16 @@ Environment caveats:
 
 ### Ready To Implement
 
-1. **5A Retention report visibility**
-   - Implemented 2026-04-20.
+1. **6A Post-Phase-B analytics layer**
+   - Detailed plan written in `docs/01-plan/features/post-phase-b-analytics.plan.md`.
+   - Implemented locally on `codex/phase-b-analytics`.
+   - Includes SQL RPCs, CLI report runner, test scope, and the restored report script entrypoints.
 
-2. **5B Smaller mission and swap mission**
-   - Implemented locally 2026-04-21.
-   - Remote migration applied and verified on 2026-04-21.
+2. **6B Weekly recovery check-in**
+   - Design the next-week comeback flow so it acknowledges the previous week's outcome.
 
-3. **5C Routine space and fear personalization**
-   - Implemented locally 2026-04-21.
-   - Remote migration applied and verified on 2026-04-21.
+3. **6C Preview QA hardening**
+   - Make preview verification documented and repeatable beyond local QA bypass flows.
 
 ### Still Deferred
 
@@ -162,6 +173,7 @@ Environment caveats:
 - Retention report visibility is an internal/operator command, not a browser admin page.
 - Mission adjustment should stay deterministic and should not call Gemini in the request path.
 - Profile personalization should use explicit routine-space and social-fear arrays, and fallback mission generation should prefer those selections when present.
+- Post-Phase-B should begin with observability, not another large user-facing surface, so the team can measure whether Phase B meaningfully improved return behavior.
 
 ## Tracking Rule
 

@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "report:micro-missions": "node scripts/micro-mission-return-report.mjs",
+    "report:phase-b": "node scripts/phase-b-analytics-report.mjs"
   },
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.1",

@@ -456,6 +456,32 @@ export type Database = {
           next_week_return_rate: number;
         }[];
       };
+      phase_b_return_delta_report: {
+        Args: Record<string, never>;
+        Returns: {
+          week_start_date: string;
+          adjusted_users: number;
+          adjusted_returned_next_week_users: number;
+          adjusted_next_week_return_rate: number;
+          non_adjusted_users: number;
+          non_adjusted_returned_next_week_users: number;
+          non_adjusted_next_week_return_rate: number;
+        }[];
+      };
+      phase_b_usage_report: {
+        Args: Record<string, never>;
+        Returns: {
+          week_start_date: string;
+          micro_mission_users: number;
+          adjusted_users: number;
+          adjustment_rate: number;
+          smaller_requests: number;
+          different_space_requests: number;
+          safer_line_requests: number;
+          users_with_profile_preferences: number;
+          profile_preference_completion_rate: number;
+        }[];
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
