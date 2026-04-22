@@ -1,4 +1,13 @@
-export function parsePreviewQaArgs(argv) {
+function isEnabledNpmFlag(value) {
+  if (value == null) {
+    return false;
+  }
+
+  const normalized = String(value).trim().toLowerCase();
+  return normalized === '' || normalized === '1' || normalized === 'true';
+}
+
+export function parsePreviewQaArgs(argv, env = process.env) {
   let url = null;
   let project = 'chromium';
   let headed = false;
@@ -40,6 +49,22 @@ export function parsePreviewQaArgs(argv) {
     }
 
     throw new Error(`Unknown argument: ${arg}`);
+  }
+
+  if (!url) {
+    url = env.npm_config_url ?? null;
+  }
+
+  if (project === 'chromium' && env.npm_config_project) {
+    project = env.npm_config_project;
+  }
+
+  if (!headed && isEnabledNpmFlag(env.npm_config_headed)) {
+    headed = true;
+  }
+
+  if (bypass && isEnabledNpmFlag(env.npm_config_no_bypass)) {
+    bypass = false;
   }
 
   if (!url) {
