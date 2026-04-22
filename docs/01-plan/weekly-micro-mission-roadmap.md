@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Roadmap
 
-Last updated: 2026-04-22
+Last updated: 2026-04-23
 Status: active
 
 ## How To Use This File
@@ -149,7 +149,7 @@ Acceptance criteria:
 
 ### Slice 6: Post-Phase-B Learning Loop
 
-Status: planned, next focus.
+Status: active, 6B implemented locally and awaiting review.
 
 Plan: `docs/01-plan/features/post-phase-b.plan.md`
 
@@ -160,10 +160,12 @@ Sub-slices:
 1. **6A Post-Phase-B analytics layer**
    - Expand reporting so operators can see Phase B usage and return deltas.
    - Detailed plan is locked in `docs/01-plan/features/post-phase-b-analytics.plan.md`.
-   - Implemented locally on `codex/phase-b-analytics`; merge is still pending.
+   - Shipped on `main` 2026-04-22.
 
 2. **6B Weekly recovery check-in**
    - Make the next-week comeback experience acknowledge the prior week's outcome.
+   - Detailed plan is locked in `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md`.
+   - Implemented locally on `codex/weekly-recovery-checkin`; pending review/merge.
 
 3. **6C Preview QA hardening**
    - Make preview verification repeatable enough for fast weekly iteration.
