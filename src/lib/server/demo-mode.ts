@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers';
 
-import { QA_AUTH_BYPASS_COOKIE, shouldUseDemoData } from '@/lib/env';
+import { isQaAuthBypassEnabled, QA_AUTH_BYPASS_COOKIE, shouldUseDemoData } from '@/lib/env';
 
 export async function shouldUseDemoDataForRequest() {
   if (shouldUseDemoData()) {
     return true;
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (!isQaAuthBypassEnabled()) {
     return false;
   }
 

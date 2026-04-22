@@ -20,10 +20,11 @@ Related documents:
 - Phase B readiness plan: `docs/01-plan/features/phase-b-readiness.plan.md`
 - Design system: `DESIGN.md`
 - Local environment guide: `ENV_LOCAL_SETUP.md`
+- Preview QA playbook: `docs/preview-qa-playbook.md`
 
 ## Current Slice Status
 
-Active slice: Slice 6B implemented locally, Weekly recovery check-in.
+Active slice: Slice 6C implemented locally, Preview QA hardening.
 
 Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied.
 
@@ -33,7 +34,7 @@ Implementation order is locked:
 2. **5B Smaller mission and swap mission** - merged to `main` 2026-04-22
 3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
 
-Slice 6A is merged. Slice 6B Weekly recovery check-in is implemented and verified locally on `codex/weekly-recovery-checkin`, pending review/merge.
+Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implemented and verified locally on `codex/preview-qa-hardening`, pending review/merge.
 
 ## Implemented
 
@@ -109,6 +110,17 @@ Slice 6A is merged. Slice 6B Weekly recovery check-in is implemented and verifie
   - `src/app/[locale]/(main)/home/page.tsx` now shows the recovery check-in card and reuses recovery-specific copy in the weekly check-in form.
   - `supabase/functions/generate-challenges/index.ts` now passes prior-week recovery context into Gemini and adjusts deterministic fallbacks.
   - `tests/unit/recovery-check-in.test.ts` and `tests/e2e/smoke.spec.ts` cover the new recovery behavior.
+- Slice 6C planning started on 2026-04-23.
+  - `docs/01-plan/features/post-phase-b-preview-qa.plan.md` locks the intended preview QA hardening shape.
+  - The implementation target is preview-safe QA bypass plus an external-base smoke path.
+- Slice 6C preview QA hardening was implemented locally on 2026-04-23.
+  - `src/lib/qa/runtime.ts` now distinguishes local/test, preview, and real production QA-bypass runtimes.
+  - `src/lib/env.ts`, `src/lib/server/demo-mode.ts`, and `src/app/api/qa/auth-bypass/route.ts` now treat QA bypass as cookie-based request access instead of global demo mode whenever the flag is present.
+  - `playwright.config.ts` now supports `PLAYWRIGHT_BASE_URL` so smoke tests can target an existing preview URL.
+  - `tests/e2e/global.setup.ts` establishes the QA bypass cookie before the smoke suite and fails clearly when the route is unavailable.
+  - `scripts/preview-qa-smoke.mjs` and `npm run qa:preview -- --url https://...` add a stable preview smoke entrypoint.
+  - `docs/preview-qa-playbook.md`, `README.md`, `.env.example`, and `ENV_LOCAL_SETUP.md` document the new flow.
+  - `tests/unit/qa-runtime.test.ts` and `tests/unit/preview-qa-script.test.ts` cover the new runtime and script behavior.
 
 ## Verification Status
 
@@ -120,6 +132,7 @@ Recent passing checks:
 - `npm run check`
 - `npm run build`
 - `npx playwright test tests/e2e/smoke.spec.ts --project=chromium`
+- `npm run test:e2e:smoke`
 - `git diff --check`
 - `npx supabase db push`
 - `npm run report:phase-b -- --week=2026-04-20`
@@ -140,19 +153,18 @@ Environment caveats:
 
 - Vercel project configuration was not detected locally. `vercel_list_projects` returned no projects for the visible team.
 - Production/preview deployment QA is therefore not yet repeatable from repo config alone.
-- `SOLOSYNC_QA_AUTH_BYPASS=true` is for local/test only; production rejects the bypass route.
+- `SOLOSYNC_QA_AUTH_BYPASS=true` can be used for local/test and preview verification, but the bypass route remains blocked in real production.
+- The new `npm run qa:preview -- --url https://...` path was validated through local script/runtime coverage, but not yet against a live preview URL in this branch session.
 
 ## Active Backlog
 
 ### Ready To Implement
 
-1. **6B Weekly recovery check-in**
-   - Detailed plan written in `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md`.
-   - Implemented locally on `codex/weekly-recovery-checkin`.
-   - Pending review/merge.
-
-2. **6C Preview QA hardening**
+1. **6C Preview QA hardening**
    - Make preview verification documented and repeatable beyond local QA bypass flows.
+   - Detailed plan written in `docs/01-plan/features/post-phase-b-preview-qa.plan.md`.
+   - Implemented locally on `codex/preview-qa-hardening`.
+   - Pending review/merge.
 
 ### Still Deferred
 

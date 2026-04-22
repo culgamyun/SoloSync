@@ -1,4 +1,6 @@
-﻿import { z } from 'zod';
+import { z } from 'zod';
+
+import { isQaBypassAllowedRuntime } from '@/lib/qa/runtime';
 
 const publicSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().catch('http://localhost:3000'),
@@ -7,9 +9,7 @@ const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL: z.string().optional(),
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional(),
   NEXT_PUBLIC_DEFAULT_LOCALE: z.enum(['ko', 'en']).catch('ko'),
-  NEXT_PUBLIC_ENABLE_APPLE_AUTH: z
-    .union([z.literal('true'), z.literal('false')])
-    .catch('false'),
+  NEXT_PUBLIC_ENABLE_APPLE_AUTH: z.union([z.literal('true'), z.literal('false')]).catch('false'),
   NEXT_PUBLIC_SENTRY_DSN: z.string().optional()
 });
 
@@ -30,17 +30,21 @@ export const serverEnv = serverSchema.parse(process.env);
 export const QA_AUTH_BYPASS_COOKIE = 'solosync_qa_auth_bypass';
 
 export function isSupabaseConfigured() {
-  return Boolean(
-    publicEnv.NEXT_PUBLIC_SUPABASE_URL && publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-  );
+  return Boolean(publicEnv.NEXT_PUBLIC_SUPABASE_URL && publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 }
 
 export function isQaAuthBypassEnabled() {
-  return process.env.NODE_ENV !== 'production' && serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true';
+  return (
+    serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true' &&
+    isQaBypassAllowedRuntime({
+      nodeEnv: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV
+    })
+  );
 }
 
 export function shouldUseDemoData() {
-  return isQaAuthBypassEnabled() || !isSupabaseConfigured();
+  return !isSupabaseConfigured();
 }
 
 export function arePushKeysConfigured() {
