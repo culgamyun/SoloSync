@@ -1,7 +1,7 @@
 # Post-Phase-B Implementation Plan
 
-Last updated: 2026-04-22
-Status: planned
+Last updated: 2026-04-23
+Status: active
 
 ## Goal
 
@@ -79,6 +79,10 @@ Current implementation note:
 
 Goal: make week-to-week re-entry explicit after a rough mission week.
 
+Detailed plan: `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md`
+
+Status: implemented locally on `codex/weekly-recovery-checkin`, review/merge pending.
+
 What to add:
 
 - a lightweight weekly check-in before or alongside the next mission
@@ -149,10 +153,10 @@ merge/deploy
 
 ## Recommended First Move
 
-Start with **Slice 6A: Post-Phase-B Analytics Layer**.
+Current recommended move after 6B lands: **Slice 6C: Preview QA Hardening**.
 
 Reason:
 
-- It gives immediate signal on whether Phase B mattered.
-- It sharpens what Slice 6B should optimize for.
-- It keeps scope smaller than jumping straight into a new user-facing loop.
+- Phase B analytics is already on `main`, and 6B now closes the user-facing recovery loop locally.
+- The next leverage point is reducing preview/deploy QA friction so iteration stays fast.
+- 6C will make weekly shipping less dependent on local-only memory and auth bypass setup.
