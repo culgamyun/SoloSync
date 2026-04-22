@@ -57,3 +57,15 @@ test.describe('weekly micro-mission', () => {
     await expect(page.getByText('눈을 마주치고 고개만 살짝 끄덕여도 성공')).toBeVisible();
   });
 });
+
+test.describe('profile personalization', () => {
+  test('renders routine space and social fear chips', async ({ page }) => {
+    await page.goto('/ko/settings/profile');
+
+    await expect(page.getByText('자주 지나는 생활 공간')).toBeVisible();
+    await expect(page.locator('input[name="routineSpaces"]')).toHaveCount(5);
+    await expect(page.locator('input[name="socialFears"]')).toHaveCount(5);
+    await expect(page.getByText('미용실')).toBeVisible();
+    await expect(page.getByText('다음에 또 마주치면 어색할까 봐')).toBeVisible();
+  });
+});

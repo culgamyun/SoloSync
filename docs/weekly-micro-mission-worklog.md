@@ -25,15 +25,15 @@ Related documents:
 
 Active slice: Slice 5, Phase B Readiness Bundle.
 
-Slice 5A and 5B are implemented locally. Slice 5C is not implemented yet.
+Slice 5A, 5B, and 5C are implemented locally. Remote Supabase migrations through `007_profile_personalization.sql` are applied.
 
 Implementation order is locked:
 
 1. **5A Retention report visibility** - implemented 2026-04-20
 2. **5B Smaller mission and swap mission** - implemented locally 2026-04-21
-3. **5C Routine space and fear personalization**
+3. **5C Routine space and fear personalization** - implemented 2026-04-21
 
-The next implementation work should target 5C unless the user explicitly pauses to apply Supabase migration `006_phase_b_readiness.sql` first.
+The next implementation work should move beyond Phase B Readiness unless the user wants another QA/review pass on this bundle first.
 
 ## Implemented
 
@@ -84,6 +84,13 @@ The next implementation work should target 5C unless the user explicitly pauses 
   - Adjustments update the visible challenge in place and log previous/next mission payloads.
   - Challenge detail shows success/error feedback after adjustment redirects.
   - Demo mode previews the adjusted mission so Playwright smoke coverage can verify the flow without a live write.
+- 5C profile personalization was implemented locally on 2026-04-21.
+  - `user_profiles` now stores `routine_spaces` and `social_fears`.
+  - `/settings/profile` includes lightweight checkbox chips for routine spaces and social fears.
+  - `updateProfileAction` filters and stores those arrays and revalidates challenge surfaces.
+  - `getProfileSnapshot` maps the new fields for demo and live profile rendering.
+  - `generate-challenges` includes those preferences in Gemini context and deterministic fallback generation.
+  - `007_profile_personalization.sql` was applied to the remote Supabase project.
 
 ## Verification Status
 
@@ -96,6 +103,7 @@ Recent passing checks:
 - `npm run build`
 - `npm run test:e2e`
 - `git diff --check`
+- `npx supabase db push`
 
 Browser/design QA:
 
@@ -123,13 +131,11 @@ Environment caveats:
 
 2. **5B Smaller mission and swap mission**
    - Implemented locally 2026-04-21.
-   - Still needs remote migration apply/verification before ship.
+   - Remote migration applied and verified on 2026-04-21.
 
 3. **5C Routine space and fear personalization**
-   - Add `routine_spaces` and `social_fears` to `user_profiles`.
-   - Add profile settings chips.
-   - Update profile action and snapshot mapping.
-   - Feed preferences into `generate-challenges`.
+   - Implemented locally 2026-04-21.
+   - Remote migration applied and verified on 2026-04-21.
 
 ### Still Deferred
 
@@ -155,6 +161,7 @@ Environment caveats:
 - Personalization UI belongs in profile settings first, not onboarding.
 - Retention report visibility is an internal/operator command, not a browser admin page.
 - Mission adjustment should stay deterministic and should not call Gemini in the request path.
+- Profile personalization should use explicit routine-space and social-fear arrays, and fallback mission generation should prefer those selections when present.
 
 ## Tracking Rule
 

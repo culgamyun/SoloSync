@@ -1,5 +1,12 @@
-﻿export type LivingSituation = 'alone' | 'with_partner' | 'with_family' | 'with_roommates';
+export type LivingSituation = 'alone' | 'with_partner' | 'with_family' | 'with_roommates';
 export type ComfortLevel = 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+export type RoutineSpace = 'cafe' | 'convenience_store' | 'gym' | 'beauty_salon' | 'office_building';
+export type SocialFear =
+  | 'being_judged'
+  | 'awkward_silence'
+  | 'feeling_pushy'
+  | 'bothering_busy_people'
+  | 'running_into_the_same_person';
 
 export type RelationshipMap = {
   close_friends: number;

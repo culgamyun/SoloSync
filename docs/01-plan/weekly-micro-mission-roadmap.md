@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Roadmap
 
-Last updated: 2026-04-19
+Last updated: 2026-04-21
 Status: active
 
 ## How To Use This File
@@ -50,6 +50,7 @@ The V1 micro-social mission path is implemented in the existing challenge surfac
 - `public.micro_mission_return_report()` derives the V1 return metric.
 - Playwright e2e runs against a QA auth-bypass dev server on port `3100`.
 - Post-merge QA fixed the coach icon button rendering and accessibility label.
+- Profile settings now store routine spaces and social fears, and challenge generation can use them in Gemini context plus deterministic fallback copy.
 
 See the worklog for detailed execution state.
 
@@ -107,7 +108,7 @@ Acceptance criteria:
 
 ### Slice 5: Phase B Readiness Bundle
 
-Status: planned, next implementation focus.
+Status: implemented locally 2026-04-21. Ship pending.
 
 Plan: `docs/01-plan/features/phase-b-readiness.plan.md`
 
@@ -132,9 +133,11 @@ Sub-slices:
 Already done:
 
 - `micro_mission_return_report()` SQL RPC exists.
-- Remote Supabase migrations were applied and verified.
+- Remote Supabase migrations through `007_profile_personalization.sql` were applied and verified.
 - Sample-data probe returned `failed_or_skipped_users=3`, `returned_next_week_users=2`, and `next_week_return_rate=0.6667`.
 - Playwright e2e passed across desktop and mobile Chromium.
+- Mission adjustments are live in the local app flow and backed by adjustment event logging.
+- Routine-space and social-fear preferences are live in profile settings and feed future challenge generation.
 
 Acceptance criteria:
 
