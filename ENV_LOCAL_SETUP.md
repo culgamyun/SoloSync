@@ -177,3 +177,16 @@ GEMINI_API_KEY=your_gemini_api_key
 GEMINI_MODEL=gemini-2.5-flash
 NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL=https://your-project-ref.supabase.co/functions/v1
 ```
+
+## 7. Preview QA
+
+For repeatable smoke testing on preview deployments:
+
+1. Set `SOLOSYNC_QA_AUTH_BYPASS=true` in the preview environment only.
+2. Run:
+
+```bash
+npm run qa:preview -- --url https://your-preview-url
+```
+
+See `docs/preview-qa-playbook.md` for the full preview QA flow and failure modes.

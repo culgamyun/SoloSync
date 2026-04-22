@@ -149,7 +149,7 @@ Acceptance criteria:
 
 ### Slice 6: Post-Phase-B Learning Loop
 
-Status: active, 6B implemented locally and awaiting review.
+Status: active, 6C implemented locally and awaiting review.
 
 Plan: `docs/01-plan/features/post-phase-b.plan.md`
 
@@ -165,10 +165,12 @@ Sub-slices:
 2. **6B Weekly recovery check-in**
    - Make the next-week comeback experience acknowledge the prior week's outcome.
    - Detailed plan is locked in `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md`.
-   - Implemented locally on `codex/weekly-recovery-checkin`; pending review/merge.
+   - Shipped on `main` 2026-04-23.
 
 3. **6C Preview QA hardening**
    - Make preview verification repeatable enough for fast weekly iteration.
+   - Detailed plan is locked in `docs/01-plan/features/post-phase-b-preview-qa.plan.md`.
+   - Implemented locally on `codex/preview-qa-hardening`; pending review/merge.
 
 Acceptance criteria:
 
