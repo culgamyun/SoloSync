@@ -6,6 +6,12 @@ import {
   getRoutineSpaceLabels,
   getSocialFearLabels
 } from '../../../src/lib/challenges/profile-personalization.ts';
+import {
+  applyRecoverySignalToMissionSeed,
+  buildRecoveryGenerationContext,
+  buildRecoveryWeeklyMessage,
+  deriveRecoverySignal
+} from '../../../src/lib/challenges/recovery-check-in.ts';
 
 const allowedDifficulties = ['easy', 'medium', 'hard'];
 const allowedCategories = ['reach_out', 'deepen', 'explore', 'maintain'];
@@ -32,8 +38,17 @@ type ChallengeGeneration = {
   weekly_message: string;
 };
 
-function fallbackChallenges(locale: string, routineSpaces: string[], socialFears: string[]): ChallengeGeneration {
-  const preferredMicroMission = buildPreferredMicroMissionSeed(locale, routineSpaces, socialFears);
+function fallbackChallenges(
+  locale: string,
+  routineSpaces: string[],
+  socialFears: string[],
+  recoverySignal: Parameters<typeof applyRecoverySignalToMissionSeed>[1]
+): ChallengeGeneration {
+  const preferredMicroMission = applyRecoverySignalToMissionSeed(
+    locale,
+    recoverySignal,
+    buildPreferredMicroMissionSeed(locale, routineSpaces, socialFears)
+  );
 
   return {
     challenges: [
@@ -52,16 +67,16 @@ function fallbackChallenges(locale: string, routineSpaces: string[], socialFears
         reframe: preferredMicroMission.reframe
       },
       {
-        title: locale === 'ko' ? '점심 제안 한 번 하기' : 'Invite one person to lunch',
+        title: locale === 'ko' ? '식사 제안 한 번 해보기' : 'Invite one person to lunch',
         description:
           locale === 'ko'
-            ? '현실에서 만날 수 있는 가벼운 제안을 하나 해보세요.'
+            ? '일상에서 만날 수 있는 가벼운 제안을 하나 시도해보세요.'
             : 'Make one light-weight real-world invitation.',
         difficulty: 'medium',
         category: 'deepen',
         conversation_starters:
           locale === 'ko'
-            ? ['이번 주 점심 같이 할래?', '요즘 프로젝트는 어때?', '주말 계획 있어?']
+            ? ['이번 주 점심 같이 갈래요?', '요즘 프로젝트는 어때요?', '주말 계획 있어요?']
             : ['Want to grab lunch this week?', 'How is the project feeling lately?', 'Any plans for the weekend?'],
         estimated_time: '30min',
         mission_kind: 'standard'
@@ -70,7 +85,7 @@ function fallbackChallenges(locale: string, routineSpaces: string[], socialFears
         title: locale === 'ko' ? '로컬 모임 하나 저장하기' : 'Save one local event',
         description:
           locale === 'ko'
-            ? '현실에서 참여할 수 있는 이벤트를 하나 찾아 저장하세요.'
+            ? '일상에서 참여할 수 있는 이벤트를 하나 찾아 저장해보세요.'
             : 'Find one local event you could realistically attend and save it.',
         difficulty: 'easy',
         category: 'explore',
@@ -82,10 +97,7 @@ function fallbackChallenges(locale: string, routineSpaces: string[], socialFears
         mission_kind: 'standard'
       }
     ],
-    weekly_message:
-      locale === 'ko'
-        ? '이번 주에는 적은 수의 행동을 확실히 해내는 데 집중해 봅시다.'
-        : 'This week, focus on doing a small number of actions with intention.'
+    weekly_message: buildRecoveryWeeklyMessage(locale, recoverySignal)
   };
 }
 
@@ -138,27 +150,79 @@ function normalizeChallenge(candidate: unknown, fallback: ReturnType<typeof fall
 }
 
 async function createChallengesForUser(supabase: ReturnType<typeof createServiceClient>, userId: string, locale: string, timezone: string) {
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('routine_spaces, social_fears')
-    .eq('user_id', userId)
-    .maybeSingle();
+  const weekStartDate = weekStartForTimezone(timezone);
+
+  const [{ data: profile }, { data: previousMicroMission }] = await Promise.all([
+    supabase
+      .from('user_profiles')
+      .select('routine_spaces, social_fears')
+      .eq('user_id', userId)
+      .maybeSingle(),
+    supabase
+      .from('challenges')
+      .select('id, status')
+      .eq('user_id', userId)
+      .eq('mission_kind', 'micro_social')
+      .lt('week_start_date', weekStartDate)
+      .order('week_start_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+  ]);
+
   const routineSpaces = profile?.routine_spaces ?? [];
   const socialFears = profile?.social_fears ?? [];
-  const fallback = fallbackChallenges(locale, routineSpaces, socialFears);
+
+  let previousOutcome: string | null = null;
+  let previousAdjustmentCount = 0;
+
+  if (previousMicroMission) {
+    const [previousReflectionResult, previousAdjustmentCountResult] = await Promise.all([
+      supabase
+        .from('challenge_reflections')
+        .select('outcome')
+        .eq('challenge_id', previousMicroMission.id)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('challenge_mission_adjustments')
+        .select('id', { count: 'exact', head: true })
+        .eq('challenge_id', previousMicroMission.id)
+        .eq('user_id', userId)
+    ]);
+
+    previousOutcome = previousReflectionResult.data?.outcome ?? null;
+    previousAdjustmentCount = previousAdjustmentCountResult.count ?? 0;
+  }
+
+  const recoverySignal = deriveRecoverySignal({
+    previousStatus: previousMicroMission?.status ?? null,
+    previousOutcome,
+    adjustmentCount: previousAdjustmentCount
+  });
+  const recoveryContext = buildRecoveryGenerationContext(locale, recoverySignal);
+  const fallback = fallbackChallenges(locale, routineSpaces, socialFears, recoverySignal);
   const context = {
     userId,
     locale,
     timezone,
     routine_spaces: getRoutineSpaceLabels(locale, routineSpaces),
-    social_fears: getSocialFearLabels(locale, socialFears)
+    social_fears: getSocialFearLabels(locale, socialFears),
+    last_week_signal: recoverySignal,
+    last_week_signal_label: recoveryContext.label,
+    last_week_guidance: recoveryContext.guidance,
+    last_week_status: previousMicroMission?.status ?? null,
+    last_week_outcome: previousOutcome,
+    last_week_adjustment_count: previousAdjustmentCount
   };
   const generated = await generateJson(
-    'You are SoloSync\'s challenge generator. Return JSON with challenges and weekly_message.',
+    "You are SoloSync's challenge generator. Return JSON with challenges and weekly_message.",
     context,
     fallback
   );
-  const weekStartDate = weekStartForTimezone(timezone);
+
   const weekNumber = Number(weekStartDate.slice(5, 7)) * 4;
   const generatedChallenges = Array.isArray(generated.challenges) ? generated.challenges : [];
   const challenges = fallback.challenges.map((fallbackChallenge, index) => normalizeChallenge(generatedChallenges[index], fallbackChallenge));

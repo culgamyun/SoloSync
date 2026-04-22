@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Worklog
 
-Last updated: 2026-04-22
+Last updated: 2026-04-23
 
 ## How To Resume
 
@@ -23,9 +23,9 @@ Related documents:
 
 ## Current Slice Status
 
-Active slice: Slice 6A implementation, Post-Phase-B Analytics Layer.
+Active slice: Slice 6B implemented locally, Weekly recovery check-in.
 
-Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied on the working branch.
+Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied.
 
 Implementation order is locked:
 
@@ -33,7 +33,7 @@ Implementation order is locked:
 2. **5B Smaller mission and swap mission** - merged to `main` 2026-04-22
 3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
 
-Slice 6A is implemented locally on `codex/phase-b-analytics` and verified. The next implementation work after merge should move to 6B Weekly recovery check-in.
+Slice 6A is merged. Slice 6B Weekly recovery check-in is implemented and verified locally on `codex/weekly-recovery-checkin`, pending review/merge.
 
 ## Implemented
 
@@ -100,6 +100,15 @@ Slice 6A is implemented locally on `codex/phase-b-analytics` and verified. The n
   - `npm run report:micro-missions` restores the documented micro-mission return-only report entrypoint.
   - The report scripts accept `--week=YYYY-MM-DD` and `--json`.
   - Live execution against the connected dataset currently returns empty-state tables, confirming the path works even with no qualifying rows.
+- Slice 6B planning started on 2026-04-23.
+  - `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md` locks the intended shape.
+  - The current plan is to reuse previous challenge/reflection/adjustment data rather than add a new table.
+- Slice 6B weekly recovery check-in was implemented locally on 2026-04-23.
+  - `src/lib/challenges/recovery-check-in.ts` derives prior-week recovery signals and shared copy for app plus edge generation.
+  - `src/lib/server/app-data.ts` loads the prior micro-mission, latest reflection outcome, and adjustment count to build a recovery card on Home.
+  - `src/app/[locale]/(main)/home/page.tsx` now shows the recovery check-in card and reuses recovery-specific copy in the weekly check-in form.
+  - `supabase/functions/generate-challenges/index.ts` now passes prior-week recovery context into Gemini and adjusts deterministic fallbacks.
+  - `tests/unit/recovery-check-in.test.ts` and `tests/e2e/smoke.spec.ts` cover the new recovery behavior.
 
 ## Verification Status
 
@@ -110,7 +119,7 @@ Recent passing checks:
 - `npm run test`
 - `npm run check`
 - `npm run build`
-- `npm run test:e2e`
+- `npx playwright test tests/e2e/smoke.spec.ts --project=chromium`
 - `git diff --check`
 - `npx supabase db push`
 - `npm run report:phase-b -- --week=2026-04-20`
@@ -137,15 +146,12 @@ Environment caveats:
 
 ### Ready To Implement
 
-1. **6A Post-Phase-B analytics layer**
-   - Detailed plan written in `docs/01-plan/features/post-phase-b-analytics.plan.md`.
-   - Implemented locally on `codex/phase-b-analytics`.
-   - Includes SQL RPCs, CLI report runner, test scope, and the restored report script entrypoints.
+1. **6B Weekly recovery check-in**
+   - Detailed plan written in `docs/01-plan/features/post-phase-b-recovery-checkin.plan.md`.
+   - Implemented locally on `codex/weekly-recovery-checkin`.
+   - Pending review/merge.
 
-2. **6B Weekly recovery check-in**
-   - Design the next-week comeback flow so it acknowledges the previous week's outcome.
-
-3. **6C Preview QA hardening**
+2. **6C Preview QA hardening**
    - Make preview verification documented and repeatable beyond local QA bypass flows.
 
 ### Still Deferred

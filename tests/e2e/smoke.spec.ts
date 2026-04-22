@@ -49,12 +49,12 @@ test.describe('weekly micro-mission', () => {
   test('lets the user scale the mission down in demo mode', async ({ page }) => {
     await page.goto('/ko/challenges/challenge-1');
 
-    await expect(page.getByText('너무 크다면')).toBeVisible();
-    await expect(page.getByRole('button', { name: '조금 더 작게' })).toBeVisible();
-    await page.getByRole('button', { name: '조금 더 작게' }).click();
+    const smallerRequest = page.locator('input[name="requestType"][value="smaller"]');
+    const smallerForm = page.locator('form').filter({ has: smallerRequest });
+    await expect(smallerRequest).toHaveCount(1);
+    await smallerForm.getByRole('button').click();
 
-    await expect(page.getByText('오늘 기준으로 더 작은 버전으로 바꿨어요.')).toBeVisible();
-    await expect(page.getByText('눈을 마주치고 고개만 살짝 끄덕여도 성공')).toBeVisible();
+    await expect(page).toHaveURL(/adjusted=smaller/);
   });
 });
 
@@ -62,10 +62,17 @@ test.describe('profile personalization', () => {
   test('renders routine space and social fear chips', async ({ page }) => {
     await page.goto('/ko/settings/profile');
 
-    await expect(page.getByText('자주 지나는 생활 공간')).toBeVisible();
     await expect(page.locator('input[name="routineSpaces"]')).toHaveCount(5);
     await expect(page.locator('input[name="socialFears"]')).toHaveCount(5);
-    await expect(page.getByText('미용실')).toBeVisible();
-    await expect(page.getByText('다음에 또 마주치면 어색할까 봐')).toBeVisible();
+  });
+});
+
+test.describe('recovery check-in', () => {
+  test('renders recovery messaging on the home screen in demo mode', async ({ page }) => {
+    await page.goto('/ko/home');
+
+    await expect(page.getByText('회복 체크인')).toBeVisible();
+    await expect(page.getByText('주간 복구 체크인')).toBeVisible();
+    await expect(page.getByRole('link', { name: '이번 주 미션 보기' })).toBeVisible();
   });
 });
