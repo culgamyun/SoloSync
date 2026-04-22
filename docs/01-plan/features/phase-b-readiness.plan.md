@@ -1,7 +1,7 @@
 # Phase B Readiness Implementation Plan
 
-Last updated: 2026-04-21
-Status: implemented locally, ready to ship
+Last updated: 2026-04-22
+Status: shipped on `main`
 
 ## Goal
 
