@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { QA_AUTH_BYPASS_COOKIE } from '@/lib/env';
+import { isQaAuthBypassEnabled, QA_AUTH_BYPASS_COOKIE } from '@/lib/env';
 
 function getSafeRedirectTarget(request: NextRequest) {
   const target = request.nextUrl.searchParams.get('next') ?? '/ko/home';
@@ -11,8 +11,12 @@ function getSafeRedirectTarget(request: NextRequest) {
   return new URL(target, request.url);
 }
 
+function isSecureRequest(request: NextRequest) {
+  return request.nextUrl.protocol === 'https:';
+}
+
 export function GET(request: NextRequest) {
-  if (process.env.NODE_ENV === 'production') {
+  if (!isQaAuthBypassEnabled()) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
@@ -21,14 +25,15 @@ export function GET(request: NextRequest) {
     httpOnly: true,
     maxAge: 60 * 60 * 8,
     path: '/',
-    sameSite: 'lax'
+    sameSite: 'lax',
+    secure: isSecureRequest(request)
   });
 
   return response;
 }
 
-export function DELETE() {
-  if (process.env.NODE_ENV === 'production') {
+export function DELETE(request: NextRequest) {
+  if (!isQaAuthBypassEnabled()) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
@@ -37,7 +42,8 @@ export function DELETE() {
     httpOnly: true,
     maxAge: 0,
     path: '/',
-    sameSite: 'lax'
+    sameSite: 'lax',
+    secure: isSecureRequest(request)
   });
 
   return response;

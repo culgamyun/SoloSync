@@ -40,6 +40,8 @@ See `ENV_LOCAL_SETUP.md` for the full local environment guide.
 - `npm run dev` - start the local Next.js server.
 - `npm run check` - run lint, typecheck, and unit tests.
 - `npm run test:e2e` - run Playwright against a QA auth-bypass dev server on port 3100.
+- `npm run test:e2e:smoke` - run the stable local Chromium smoke flow.
+- `npm run qa:preview -- --url https://...` - run the smoke flow against a preview URL.
 - `npm run build` - create a production Next.js build.
 
 ## Key Paths
@@ -60,10 +62,12 @@ See `ENV_LOCAL_SETUP.md` for the full local environment guide.
 - `docs/weekly-micro-mission-worklog.md` - current execution state and backlog.
 - `docs/01-plan/features/weekly-micro-mission-v1.plan.md` - implementation plan and engineering decisions.
 - `docs/checkpoints/` - dated handoff snapshots.
+- `docs/preview-qa-playbook.md` - repeatable local and preview QA flow.
 
 ## Notes
 
 - When Supabase env vars are absent, the app falls back to demo data so the UI can still be explored.
 - Set `SOLOSYNC_QA_AUTH_BYPASS=true` only in local/test environments. Production rejects the bypass route.
+- Preview smoke can also use `SOLOSYNC_QA_AUTH_BYPASS=true`, but only on preview deployments, never on real production.
 - Apple auth is feature-gated via `NEXT_PUBLIC_ENABLE_APPLE_AUTH`.
 - Push notifications require valid VAPID keys and a deployed service worker.
