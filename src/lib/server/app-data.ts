@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { startOfWeek, subWeeks } from 'date-fns';
 
 import { isSupabaseConfigured } from '@/lib/env';
+import { buildRecoveryCheckInCard } from '@/lib/challenges/recovery-check-in';
 import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 import { calculateBreakdown, sumBreakdown } from '@/lib/utils/score';
@@ -90,6 +91,14 @@ const demoMessages: CoachMessage[] = [
     createdAt: new Date().toISOString()
   }
 ];
+
+const demoRecoveryCheckIn = buildRecoveryCheckInCard('ko', {
+  previousStatus: 'skipped',
+  previousOutcome: 'could_not_do_it',
+  adjustmentCount: 1,
+  currentChallengeId: demoChallenges[0].id,
+  currentChallengeTitle: demoChallenges[0].title
+});
 
 function mapChallenge(row: Database['public']['Tables']['challenges']['Row']): ChallengeRecord {
   return {
@@ -180,6 +189,7 @@ export const getHomeSnapshot = cache(async () => {
       ],
       streak: { current: 3, longest: 8, xp: 720, level: getLevelFromXp(720) },
       challenges: demoChallenges,
+      recoveryCheckIn: demoRecoveryCheckIn,
       weeklyCheckIn: { satisfaction: 4, energy: 3, note: '주중에는 괜찮았지만 주말 약속은 미뤘어요.' }
     };
   }
@@ -187,7 +197,7 @@ export const getHomeSnapshot = cache(async () => {
   const supabase = await createClient();
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString();
 
-  const [scoreResult, historyResult, challengeResult, streakResult, checkInResult] = await Promise.all([
+  const [scoreResult, historyResult, challengeResult, previousMicroMissionResult, streakResult, checkInResult] = await Promise.all([
     supabase
       .from('social_health_scores')
       .select('*')
@@ -207,9 +217,55 @@ export const getHomeSnapshot = cache(async () => {
       .eq('user_id', viewer.id)
       .eq('week_start_date', weekStart)
       .order('created_at', { ascending: true }),
+    supabase
+      .from('challenges')
+      .select('*')
+      .eq('user_id', viewer.id)
+      .eq('mission_kind', 'micro_social')
+      .lt('week_start_date', weekStart)
+      .order('week_start_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
     supabase.from('streaks').select('*').eq('user_id', viewer.id).maybeSingle(),
     supabase.from('weekly_check_ins').select('*').eq('user_id', viewer.id).eq('week_start_date', weekStart).maybeSingle()
   ]);
+
+  const currentChallenges = (challengeResult.data ?? []).map(mapChallenge);
+  const currentMicroMission = currentChallenges.find((challenge: ChallengeRecord) => challenge.missionKind === 'micro_social') ?? null;
+  const previousMicroMission = previousMicroMissionResult.data ?? null;
+
+  let previousOutcome: Database['public']['Tables']['challenge_reflections']['Row']['outcome'] = null;
+  let previousAdjustmentCount = 0;
+
+  if (previousMicroMission) {
+    const [previousReflectionResult, previousAdjustmentCountResult] = await Promise.all([
+      supabase
+        .from('challenge_reflections')
+        .select('outcome')
+        .eq('challenge_id', previousMicroMission.id)
+        .eq('user_id', viewer.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('challenge_mission_adjustments')
+        .select('id', { count: 'exact', head: true })
+        .eq('challenge_id', previousMicroMission.id)
+        .eq('user_id', viewer.id)
+    ]);
+
+    previousOutcome = previousReflectionResult.data?.outcome ?? null;
+    previousAdjustmentCount = previousAdjustmentCountResult.count ?? 0;
+  }
+
+  const recoveryCheckIn = buildRecoveryCheckInCard(viewer.locale, {
+    previousStatus: previousMicroMission?.status ?? null,
+    previousOutcome,
+    adjustmentCount: previousAdjustmentCount,
+    currentChallengeId: currentMicroMission?.id ?? null,
+    currentChallengeTitle: currentMicroMission?.title ?? null
+  });
 
   return {
     viewer,
@@ -226,7 +282,8 @@ export const getHomeSnapshot = cache(async () => {
       xp: streakResult.data?.xp ?? 0,
       level: getLevelFromXp(streakResult.data?.xp ?? 0)
     },
-    challenges: (challengeResult.data ?? []).map(mapChallenge),
+    challenges: currentChallenges,
+    recoveryCheckIn,
     weeklyCheckIn: checkInResult.data
       ? {
           satisfaction: checkInResult.data.satisfaction_score,
