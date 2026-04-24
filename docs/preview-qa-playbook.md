@@ -42,6 +42,8 @@ SOLOSYNC_QA_AUTH_BYPASS=true
 npm run qa:preview -- --url https://your-preview-url
 ```
 
+If the preview is protected by Vercel Authentication, use the shared preview URL with the `_vercel_share=...` query string. The smoke bootstrap will visit that URL once to establish the Vercel protection cookie before hitting the QA bypass route.
+
 Optional flags:
 
 - `--project mobile-chrome`
@@ -55,6 +57,7 @@ Examples:
 npm run qa:preview -- --url https://solosync-git-branch-user.vercel.app
 npm run qa:preview -- --url https://solosync-git-branch-user.vercel.app --project mobile-chrome
 npm run qa:preview -- --url https://solosync-git-branch-user.vercel.app --project all
+npm run qa:preview -- --url "https://solosync-git-branch-user.vercel.app?_vercel_share=..."
 ```
 
 ## Expected Failure Modes

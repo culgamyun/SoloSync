@@ -5,6 +5,7 @@ dist
 node_modules
 playwright-report
 test-results
+.env
 .env.local
 .env*.local
 supabase/.temp

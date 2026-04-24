@@ -12,9 +12,21 @@ export default async function globalSetup() {
 
   const port = process.env.PLAYWRIGHT_PORT ?? '3100';
   const baseURL = process.env.PLAYWRIGHT_BASE_URL?.trim() || `http://127.0.0.1:${port}`;
+  const parsedBaseUrl = new URL(baseURL);
   const requestContext = await request.newContext({ baseURL });
 
   try {
+    if (parsedBaseUrl.searchParams.has('_vercel_share')) {
+      const protectionResponse = await requestContext.get(baseURL);
+
+      if (!protectionResponse.ok()) {
+        throw new Error(
+          `Preview protection bootstrap failed with ${protectionResponse.status()} for ${baseURL}. ` +
+            'Make sure the shared Vercel preview URL is still valid before running preview smoke.'
+        );
+      }
+    }
+
     const response = await requestContext.get('/api/qa/auth-bypass?next=/ko/home');
 
     if (!response.ok()) {
