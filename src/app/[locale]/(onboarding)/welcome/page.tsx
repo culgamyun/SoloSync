@@ -49,7 +49,12 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
           <div className='flex h-11 w-11 items-center justify-center rounded-lg bg-primary shadow-ambient'>
             <ConnectionPathMark className='h-8 w-8' inverted />
           </div>
-          <span className='font-display text-[1.85rem] font-bold'>SoloSync</span>
+          <img
+            src='/icons/solosync-wordmark.svg'
+            alt='SoloSync'
+            className='h-9 w-[155px]'
+            draggable={false}
+          />
         </div>
 
         <div className='mx-auto mt-10 flex h-[248px] w-full max-w-[320px] items-center justify-center'>
