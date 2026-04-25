@@ -1,9 +1,35 @@
-import Image from 'next/image';
-import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { AppShell } from '@/components/common/app-shell';
+
+function ConnectionPathMark({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      viewBox='0 0 240 240'
+      role='img'
+      aria-label='SoloSync'
+      className={className}
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <circle cx='76' cy='82' r='22' fill='#73A8EE' />
+      <rect x='54' y='108' width='44' height='68' rx='22' fill='#126B5A' />
+      <circle cx='164' cy='82' r='22' fill='#C05A4E' />
+      <rect x='142' y='108' width='44' height='68' rx='22' fill='#24302D' />
+      <path
+        d='M91 147C109 128 132 128 150 147'
+        stroke='#126B5A'
+        strokeWidth='10'
+        strokeLinecap='round'
+      />
+      <circle cx='104' cy='139' r='5' fill='#F7FAF6' />
+      <circle cx='120' cy='135' r='5' fill='#F7FAF6' />
+      <circle cx='136' cy='139' r='5' fill='#F7FAF6' />
+    </svg>
+  );
+}
 
 export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -16,27 +42,14 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
     >
       <section className='relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-6 pb-6 pt-6'>
         <div className='flex items-center justify-center gap-3 text-primary'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-reflection/25'>
-            <Sparkles className='h-5 w-5' />
+          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-surface-high shadow-ambient'>
+            <ConnectionPathMark className='h-8 w-8' />
           </div>
           <span className='font-display text-[1.85rem] font-bold'>SoloSync</span>
         </div>
 
-        <div className='relative mx-auto mt-7 w-full max-w-[320px]'>
-          <div className='relative z-10 h-[292px] overflow-hidden rounded-lg border border-line bg-surface-high shadow-float md:h-[320px]'>
-            <Image
-              src='/images/welcome-social-moment-isometric.webp'
-              alt={
-                locale === 'ko'
-                  ? '카페에서 직원에게 가볍게 인사하며 커피를 받는 장면'
-                  : 'A small greeting while receiving coffee at a cafe counter'
-              }
-              fill
-              priority
-              sizes='(max-width: 430px) 82vw, 320px'
-              className='object-cover object-[50%_45%]'
-            />
-          </div>
+        <div className='mx-auto mt-10 flex h-[248px] w-full max-w-[320px] items-center justify-center'>
+          <ConnectionPathMark className='h-full w-full drop-shadow-[0_18px_32px_rgba(18,107,90,0.12)]' />
         </div>
 
         <div className='mt-8 text-center'>
