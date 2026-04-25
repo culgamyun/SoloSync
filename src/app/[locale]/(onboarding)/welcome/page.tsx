@@ -1,4 +1,5 @@
-import { ArrowRight, Coffee, MessageCircle, ShieldCheck, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -25,61 +26,19 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
           <div className='absolute -left-4 top-5 h-16 w-16 rounded-lg bg-reflection/85 shadow-ambient' />
           <div className='absolute -right-3 bottom-7 h-14 w-14 rounded-lg border border-line bg-observation/30 shadow-ambient' />
 
-          <div className='relative z-10 rounded-lg border border-line bg-surface-high p-3.5 shadow-float'>
-            <div className='flex items-center justify-between gap-3'>
-              <div className='flex items-center gap-2'>
-                <span className='flex h-9 w-9 items-center justify-center rounded-lg bg-surface-soft text-primary'>
-                  <Coffee className='h-5 w-5' />
-                </span>
-                <div>
-                  <p className='text-xs font-semibold text-muted-foreground'>
-                    {locale === 'ko' ? '이번 주 작은 접촉' : 'This week'}
-                  </p>
-                  <p className='font-data text-[11px] font-semibold text-primary'>10 MIN</p>
-                </div>
-              </div>
-              <span className='rounded-md bg-observation/20 px-2.5 py-1 font-data text-[11px] font-semibold text-secondary-foreground'>
-                +50 XP
-              </span>
-            </div>
-
-            <div className='mt-4 space-y-2.5'>
-              <h2 className='text-[1.3rem] font-bold leading-tight text-foreground [word-break:keep-all]'>
-                {locale === 'ko'
-                  ? '단골 카페에서 눈 마주치고 인사하기'
-                  : 'Make eye contact and say hello at a familiar cafe'}
-              </h2>
-              <p className='text-[0.92rem] leading-6 text-muted-foreground [word-break:keep-all]'>
-                {locale === 'ko'
-                  ? '이미 지나치는 생활 공간에서 20초짜리 접촉 하나만 만들어봐요.'
-                  : 'Try one 20-second contact in a place already inside your routine.'}
-              </p>
-            </div>
-
-            <div className='mt-4 rounded-lg border border-line bg-surface-soft p-2.5'>
-              <div className='flex items-start gap-2 text-primary'>
-                <MessageCircle className='mt-0.5 h-4 w-4 shrink-0' />
-                <p className='text-sm font-semibold leading-5 text-foreground [word-break:keep-all]'>
-                  {locale === 'ko'
-                    ? '“안녕하세요. 오늘도 늦게까지 하시네요.”'
-                    : '"Hi. You are open late today, too."'}
-                </p>
-              </div>
-            </div>
-
-            <div className='mt-3 flex flex-wrap gap-2'>
-              {(locale === 'ko'
-                ? ['작은 접촉', '가볍게', '눈 마주치면 성공']
-                : ['Small contact', 'Light', 'Eye contact counts']
-              ).map((label) => (
-                <span
-                  key={label}
-                  className='whitespace-nowrap rounded-md border border-line bg-white px-2.5 py-1 text-xs font-semibold text-muted-foreground'
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
+          <div className='relative z-10 h-[292px] overflow-hidden rounded-lg border border-line bg-surface-high shadow-float md:h-[320px]'>
+            <Image
+              src='/images/welcome-social-moment-isometric.webp'
+              alt={
+                locale === 'ko'
+                  ? '카페에서 직원에게 가볍게 인사하며 커피를 받는 장면'
+                  : 'A small greeting while receiving coffee at a cafe counter'
+              }
+              fill
+              priority
+              sizes='(max-width: 430px) 82vw, 320px'
+              className='object-cover object-[50%_45%]'
+            />
           </div>
         </div>
 
