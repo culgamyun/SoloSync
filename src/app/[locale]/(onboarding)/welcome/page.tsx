@@ -23,9 +23,6 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
         </div>
 
         <div className='relative mx-auto mt-7 w-full max-w-[320px]'>
-          <div className='absolute -left-4 top-5 h-16 w-16 rounded-lg bg-reflection/85 shadow-ambient' />
-          <div className='absolute -right-3 bottom-7 h-14 w-14 rounded-lg border border-line bg-observation/30 shadow-ambient' />
-
           <div className='relative z-10 h-[292px] overflow-hidden rounded-lg border border-line bg-surface-high shadow-float md:h-[320px]'>
             <Image
               src='/images/welcome-social-moment-isometric.webp'
