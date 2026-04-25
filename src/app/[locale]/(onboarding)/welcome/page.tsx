@@ -4,7 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { AppShell } from '@/components/common/app-shell';
 
-function ConnectionPathMark({ className = '' }: { className?: string }) {
+function ConnectionPathMark({
+  className = '',
+  inverted = false,
+}: {
+  className?: string;
+  inverted?: boolean;
+}) {
+  const strokeColor = inverted ? '#F7FAF6' : '#126B5A';
+
   return (
     <svg
       viewBox='0 0 240 240'
@@ -14,19 +22,15 @@ function ConnectionPathMark({ className = '' }: { className?: string }) {
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
     >
-      <circle cx='76' cy='82' r='22' fill='#73A8EE' />
-      <rect x='54' y='108' width='44' height='68' rx='22' fill='#126B5A' />
-      <circle cx='164' cy='82' r='22' fill='#C05A4E' />
-      <rect x='142' y='108' width='44' height='68' rx='22' fill='#24302D' />
       <path
-        d='M91 147C109 128 132 128 150 147'
-        stroke='#126B5A'
-        strokeWidth='10'
+        d='M146 41C120 39 94 49 86 69C76 93 98 106 121 113C146 121 160 136 151 161C143 184 118 196 91 198'
+        stroke={strokeColor}
+        strokeWidth='21'
         strokeLinecap='round'
+        strokeLinejoin='round'
       />
-      <circle cx='104' cy='139' r='5' fill='#F7FAF6' />
-      <circle cx='120' cy='135' r='5' fill='#F7FAF6' />
-      <circle cx='136' cy='139' r='5' fill='#F7FAF6' />
+      <circle cx='165' cy='43' r='13' fill='#EE6B5F' />
+      <circle cx='74' cy='197' r='13' fill='#73A8EE' />
     </svg>
   );
 }
@@ -42,14 +46,14 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
     >
       <section className='relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-6 pb-6 pt-6'>
         <div className='flex items-center justify-center gap-3 text-primary'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-surface-high shadow-ambient'>
-            <ConnectionPathMark className='h-8 w-8' />
+          <div className='flex h-11 w-11 items-center justify-center rounded-lg bg-primary shadow-ambient'>
+            <ConnectionPathMark className='h-8 w-8' inverted />
           </div>
           <span className='font-display text-[1.85rem] font-bold'>SoloSync</span>
         </div>
 
         <div className='mx-auto mt-10 flex h-[248px] w-full max-w-[320px] items-center justify-center'>
-          <ConnectionPathMark className='h-full w-full drop-shadow-[0_18px_32px_rgba(18,107,90,0.12)]' />
+          <ConnectionPathMark className='h-[220px] w-[220px] drop-shadow-[0_18px_32px_rgba(18,107,90,0.12)]' />
         </div>
 
         <div className='mt-8 text-center'>
