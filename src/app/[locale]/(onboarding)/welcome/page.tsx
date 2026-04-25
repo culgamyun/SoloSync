@@ -1,39 +1,9 @@
+import Image from 'next/image';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { AppShell } from '@/components/common/app-shell';
-
-function ConnectionPathMark({
-  className = '',
-  inverted = false,
-}: {
-  className?: string;
-  inverted?: boolean;
-}) {
-  const strokeColor = inverted ? '#F7FAF6' : '#126B5A';
-
-  return (
-    <svg
-      viewBox='0 0 240 240'
-      role='img'
-      aria-label='SoloSync'
-      className={className}
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
-      <path
-        d='M146 41C120 39 94 49 86 69C76 93 98 106 121 113C146 121 160 136 151 161C143 184 118 196 91 198'
-        stroke={strokeColor}
-        strokeWidth='21'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-      <circle cx='165' cy='43' r='13' fill='#EE6B5F' />
-      <circle cx='74' cy='197' r='13' fill='#73A8EE' />
-    </svg>
-  );
-}
 
 export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -45,20 +15,26 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
       surfaceClassName='max-w-none border-x-0 md:my-0 md:min-h-screen md:rounded-none md:border-0 md:shadow-none md:overflow-visible'
     >
       <section className='relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-6 pb-6 pt-6'>
-        <div className='flex items-center justify-center gap-3 text-primary'>
-          <div className='flex h-11 w-11 items-center justify-center rounded-lg bg-primary shadow-ambient'>
-            <ConnectionPathMark className='h-8 w-8' inverted />
-          </div>
-          <img
-            src='/icons/solosync-wordmark.svg'
+        <div className='flex items-center justify-center'>
+          <Image
+            src='/images/solosync-logo-lockup-imagegen-alpha.png'
             alt='SoloSync'
-            className='h-9 w-[155px]'
-            draggable={false}
+            width={900}
+            height={285}
+            priority
+            className='h-auto w-[220px]'
           />
         </div>
 
         <div className='mx-auto mt-10 flex h-[248px] w-full max-w-[320px] items-center justify-center'>
-          <ConnectionPathMark className='h-[220px] w-[220px] drop-shadow-[0_18px_32px_rgba(18,107,90,0.12)]' />
+          <Image
+            src='/images/solosync-symbol-imagegen-alpha.png'
+            alt=''
+            width={520}
+            height={520}
+            priority
+            className='h-[220px] w-[220px] rounded-lg'
+          />
         </div>
 
         <div className='mt-8 text-center'>
