@@ -41,7 +41,7 @@ export default async function ChallengesPage({
         <p className='font-data text-[12px] font-bold tracking-normal text-primary/80'>
           {locale === 'ko' ? '성장을 위한 발걸음' : 'Practical momentum'}
         </p>
-        <h1 className='mt-3 whitespace-pre-line text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
+        <h1 className='mt-3 whitespace-pre-line break-keep text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
           {locale === 'ko' ? `${displayName}님의\n새로운 도전들` : 'Your next real-world\nchallenges'}
         </h1>
         <div className='editorial-rule' />
@@ -55,7 +55,7 @@ export default async function ChallengesPage({
               key={filter.key}
               href={filter.key === 'current' ? '/challenges' : `/challenges?status=${filter.key}`}
               className={cn(
-                'rounded-md border px-5 py-3 text-sm font-bold transition',
+                'whitespace-nowrap rounded-md border px-5 py-3 text-sm font-bold transition',
                 active
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-line bg-surface-high text-muted-foreground hover:bg-surface-low'
@@ -77,7 +77,7 @@ export default async function ChallengesPage({
           <p className='font-data text-[11px] font-bold uppercase tracking-normal text-white/60'>
             {locale === 'ko' ? '다음 연결 추천' : 'Next move'}
           </p>
-          <h2 className='mt-3 max-w-[12rem] whitespace-pre-line font-display text-[1.8rem] font-bold leading-[1.04] tracking-normal'>
+          <h2 className='mt-3 max-w-[12rem] whitespace-pre-line break-keep font-display text-[1.8rem] font-bold leading-[1.04] tracking-normal'>
             {locale === 'ko' ? '함께 성장하는\n솔로들의 챌린지 엿보기' : 'See what the coach\nsuggests next'}
           </h2>
           <Button asChild variant='secondary' className='mt-6 bg-white/18 text-white hover:bg-white/24'>

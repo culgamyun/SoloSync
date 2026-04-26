@@ -28,7 +28,7 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
         <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
           {language === 'ko' ? '설정' : 'Settings'}
         </p>
-        <h1 className='mt-3 font-display text-[2.2rem] font-bold tracking-normal'>
+        <h1 className='mt-3 break-keep font-display text-[2.2rem] font-bold tracking-normal'>
           {language === 'ko' ? '환경과 보호 설정' : 'Preferences and safety'}
         </h1>
       </section>

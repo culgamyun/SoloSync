@@ -1,6 +1,7 @@
-import { ShieldCheck, Sparkles } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 import { AppShell } from '@/components/common/app-shell';
+import { BrandLogo } from '@/components/common/brand-logo';
 import { OauthButtons } from '@/components/common/oauth-buttons';
 
 export default async function LoginPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -9,13 +10,12 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
   return (
     <AppShell padded={false} tabBarInset={false}>
       <section className='flex min-h-screen flex-col px-6 pb-10 pt-10'>
-        <div className='mx-auto flex h-14 w-14 items-center justify-center rounded-[1.6rem] bg-peach/60 text-primary shadow-ambient'>
-          <Sparkles className='h-6 w-6' />
+        <div className='flex justify-center'>
+          <BrandLogo priority className='w-[220px]' />
         </div>
         <div className='mt-10 text-center'>
-          <p className='text-[11px] font-semibold uppercase tracking-[0.24em] text-primary/70'>SoloSync</p>
-          <h1 className='text-balance mt-4 font-display text-[2.65rem] font-bold leading-[1.02] tracking-[-0.05em]'>
-            {locale === 'ko' ? '기분 좋은 관계 루틴을 시작해요' : 'Start a calmer rhythm for real connection'}
+          <h1 className='mx-auto max-w-[18rem] break-keep font-display text-[2.45rem] font-bold leading-[1.08] tracking-normal'>
+            {locale === 'ko' ? '건강한 관계 루틴의 시작' : 'Start a healthier relationship routine'}
           </h1>
           <p className='mx-auto mt-5 max-w-[19rem] text-[15px] leading-7 text-muted-foreground'>
             {locale === 'ko'

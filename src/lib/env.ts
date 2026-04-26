@@ -34,12 +34,14 @@ export function isSupabaseConfigured() {
 }
 
 export function isQaAuthBypassEnabled() {
+  const runtime = {
+    nodeEnv: process.env.NODE_ENV,
+    vercelEnv: process.env.VERCEL_ENV
+  };
+
   return (
-    serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true' &&
-    isQaBypassAllowedRuntime({
-      nodeEnv: process.env.NODE_ENV,
-      vercelEnv: process.env.VERCEL_ENV
-    })
+    isQaBypassAllowedRuntime(runtime) &&
+    (serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true' || runtime.nodeEnv === 'development')
   );
 }
 

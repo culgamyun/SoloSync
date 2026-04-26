@@ -25,7 +25,7 @@ export default async function ProgressPage({ params }: { params: Promise<{ local
         <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
           {locale === 'ko' ? '나의 여정' : 'My journey'}
         </p>
-        <h1 className='mt-3 whitespace-pre-line text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
+        <h1 className='mt-3 whitespace-pre-line break-keep text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
           {locale === 'ko' ? `반가워요,\n${displayName}님의 성장` : 'A calmer view of\nyour growth'}
         </h1>
         <div className='editorial-rule' />
@@ -35,7 +35,7 @@ export default async function ProgressPage({ params }: { params: Promise<{ local
         <div className='flex items-start justify-between gap-4'>
           <div>
             <p className='text-sm text-muted-foreground'>{locale === 'ko' ? '현재 점수' : 'Current score'}</p>
-            <p className='mt-2 font-display text-[2.4rem] font-bold tracking-[-0.05em]'>{snapshot.latestScore}점</p>
+            <p className='mt-2 font-display text-[2.4rem] font-bold tracking-normal'>{snapshot.latestScore}점</p>
           </div>
           <span className='rounded bg-reflection/10 px-3 py-1 font-data text-[11px] font-bold text-reflection'>
             {locale === 'ko' ? '상위 15%' : 'Top 15%'}

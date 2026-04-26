@@ -23,7 +23,7 @@ export function SectionHeading({
       <div className={cn('space-y-2', size === 'hero' && 'editorial-rule')}>
         <h2
           className={cn(
-            'text-balance font-display font-bold tracking-[-0.03em] text-foreground',
+            'break-keep text-balance font-display font-bold tracking-normal text-foreground',
             size === 'hero' ? 'text-[2.4rem] leading-[1.08]' : 'text-[1.85rem] leading-[1.16]'
           )}
         >

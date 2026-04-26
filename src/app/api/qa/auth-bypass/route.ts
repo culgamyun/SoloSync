@@ -4,11 +4,13 @@ import { isQaAuthBypassEnabled, QA_AUTH_BYPASS_COOKIE } from '@/lib/env';
 
 function getSafeRedirectTarget(request: NextRequest) {
   const target = request.nextUrl.searchParams.get('next') ?? '/ko/home';
+  const origin = `${request.nextUrl.protocol}//${request.headers.get('host') ?? request.nextUrl.host}`;
+
   if (!target.startsWith('/') || target.startsWith('//')) {
-    return new URL('/ko/home', request.url);
+    return new URL('/ko/home', origin);
   }
 
-  return new URL(target, request.url);
+  return new URL(target, origin);
 }
 
 function isSecureRequest(request: NextRequest) {

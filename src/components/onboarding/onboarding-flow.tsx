@@ -71,7 +71,7 @@ function SelectChip({
       type='button'
       onClick={onClick}
       className={cn(
-        'rounded-full px-5 py-3 text-sm font-semibold transition',
+        'whitespace-nowrap rounded-full px-5 py-3 text-sm font-semibold transition',
         active ? 'bg-peach text-primary shadow-ambient' : 'bg-white/84 text-muted-foreground shadow-ambient hover:bg-white'
       )}
     >
@@ -157,7 +157,7 @@ export function OnboardingFlow({ step, locale }: { step: number; locale: string 
 
       <div className='flex-1 overflow-y-auto px-5 pb-40 pt-8'>
         <div className='max-w-[22rem]'>
-          <h1 className='whitespace-pre-line text-balance font-display text-[2.35rem] font-bold leading-[1.08] tracking-[-0.05em]'>
+          <h1 className='whitespace-pre-line break-keep text-balance font-display text-[2.35rem] font-bold leading-[1.08] tracking-normal'>
             {pageTitle}
           </h1>
           <div className='editorial-rule' />
