@@ -94,7 +94,7 @@ export default async function ChallengeReflectionPage({
                       value={option.value}
                       required
                     />
-                    <span className='block rounded-md border border-line bg-surface-low px-4 py-4 text-sm transition duration-200 peer-checked:scale-[1.01] peer-checked:border-primary/30 peer-checked:bg-primary/10'>
+                    <span className='block rounded-md border border-line bg-surface-low px-4 py-4 text-sm transition duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/35 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-checked:scale-[1.01] peer-checked:border-primary/30 peer-checked:bg-primary/10'>
                       <span className='font-semibold text-foreground'>{option.label[language]}</span>
                       <span className='mt-1 block leading-6 text-muted-foreground'>{option.helper[language]}</span>
                     </span>
@@ -117,7 +117,7 @@ export default async function ChallengeReflectionPage({
               {moods.map((mood, index) => (
                 <label key={`before-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodBefore' value={mood.value} defaultChecked={index === 2} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-focus-visible:ring-2 peer-focus-visible:ring-primary/35 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
@@ -133,7 +133,7 @@ export default async function ChallengeReflectionPage({
               {moods.map((mood, index) => (
                 <label key={`after-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodAfter' value={mood.value} defaultChecked={index === 4} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-focus-visible:ring-2 peer-focus-visible:ring-primary/35 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
@@ -155,7 +155,7 @@ export default async function ChallengeReflectionPage({
                     value={option.value}
                     defaultChecked={index === 2}
                   />
-                  <span className='flex rounded-md border border-line bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition duration-200 peer-checked:scale-[1.01] peer-checked:border-reflection/25 peer-checked:bg-reflection/10 peer-checked:text-reflection'>
+                  <span className='flex rounded-md border border-line bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/35 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-checked:scale-[1.01] peer-checked:border-reflection/25 peer-checked:bg-reflection/10 peer-checked:text-reflection'>
                     {option[language]}
                   </span>
                 </label>

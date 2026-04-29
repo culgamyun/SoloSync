@@ -2,12 +2,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   createClient: vi.fn(),
+  redirect: vi.fn(),
   revalidatePath: vi.fn(),
   shouldUseDemoDataForRequest: vi.fn()
 }));
 
 vi.mock('next/cache', () => ({
   revalidatePath: mocks.revalidatePath
+}));
+
+vi.mock('next/navigation', () => ({
+  redirect: mocks.redirect
 }));
 
 vi.mock('@/lib/server/app-data', () => ({
@@ -223,12 +228,15 @@ describe('submitReflectionAction', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.shouldUseDemoDataForRequest.mockResolvedValue(false);
+    mocks.redirect.mockImplementation((url: string) => {
+      throw new Error(`REDIRECT:${url}`);
+    });
   });
 
   it('stores a failed micro-mission outcome without treating it as outside the reflection loop', async () => {
     const supabase = arrangeSupabase();
 
-    await submitReflectionAction(makeReflectionForm());
+    await expect(submitReflectionAction(makeReflectionForm())).rejects.toThrow('REDIRECT:/ko/progress');
 
     expect(supabase.reflectionUpsert).toHaveBeenCalledWith(
       {
@@ -256,7 +264,9 @@ describe('submitReflectionAction', () => {
   it('normalizes unsupported outcome values to null before inserting', async () => {
     const supabase = arrangeSupabase({ streak: null });
 
-    await submitReflectionAction(makeReflectionForm({ outcome: 'ghosted_by_cafe_owner' }));
+    await expect(submitReflectionAction(makeReflectionForm({ outcome: 'ghosted_by_cafe_owner' }))).rejects.toThrow(
+      'REDIRECT:/ko/progress'
+    );
 
     expect(supabase.reflectionUpsert).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -274,22 +284,22 @@ describe('submitReflectionAction', () => {
   it('does not award reflection XP again when the reflection already exists', async () => {
     const supabase = arrangeSupabase({ insertedReflection: null });
 
-    await submitReflectionAction(makeReflectionForm());
+    await expect(submitReflectionAction(makeReflectionForm())).rejects.toThrow('REDIRECT:/ko/progress');
 
     expect(supabase.reflectionUpsert).toHaveBeenCalledTimes(1);
     expect(supabase.streakSelect).not.toHaveBeenCalled();
     expect(supabase.streakUpsert).not.toHaveBeenCalled();
-    expect(mocks.revalidatePath).toHaveBeenCalledTimes(1);
     expect(mocks.revalidatePath).toHaveBeenCalledWith('/ko/challenges');
+    expect(mocks.revalidatePath).toHaveBeenCalledWith('/ko/progress');
   });
 
   it('does not write reflection rows while the request is using demo data', async () => {
     mocks.shouldUseDemoDataForRequest.mockResolvedValue(true);
 
-    await submitReflectionAction(makeReflectionForm());
+    await expect(submitReflectionAction(makeReflectionForm())).rejects.toThrow('REDIRECT:/ko/progress');
 
     expect(mocks.createClient).not.toHaveBeenCalled();
-    expect(mocks.revalidatePath).toHaveBeenCalledTimes(1);
     expect(mocks.revalidatePath).toHaveBeenCalledWith('/ko/challenges');
+    expect(mocks.revalidatePath).toHaveBeenCalledWith('/ko/progress');
   });
 });

@@ -26,7 +26,7 @@ Related documents:
 
 ## Current Slice Status
 
-Active slice: Portfolio readiness accessibility, functional demo hardening, and security/ops proof planning on `codex/portfolio-readiness-audit`.
+Active slice: Portfolio readiness accessibility, functional demo hardening, and security/ops proof implemented locally on `codex/portfolio-readiness-audit`.
 
 Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied.
 
@@ -37,9 +37,9 @@ Implementation order is locked:
 3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
 4. **7A Portfolio visual identity assets** - implemented and verified locally 2026-04-29
 5. **7B Expressive motion polish** - implemented and verified locally 2026-04-29
-6. **7C Accessibility and usability polish** - planned 2026-04-29
-7. **7D Portfolio demo flow hardening** - planned 2026-04-29
-8. **7E Security and ops proof** - planned 2026-04-29
+6. **7C Accessibility and usability polish** - implemented and verified locally 2026-04-29
+7. **7D Portfolio demo flow hardening** - implemented and verified locally 2026-04-29
+8. **7E Security and ops proof** - implemented and verified locally 2026-04-29
 
 Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implemented and verified locally on `codex/preview-qa-hardening`, pending review/merge.
 
@@ -136,6 +136,15 @@ Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implement
   - Bottom navigation keeps lucide icons and uses a Framer Motion active indicator instead of generated raster decoration.
   - `ScoreRing` animates stroke dashoffset while respecting reduced motion.
   - Verified with lint, typecheck, unit tests, build, check, smoke E2E, and mobile/desktop Playwright visual QA.
+- Portfolio accessibility, demo flow, and security proof were implemented and verified locally on 2026-04-29.
+  - Bottom navigation now exposes `aria-current="page"` and a navigation label, while keeping 44px+ touch targets.
+  - Common buttons, bottom navigation, mobile header back button, and reflection radio cards have clearer focus-visible states.
+  - Reflection submission now redirects to `/ko/progress` so the portfolio path closes the loop from mission record to growth view.
+  - `tests/e2e/accessibility.spec.ts` covers nav semantics, touch target sizing, and keyboard radio selection.
+  - `tests/e2e/portfolio-demo.spec.ts` covers mission adjustment, reflection submit, and repeated reflection submit in demo mode.
+  - `src/lib/ai/client.ts` imports `server-only` before using `SUPABASE_SERVICE_ROLE_KEY`.
+  - `npm run security:check` now verifies service role key usage, RLS coverage for 11 user-owned tables, and production dependency audit.
+  - `docs/security-ops-proof.md` records the security and operations proof for portfolio review.
 
 ## Verification Status
 
@@ -148,6 +157,8 @@ Recent passing checks:
 - `npm run build`
 - `npx playwright test tests/e2e/smoke.spec.ts --project=chromium`
 - `npm run test:e2e:smoke`
+- `npm run test:e2e:portfolio`
+- `npm run security:check`
 - `git diff --check`
 - `npx supabase db push`
 - `npm run report:phase-b -- --week=2026-04-20`
@@ -175,24 +186,7 @@ Environment caveats:
 
 ### Ready To Implement
 
-1. **7C Accessibility and usability polish**
-   - 키보드만으로 welcome, home, challenges, challenge detail, reflection, progress, settings를 이동할 수 있는지 확인한다.
-   - focus-visible, aria-label, form label, radio card 선택 상태, bottom nav의 현재 위치 표시를 보강한다.
-   - touch target과 텍스트 줄바꿈을 다시 점검한다.
-   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
-
-2. **7D Portfolio demo flow hardening**
-   - 데모 리뷰어가 2분 안에 핵심 경험을 완료할 수 있도록 auth bypass, challenge adjustment, reflection submit, progress 확인 플로우를 강화한다.
-   - duplicate reflection/idempotency를 E2E로 직접 검증한다.
-   - portfolio demo path 문서와 checkpoint의 검증 항목을 최신화한다.
-   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
-
-3. **7E Security and ops proof**
-   - QA bypass production 차단, service role client leakage 방지, RLS coverage, audit 결과, preview smoke 준비 상태를 증빙한다.
-   - CSP는 즉시 enforce하지 않고 report-only/backlog로 다룬다.
-   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
-
-4. **6C Preview QA hardening**
+1. **6C Preview QA hardening**
    - Make preview verification documented and repeatable beyond local QA bypass flows.
    - Detailed plan written in `docs/01-plan/features/post-phase-b-preview-qa.plan.md`.
    - Implemented locally on `codex/preview-qa-hardening`.

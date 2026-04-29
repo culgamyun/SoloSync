@@ -47,7 +47,9 @@ SoloSync는 Next.js와 Supabase 기반의 hosted-first PWA입니다. 제품의 �
 - `npm run check` - lint, typecheck, unit test를 한 번에 실행합니다.
 - `npm run test:e2e` - 3100번 포트의 QA auth-bypass 개발 서버를 대상으로 Playwright를 실행합니다.
 - `npm run test:e2e:smoke` - 안정적인 로컬 Chromium smoke flow를 실행합니다.
+- `npm run test:e2e:portfolio` - 접근성/포트폴리오 데모 플로우를 Chromium으로 검증합니다.
 - `npm run qa:preview -- --url https://...` - preview URL을 대상으로 smoke flow를 실행합니다.
+- `npm run security:check` - service role key client 노출, Supabase RLS coverage, production dependency audit를 확인합니다.
 - `npm run build` - production Next.js build를 생성합니다.
 
 ## 주요 경로
@@ -69,6 +71,7 @@ SoloSync는 Next.js와 Supabase 기반의 hosted-first PWA입니다. 제품의 �
 - `docs/01-plan/features/weekly-micro-mission-v1.plan.md` - 구현 계획과 엔지니어링 결정
 - `docs/checkpoints/` - 날짜별 handoff snapshot
 - `docs/preview-qa-playbook.md` - 반복 가능한 local/preview QA flow
+- `docs/security-ops-proof.md` - 포트폴리오용 보안 및 운영 증빙
 
 ## 참고 사항
 
@@ -77,4 +80,3 @@ SoloSync는 Next.js와 Supabase 기반의 hosted-first PWA입니다. 제품의 �
 - Preview smoke에서도 `SOLOSYNC_QA_AUTH_BYPASS=true`를 사용할 수 있지만, preview deployment에서만 허용하고 실제 production에는 쓰지 않습니다.
 - Apple auth는 `NEXT_PUBLIC_ENABLE_APPLE_AUTH`로 feature-gate되어 있습니다.
 - Push notification은 유효한 VAPID keys와 배포된 service worker가 필요합니다.
-

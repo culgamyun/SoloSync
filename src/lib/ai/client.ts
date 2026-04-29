@@ -1,5 +1,7 @@
 ﻿import { startOfWeek } from 'date-fns';
 
+import 'server-only';
+
 import { getSupabaseFunctionsUrl, serverEnv } from '@/lib/env';
 import { calculateBreakdown, sumBreakdown } from '@/lib/utils/score';
 import type { OnboardingAnalysis, OnboardingDraft } from '@/types/onboarding';

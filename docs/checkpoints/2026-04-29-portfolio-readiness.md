@@ -78,3 +78,31 @@ SoloSync는 채용 또는 클라이언트 리뷰용 포트폴리오 데모에 �
 3. `/ko/welcome`을 열고 welcome, login, home, challenges, mission detail, reflection, progress, settings 순서로 확인합니다.
 4. 실제 인증 없는 local review가 필요하면 `SOLOSYNC_QA_AUTH_BYPASS=true`로 실행한 뒤 `/api/qa/auth-bypass?next=/ko/home`에 접속합니다.
 
+## 2026-04-29 추가 구현: 7C-7E
+
+### 접근성 및 사용성
+
+- 하단 navigation에 `aria-current="page"`와 navigation label을 추가했습니다.
+- 하단 navigation, 뒤로가기 버튼, 공통 버튼의 focus-visible ring을 강화했습니다.
+- reflection radio card의 keyboard focus와 선택 상태가 보이도록 보강했습니다.
+- `tests/e2e/accessibility.spec.ts`로 현재 탭 의미 표시, 44px 이상 touch target, keyboard radio 선택을 검증합니다.
+
+### 포트폴리오 데모 플로우
+
+- 회고 저장 후 `/ko/progress`로 이동하도록 바꿔 “미션 기록 → 성장 확인” 흐름을 닫았습니다.
+- `tests/e2e/portfolio-demo.spec.ts`로 mission adjustment, reflection submit, repeated reflection submit 데모 흐름을 검증합니다.
+- 새 명령 `npm run test:e2e:portfolio`를 추가했습니다.
+
+### 보안 및 운영 증빙
+
+- `src/lib/ai/client.ts`에 `server-only`를 추가해 service role key 사용 경로를 server-only로 고정했습니다.
+- `scripts/security-client-env-guard.mjs`를 추가해 service role key가 client-reachable source에 새지 않는지 검사합니다.
+- `scripts/security-rls-coverage.mjs`를 추가해 user-owned table 11개의 RLS enable/policy 존재를 검사합니다.
+- 새 명령 `npm run security:check`는 service role guard, RLS coverage, `npm audit --omit=dev`를 함께 실행합니다.
+- 자세한 증빙은 `docs/security-ops-proof.md`에 정리했습니다.
+
+### 추가 검증
+
+- `npm run test:e2e:portfolio` - 통과, 4 tests
+- `npm run security:check` - 통과, 0 vulnerabilities
+- 모바일 390px와 데스크톱에서 welcome, home, challenges, mission detail, reflection, progress, settings를 샘플링했고 console error, horizontal overflow, active navigation issue가 발견되지 않았습니다. 스크린샷은 `test-results/portfolio-7c-7e/screenshots/`에 캡처했습니다.

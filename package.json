@@ -12,7 +12,11 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts --project=chromium",
+    "test:e2e:portfolio": "playwright test tests/e2e/accessibility.spec.ts tests/e2e/portfolio-demo.spec.ts --project=chromium",
     "qa:preview": "node scripts/preview-qa-smoke.mjs",
+    "security:client-env": "node scripts/security-client-env-guard.mjs",
+    "security:rls": "node scripts/security-rls-coverage.mjs",
+    "security:check": "npm run security:client-env && npm run security:rls && npm audit --omit=dev",
     "check": "npm run lint && npm run typecheck && npm run test",
     "report:micro-missions": "node scripts/micro-mission-return-report.mjs",
     "report:phase-b": "node scripts/phase-b-analytics-report.mjs"

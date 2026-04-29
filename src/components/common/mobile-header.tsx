@@ -8,6 +8,7 @@ export function MobileHeader({
   title,
   subtitle,
   backHref,
+  backLabel = '뒤로 가기',
   trailing,
   className,
   centered = false
@@ -15,6 +16,7 @@ export function MobileHeader({
   title: string;
   subtitle?: string;
   backHref?: string;
+  backLabel?: string;
   trailing?: ReactNode;
   className?: string;
   centered?: boolean;
@@ -26,8 +28,8 @@ export function MobileHeader({
           {backHref ? (
             <Link
               href={backHref}
-              className='flex h-11 w-11 items-center justify-center rounded-md text-foreground transition hover:bg-surface-low'
-              aria-label='Go back'
+              className='flex h-11 w-11 items-center justify-center rounded-md text-foreground transition hover:bg-surface-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+              aria-label={backLabel}
             >
               <ChevronLeft className='h-5 w-5' />
             </Link>

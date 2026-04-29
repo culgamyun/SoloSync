@@ -72,6 +72,10 @@ function redirectTo(href: string): never {
   redirect(href as never);
 }
 
+function redirectToProgress(locale: string): never {
+  redirectTo(`/${locale}/progress`);
+}
+
 export async function updateChallengeStatusAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
   const challengeId = String(formData.get('challengeId'));
@@ -132,7 +136,8 @@ export async function submitReflectionAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
   if (await shouldUseDemoDataForRequest()) {
     revalidatePath(`/${locale}/challenges`);
-    return;
+    revalidatePath(`/${locale}/progress`);
+    redirectToProgress(locale);
   }
 
   const supabase = await createClient();
@@ -168,7 +173,8 @@ export async function submitReflectionAction(formData: FormData) {
 
   if (!insertedReflection) {
     revalidatePath(`/${locale}/challenges`);
-    return;
+    revalidatePath(`/${locale}/progress`);
+    redirectToProgress(locale);
   }
 
   const { data: streak } = await supabase.from('streaks').select('*').eq('user_id', user.id).maybeSingle();
@@ -181,6 +187,7 @@ export async function submitReflectionAction(formData: FormData) {
 
   revalidatePath(`/${locale}/challenges`);
   revalidatePath(`/${locale}/progress`);
+  redirectToProgress(locale);
 }
 
 export async function submitWeeklyCheckInAction(formData: FormData) {
