@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { headers } from 'next/headers';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -9,10 +8,6 @@ import { BrandLogo } from '@/components/common/brand-logo';
 
 export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const headerStore = await headers();
-  const host = headerStore.get('host') ?? '';
-  const isLocalPreview = host.startsWith('127.0.0.1') || host.startsWith('localhost') || host.startsWith('[::1]');
-  const startHref = `/api/qa/auth-bypass?next=/${locale}/home`;
 
   return (
     <AppShell
@@ -38,7 +33,7 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
 
         <div className='mt-8 text-center'>
           <h1 className='whitespace-pre-line text-balance font-display text-[2.45rem] font-bold leading-[1.06] text-foreground [word-break:keep-all] md:text-[2.75rem]'>
-            {locale === 'ko' ? '나의 소셜 헬스,\n한 걸음씩' : 'Your social health,\none step at a time'}
+            {locale === 'ko' ? '이번 주 관계 루틴,\n한 걸음씩' : 'A weekly relationship routine,\none step at a time'}
           </h1>
           <p className='mx-auto mt-3 max-w-[19rem] text-[1rem] leading-7 text-muted-foreground [word-break:keep-all]'>
             {locale === 'ko'
@@ -49,17 +44,10 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
 
         <div className='mt-8 space-y-5'>
           <Button asChild size='lg' className='w-full rounded-lg text-[1.05rem]'>
-            {isLocalPreview ? (
-              <a href={startHref}>
-                {locale === 'ko' ? '시작하기' : 'Get started'}
-                <ArrowRight className='h-4 w-4' aria-hidden />
-              </a>
-            ) : (
-              <Link href='/login'>
-                {locale === 'ko' ? '시작하기' : 'Get started'}
-                <ArrowRight className='h-4 w-4' aria-hidden />
-              </Link>
-            )}
+            <Link href='/login'>
+              {locale === 'ko' ? '시작하기' : 'Get started'}
+              <ArrowRight className='h-4 w-4' aria-hidden />
+            </Link>
           </Button>
           <div className='flex flex-col items-center gap-3 text-center'>
             <Link

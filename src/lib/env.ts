@@ -41,7 +41,7 @@ export function isQaAuthBypassEnabled() {
 
   return (
     isQaBypassAllowedRuntime(runtime) &&
-    (serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true' || runtime.nodeEnv === 'development')
+    serverEnv.SOLOSYNC_QA_AUTH_BYPASS === 'true'
   );
 }
 
