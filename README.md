@@ -35,6 +35,12 @@ The product is not dating, meetup, friend matching, or therapy. It helps users m
 
 See `ENV_LOCAL_SETUP.md` for the full local environment guide.
 
+## Portfolio Demo Path
+
+For a local portfolio walkthrough, start at `/ko/welcome`, continue through login, then use the demo fallback path to review home, challenges, a mission detail, reflection, progress, and settings. When a Supabase project is not configured, SoloSync serves demo data so the weekly micro-mission experience remains explorable.
+
+For browser or Playwright review without real auth, run with `SOLOSYNC_QA_AUTH_BYPASS=true` in local or preview environments and open `/api/qa/auth-bypass?next=/ko/home`. The bypass is explicitly blocked in production runtime and must not be enabled for a real production demo.
+
 ## Useful Commands
 
 - `npm run dev` - start the local Next.js server.
