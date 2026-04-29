@@ -1,6 +1,6 @@
 # Weekly Micro-Mission Worklog
 
-Last updated: 2026-04-23
+Last updated: 2026-04-29
 
 ## How To Resume
 
@@ -18,13 +18,14 @@ Related documents:
 - Roadmap: `docs/01-plan/weekly-micro-mission-roadmap.md`
 - V1 implementation plan: `docs/01-plan/features/weekly-micro-mission-v1.plan.md`
 - Phase B readiness plan: `docs/01-plan/features/phase-b-readiness.plan.md`
+- Portfolio visual/motion polish plan: `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`
 - Design system: `DESIGN.md`
 - Local environment guide: `ENV_LOCAL_SETUP.md`
 - Preview QA playbook: `docs/preview-qa-playbook.md`
 
 ## Current Slice Status
 
-Active slice: Slice 6C implemented locally, Preview QA hardening.
+Active slice: Portfolio readiness visual identity and motion polish on `codex/portfolio-readiness-audit`.
 
 Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied.
 
@@ -33,6 +34,8 @@ Implementation order is locked:
 1. **5A Retention report visibility** - implemented 2026-04-20
 2. **5B Smaller mission and swap mission** - merged to `main` 2026-04-22
 3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
+4. **7A Portfolio visual identity assets** - implemented and verified locally 2026-04-29
+5. **7B Expressive motion polish** - implemented and verified locally 2026-04-29
 
 Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implemented and verified locally on `codex/preview-qa-hardening`, pending review/merge.
 
@@ -160,7 +163,20 @@ Environment caveats:
 
 ### Ready To Implement
 
-1. **6C Preview QA hardening**
+1. **7A Portfolio visual identity assets**
+   - Add project-bound field-note raster assets under `public/images/field-notes/`.
+   - Apply them to welcome, challenge detail, home/progress achievement moments, and reusable empty states.
+   - Keep generated art out of bottom navigation; navigation stays lucide-icon based.
+   - Detailed plan written in `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`.
+   - Implemented and verified locally on `codex/portfolio-readiness-audit`.
+
+2. **7B Expressive motion polish**
+   - Add reduced-motion-safe page/section reveals, active tab motion, card/tap feedback, and score ring animation.
+   - Keep durations short and avoid bounce/shimmer patterns that make the app feel like therapy, dating, or generic wellness software.
+   - Detailed plan written in `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`.
+   - Implemented and verified locally on `codex/portfolio-readiness-audit`.
+
+3. **6C Preview QA hardening**
    - Make preview verification documented and repeatable beyond local QA bypass flows.
    - Detailed plan written in `docs/01-plan/features/post-phase-b-preview-qa.plan.md`.
    - Implemented locally on `codex/preview-qa-hardening`.

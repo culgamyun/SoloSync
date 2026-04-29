@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation';
 
 import { adjustMicroMissionAction, updateChallengeStatusAction } from '@/actions/challenges';
 import { AppShell } from '@/components/common/app-shell';
+import { FieldNoteImage } from '@/components/common/field-note-image';
 import { MobileHeader } from '@/components/common/mobile-header';
+import { MotionReveal } from '@/components/motion/reveal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,7 +35,7 @@ const adjustmentButtonCopy = {
   ko: {
     smaller: '조금 더 작게',
     different_space: '장소 바꾸기',
-    safer_line: '한마디 더 안전하게'
+    safer_line: '한마디를 더 안전하게'
   },
   en: {
     smaller: 'Make it smaller',
@@ -46,7 +48,7 @@ const adjustmentBannerCopy = {
   ko: {
     smaller: '오늘 기준으로 더 작은 버전으로 바꿨어요.',
     different_space: '부담이 덜한 다른 생활 공간 버전으로 바꿨어요.',
-    safer_line: '같은 미션을 더 짧고 안전한 한마디 버전으로 바꿨어요.'
+    safer_line: '같은 미션을 유지하고 더 안전한 한마디 버전으로 바꿨어요.'
   },
   en: {
     smaller: 'This mission now uses a smaller version for today.',
@@ -76,6 +78,7 @@ export default async function ChallengeDetailPage({
   const { locale, id } = await params;
   const resolvedSearchParams = await searchParams;
   const language = locale === 'en' ? 'en' : 'ko';
+  const isKorean = language === 'ko';
   const adjustedCandidate = resolvedSearchParams.adjusted;
   const adjustedType: ChallengeAdjustmentRequestType | null =
     adjustedCandidate && isChallengeAdjustmentRequestType(adjustedCandidate) ? adjustedCandidate : null;
@@ -99,10 +102,10 @@ export default async function ChallengeDetailPage({
     <AppShell
       padded={false}
       tabBarInset={false}
-      header={<MobileHeader title={locale === 'ko' ? '챌린지 상세' : 'Challenge details'} backHref='/challenges' centered />}
+      header={<MobileHeader title={isKorean ? '챌린지 상세' : 'Challenge details'} backHref='/challenges' centered />}
     >
       <div className='px-5 pb-10 pt-6'>
-        <section className='overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
+        <MotionReveal as='section' className='overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
           <div className='px-5 py-7 text-primary-foreground'>
             <div className='flex h-12 w-12 items-center justify-center rounded-md border border-white/25 bg-white/12'>
               <Icon className='h-6 w-6' />
@@ -115,73 +118,88 @@ export default async function ChallengeDetailPage({
             </h1>
             <p className='mt-4 max-w-[17rem] text-[15px] leading-7 text-white/84'>{challenge.description}</p>
           </div>
-        </section>
+        </MotionReveal>
 
-        <section className='mt-6 flex flex-wrap gap-2'>
+        <MotionReveal as='section' delay={0.04} className='mt-6 flex flex-wrap gap-2'>
           <Badge variant='warning'>{getChallengeCategoryLabel(challenge.category, locale)}</Badge>
           <Badge className={challengeDifficultyTone[challenge.difficulty]}>
             {getChallengeDifficultyLabel(challenge.difficulty, locale)}
           </Badge>
           <Badge variant='neutral'>{getEstimatedTimeLabel(challenge.estimatedTime, locale)}</Badge>
           <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
-        </section>
+        </MotionReveal>
 
         {adjustedType ? (
-          <div className='mt-6 rounded-lg border border-success/20 bg-success/10 px-4 py-3 text-sm font-medium leading-6 text-success'>
+          <MotionReveal className='mt-6 rounded-lg border border-success/20 bg-success/10 px-4 py-3 text-sm font-medium leading-6 text-success'>
             {adjustmentBannerCopy[language][adjustedType]}
-          </div>
+          </MotionReveal>
         ) : null}
 
         {adjustmentError ? (
-          <div className='mt-6 rounded-lg border border-reflection/20 bg-reflection/10 px-4 py-3 text-sm font-medium leading-6 text-reflection'>
+          <MotionReveal className='mt-6 rounded-lg border border-reflection/20 bg-reflection/10 px-4 py-3 text-sm font-medium leading-6 text-reflection'>
             {adjustmentError === 'completed' ? adjustmentErrorCopy[language].completed : adjustmentErrorCopy[language].default}
-          </div>
+          </MotionReveal>
         ) : null}
 
         {isMicroMission ? (
-          <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
-            <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
-              {locale === 'ko' ? '이번 주 작은 접촉' : "This week's micro-mission"}
-            </p>
-            <h2 className='mt-2 font-display text-[1.3rem] font-bold tracking-normal'>
-              {locale === 'ko' ? '작게 시작해도 충분해요' : 'Small counts here'}
-            </h2>
-            <div className='mt-5 space-y-3 text-sm leading-6'>
-              {challenge.missionContext ? (
-                <div className='rounded-md border border-line bg-surface-low px-4 py-3'>
-                  <span className='font-semibold text-foreground'>{locale === 'ko' ? '장소' : 'Context'}: </span>
-                  <span className='text-muted-foreground'>{challenge.missionContext}</span>
-                </div>
-              ) : null}
-              {challenge.minimumWin ? (
-                <div className='rounded-md border border-primary/20 bg-primary/10 px-4 py-3'>
-                  <span className='font-semibold text-secondary'>{locale === 'ko' ? '최소 성공' : 'Minimum win'}: </span>
-                  <span className='text-secondary'>{challenge.minimumWin}</span>
-                </div>
-              ) : null}
-              {challenge.safeLine ? (
-                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3'>
-                  <span className='font-semibold text-foreground'>{locale === 'ko' ? '안전한 한마디' : 'Safe line'}: </span>
-                  <span className='text-muted-foreground'>&quot;{challenge.safeLine}&quot;</span>
-                </div>
-              ) : null}
-              {challenge.fear ? (
-                <div className='rounded-md border border-reflection/20 bg-reflection/10 px-4 py-3'>
-                  <span className='font-semibold text-primary'>{locale === 'ko' ? '걱정' : 'Fear'}: </span>
-                  <span className='text-primary'>{challenge.fear}</span>
-                </div>
-              ) : null}
-              {challenge.reframe ? (
-                <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>
-                  {challenge.reframe}
-                </div>
-              ) : null}
+          <MotionReveal
+            as='section'
+            delay={0.08}
+            className='mt-8 overflow-hidden rounded-lg border border-line bg-surface-high shadow-ambient'
+          >
+            <FieldNoteImage
+              src='/images/field-notes/micro-mission-field-note.webp'
+              className='aspect-[2/1] rounded-none border-0 shadow-none'
+              sizes='(max-width: 430px) 100vw, 430px'
+            />
+            <div className='p-5'>
+              <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
+                {isKorean ? '이번 주 작은 접촉' : "This week's micro-mission"}
+              </p>
+              <h2 className='mt-2 font-display text-[1.3rem] font-bold tracking-normal'>
+                {isKorean ? '작게 시작해도 충분해요' : 'Small counts here'}
+              </h2>
+              <div className='mt-5 space-y-3 text-sm leading-6'>
+                {challenge.missionContext ? (
+                  <div className='rounded-md border border-line bg-surface-low px-4 py-3'>
+                    <span className='font-semibold text-foreground'>{isKorean ? '장소' : 'Context'}: </span>
+                    <span className='text-muted-foreground'>{challenge.missionContext}</span>
+                  </div>
+                ) : null}
+                {challenge.minimumWin ? (
+                  <div className='rounded-md border border-primary/20 bg-primary/10 px-4 py-3'>
+                    <span className='font-semibold text-secondary'>{isKorean ? '최소 성공' : 'Minimum win'}: </span>
+                    <span className='text-secondary'>{challenge.minimumWin}</span>
+                  </div>
+                ) : null}
+                {challenge.safeLine ? (
+                  <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3'>
+                    <span className='font-semibold text-foreground'>{isKorean ? '안전한 한마디' : 'Safe line'}: </span>
+                    <span className='text-muted-foreground'>&quot;{challenge.safeLine}&quot;</span>
+                  </div>
+                ) : null}
+                {challenge.fear ? (
+                  <div className='rounded-md border border-reflection/20 bg-reflection/10 px-4 py-3'>
+                    <span className='font-semibold text-primary'>{isKorean ? '걱정' : 'Fear'}: </span>
+                    <span className='text-primary'>{challenge.fear}</span>
+                  </div>
+                ) : null}
+                {challenge.reframe ? (
+                  <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>
+                    {challenge.reframe}
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </section>
+          </MotionReveal>
         ) : (
-          <section className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal
+            as='section'
+            delay={0.08}
+            className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'
+          >
             <h2 className='font-display text-[1.3rem] font-bold tracking-normal'>
-              {locale === 'ko' ? '대화 시작 문장' : 'Conversation starters'}
+              {isKorean ? '대화 시작 문장' : 'Conversation starters'}
             </h2>
             <div className='mt-4 space-y-3'>
               {challenge.conversationStarters.map((starter) => (
@@ -190,19 +208,23 @@ export default async function ChallengeDetailPage({
                 </div>
               ))}
             </div>
-          </section>
+          </MotionReveal>
         )}
 
         {canAdjustMission ? (
-          <section className='mt-6 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal
+            as='section'
+            delay={0.12}
+            className='mt-6 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'
+          >
             <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
-              {locale === 'ko' ? '너무 크다면' : 'If this feels too much'}
+              {isKorean ? '너무 크다면' : 'If this feels too much'}
             </p>
             <h2 className='mt-2 font-display text-[1.2rem] font-bold tracking-normal'>
-              {locale === 'ko' ? '이번 주 연결은 놓치지 않게 줄여볼 수 있어요' : 'You can scale this down without losing the week'}
+              {isKorean ? '이번 주 연결은 망치지 않게 줄여볼 수 있어요' : 'You can scale this down without losing the week'}
             </h2>
             <p className='mt-3 text-sm leading-6 text-muted-foreground'>
-              {locale === 'ko'
+              {isKorean
                 ? '조금 더 작게, 장소 바꾸기, 더 짧은 한마디 중 하나로 다시 맞출 수 있어요.'
                 : 'Choose a smaller version, a different place, or a safer line.'}
             </p>
@@ -212,24 +234,24 @@ export default async function ChallengeDetailPage({
                   <input type='hidden' name='challengeId' value={challenge.id} />
                   <input type='hidden' name='locale' value={locale} />
                   <input type='hidden' name='requestType' value={requestType} />
-                  <Button type='submit' variant='chip' className='h-11 w-full justify-between px-4 text-left text-sm text-foreground'>
+                  <Button type='submit' variant='chip' className='h-11 w-full justify-between px-4 text-left text-sm text-foreground transition-transform hover:-translate-y-0.5 active:translate-y-0'>
                     <span>{adjustmentButtonCopy[language][requestType]}</span>
                     <ArrowRight className='h-4 w-4 shrink-0' />
                   </Button>
                 </form>
               ))}
             </div>
-          </section>
+          </MotionReveal>
         ) : null}
 
-        <section className='mt-8 grid gap-3'>
+        <MotionReveal as='section' delay={0.16} className='mt-8 grid gap-3'>
           {['pending', 'skipped'].includes(challenge.status) ? (
             <form action={updateChallengeStatusAction}>
               <input type='hidden' name='challengeId' value={challenge.id} />
               <input type='hidden' name='status' value='in_progress' />
               <input type='hidden' name='locale' value={locale} />
               <Button type='submit' className='w-full'>
-                {locale === 'ko' ? '지금 시작하기' : 'Start now'}
+                {isKorean ? '지금 시작하기' : 'Start now'}
               </Button>
             </form>
           ) : null}
@@ -240,7 +262,7 @@ export default async function ChallengeDetailPage({
               <input type='hidden' name='status' value='completed' />
               <input type='hidden' name='locale' value={locale} />
               <Button type='submit' variant='secondary' className='w-full'>
-                {locale === 'ko' ? '완료로 표시' : 'Mark as completed'}
+                {isKorean ? '완료로 표시' : 'Mark as completed'}
               </Button>
             </form>
           ) : null}
@@ -251,18 +273,18 @@ export default async function ChallengeDetailPage({
               <input type='hidden' name='status' value='skipped' />
               <input type='hidden' name='locale' value={locale} />
               <Button type='submit' variant='ghost' className='w-full'>
-                {locale === 'ko' ? '이번 주는 건너뛰기' : 'Skip for this week'}
+                {isKorean ? '이번 주는 건너뛰기' : 'Skip for this week'}
               </Button>
             </form>
           ) : null}
 
           <Button asChild variant='outline' className='w-full'>
             <Link href={`/challenges/${challenge.id}/reflect`}>
-              {locale === 'ko' ? '회고 작성하기' : 'Write reflection'}
+              {isKorean ? '회고 작성하기' : 'Write reflection'}
               <ArrowRight className='h-4 w-4' />
             </Link>
           </Button>
-        </section>
+        </MotionReveal>
       </div>
     </AppShell>
   );

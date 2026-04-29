@@ -1,5 +1,6 @@
 'use client';
 
+import { motion, useReducedMotion } from 'framer-motion';
 import { Home, LayoutList, LineChart, MessageCircleHeart, Settings } from 'lucide-react';
 import { usePathname, useSelectedLayoutSegment } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -19,6 +20,7 @@ export function TabBar() {
   const pathname = usePathname();
   const segment = useSelectedLayoutSegment();
   const t = useTranslations('nav');
+  const shouldReduceMotion = useReducedMotion();
   const isNestedChallengePage = pathname.includes('/challenges/');
 
   if (segment === 'coach' || isNestedChallengePage) {
@@ -37,14 +39,27 @@ export function TabBar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex min-h-[60px] flex-col items-center justify-center gap-1 rounded-md px-2 py-3 text-[11px] font-bold transition',
+                'relative isolate flex min-h-[60px] flex-col items-center justify-center gap-1 overflow-hidden rounded-md px-2 py-3 text-[11px] font-bold transition',
                 isActive
-                  ? 'bg-primary/15 text-primary'
+                  ? 'text-primary'
                   : 'text-muted-foreground hover:bg-surface-low hover:text-foreground'
               )}
             >
-              <Icon className={cn('h-4 w-4', isActive && 'fill-current')} />
-              <span>{t(item.key)}</span>
+              {isActive ? (
+                <motion.span
+                  layoutId='solo-tab-active'
+                  className='absolute inset-1 rounded-md bg-primary/15'
+                  transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                />
+              ) : null}
+              <motion.span
+                className='relative z-10 flex flex-col items-center justify-center gap-1'
+                animate={shouldReduceMotion ? undefined : { scale: isActive ? 1.03 : 1, opacity: isActive ? 1 : 0.86 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+              >
+                <Icon className={cn('h-4 w-4', isActive && 'fill-current')} />
+                <span>{t(item.key)}</span>
+              </motion.span>
             </Link>
           );
         })}

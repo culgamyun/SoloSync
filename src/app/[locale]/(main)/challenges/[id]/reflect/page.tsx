@@ -1,6 +1,7 @@
 import { submitReflectionAction } from '@/actions/challenges';
 import { AppShell } from '@/components/common/app-shell';
 import { MobileHeader } from '@/components/common/mobile-header';
+import { MotionReveal } from '@/components/motion/reveal';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { getChallengeDetail } from '@/lib/server/app-data';
@@ -8,10 +9,10 @@ import type { ChallengeReflectionOutcome } from '@/types/challenge';
 
 const moods = [
   { value: 1, emoji: '😟' },
-  { value: 2, emoji: '😕' },
-  { value: 3, emoji: '😐' },
-  { value: 4, emoji: '🙂' },
-  { value: 5, emoji: '😊' }
+  { value: 2, emoji: '😐' },
+  { value: 3, emoji: '🙂' },
+  { value: 4, emoji: '😊' },
+  { value: 5, emoji: '🌿' }
 ] as const;
 
 const difficultyOptions = [
@@ -30,7 +31,7 @@ const outcomeOptions: {
   {
     value: 'greeted',
     label: { ko: '눈 마주치고 인사했어요', en: 'I made eye contact and greeted them' },
-    helper: { ko: '오늘의 최소 성공입니다.', en: 'That is today\'s minimum win.' }
+    helper: { ko: '오늘의 최소 성공입니다.', en: "That is today's minimum win." }
   },
   {
     value: 'said_line',
@@ -40,7 +41,7 @@ const outcomeOptions: {
   {
     value: 'could_not_do_it',
     label: { ko: '오늘은 못 했어요', en: 'I could not do it today' },
-    helper: { ko: '멈춘 지점을 알게 된 것도 다음 시도의 재료입니다.', en: 'Knowing where you stopped helps the next attempt.' }
+    helper: { ko: '멈춘 지점을 아는 것도 다음 시도의 자료입니다.', en: 'Knowing where you stopped helps the next attempt.' }
   }
 ];
 
@@ -52,31 +53,36 @@ export default async function ChallengeReflectionPage({
   const { locale, id } = await params;
   const challenge = await getChallengeDetail(id);
   const language = locale === 'en' ? 'en' : 'ko';
+  const isKorean = language === 'ko';
   const isMicroMission = challenge?.missionKind === 'micro_social';
 
   return (
     <AppShell
       padded={false}
       tabBarInset={false}
-      header={<MobileHeader title={language === 'ko' ? '회고' : 'Challenge Reflection'} backHref={`/challenges/${id}`} centered />}
+      header={<MobileHeader title={isKorean ? '회고' : 'Challenge Reflection'} backHref={`/challenges/${id}`} centered />}
     >
       <div className='px-5 pb-10 pt-6'>
-        <div className='max-w-[18rem]'>
+        <MotionReveal className='max-w-[18rem]'>
           <h1 className='whitespace-pre-line break-keep font-display text-[2.2rem] font-bold leading-[1.08] tracking-normal'>
-            {language === 'ko' ? '어땠는지\n기록해볼까요?' : 'How did it feel?'}
+            {isKorean ? '어땠나요?\n기록해볼까요?' : 'How did it feel?'}
           </h1>
           <div className='editorial-rule' />
           <p className='mt-5 text-[15px] leading-7 text-muted-foreground'>{challenge?.title}</p>
-        </div>
+        </MotionReveal>
 
         <form action={submitReflectionAction} className='mt-8 space-y-7'>
           <input type='hidden' name='locale' value={locale} />
           <input type='hidden' name='challengeId' value={id} />
 
           {isMicroMission ? (
-            <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+            <MotionReveal
+              as='section'
+              delay={0.05}
+              className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'
+            >
               <h2 className='font-display text-[1.25rem] font-bold'>
-                {language === 'ko' ? '어디까지 해냈나요?' : 'How far did you get?'}
+                {isKorean ? '어디까지 해봤나요?' : 'How far did you get?'}
               </h2>
               <div className='mt-4 space-y-3'>
                 {outcomeOptions.map((option) => (
@@ -88,7 +94,7 @@ export default async function ChallengeReflectionPage({
                       value={option.value}
                       required
                     />
-                    <span className='block rounded-md border border-line bg-surface-low px-4 py-4 text-sm transition peer-checked:border-primary/30 peer-checked:bg-primary/10'>
+                    <span className='block rounded-md border border-line bg-surface-low px-4 py-4 text-sm transition duration-200 peer-checked:scale-[1.01] peer-checked:border-primary/30 peer-checked:bg-primary/10'>
                       <span className='font-semibold text-foreground'>{option.label[language]}</span>
                       <span className='mt-1 block leading-6 text-muted-foreground'>{option.helper[language]}</span>
                     </span>
@@ -100,44 +106,44 @@ export default async function ChallengeReflectionPage({
                   {challenge.reframe}
                 </p>
               ) : null}
-            </section>
+            </MotionReveal>
           ) : null}
 
-          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal as='section' delay={0.08} className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
-              {language === 'ko' ? '시작 전 기분' : 'Mood before'}
+              {isKorean ? '시작 전 기분' : 'Mood before'}
             </h2>
             <div className='mt-4 flex items-center justify-between gap-2'>
               {moods.map((mood, index) => (
                 <label key={`before-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodBefore' value={mood.value} defaultChecked={index === 2} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
               ))}
             </div>
-          </section>
+          </MotionReveal>
 
-          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal as='section' delay={0.1} className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
-              {language === 'ko' ? '마치고 난 뒤 기분' : 'Mood after'}
+              {isKorean ? '마치고 난 뒤 기분' : 'Mood after'}
             </h2>
             <div className='mt-4 flex items-center justify-between gap-2'>
               {moods.map((mood, index) => (
                 <label key={`after-${mood.value}`} className='cursor-pointer'>
                   <input className='peer sr-only' type='radio' name='moodAfter' value={mood.value} defaultChecked={index === 4} />
-                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
+                  <span className='flex h-12 w-12 items-center justify-center rounded-md border border-transparent text-2xl grayscale opacity-50 transition peer-checked:scale-105 peer-checked:border-reflection/25 peer-checked:bg-reflection/12 peer-checked:grayscale-0 peer-checked:opacity-100'>
                     {mood.emoji}
                   </span>
                 </label>
               ))}
             </div>
-          </section>
+          </MotionReveal>
 
-          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal as='section' delay={0.12} className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
-              {language === 'ko' ? '체감 난이도' : 'Difficulty felt'}
+              {isKorean ? '체감 난이도' : 'Difficulty felt'}
             </h2>
             <div className='mt-4 space-y-3'>
               {difficultyOptions.map((option, index) => (
@@ -149,28 +155,34 @@ export default async function ChallengeReflectionPage({
                     value={option.value}
                     defaultChecked={index === 2}
                   />
-                  <span className='flex rounded-md border border-line bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition peer-checked:border-reflection/25 peer-checked:bg-reflection/10 peer-checked:text-reflection'>
+                  <span className='flex rounded-md border border-line bg-surface-low px-4 py-4 text-sm font-semibold text-muted-foreground transition duration-200 peer-checked:scale-[1.01] peer-checked:border-reflection/25 peer-checked:bg-reflection/10 peer-checked:text-reflection'>
                     {option[language]}
                   </span>
                 </label>
               ))}
             </div>
-          </section>
+          </MotionReveal>
 
-          <section className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
+          <MotionReveal as='section' delay={0.14} className='rounded-lg border border-line bg-surface-high p-5 shadow-ambient'>
             <h2 className='font-display text-[1.25rem] font-bold'>
-              {language === 'ko' ? '어떤 점이 달라졌나요?' : 'What shifted?'}
+              {isKorean ? '어떤 점이 달라졌나요?' : 'What shifted?'}
             </h2>
             <Textarea
               name='reflectionText'
               className='mt-4 min-h-[160px]'
-              placeholder={language === 'ko' ? '기억에 남는 장면, 다음에 바꾸고 싶은 점을 적어보세요.' : 'Write what stood out and what you want to try next time.'}
+              placeholder={
+                isKorean
+                  ? '기억에 남는 장면, 다음에 바꾸고 싶은 점을 적어보세요.'
+                  : 'Write what stood out and what you want to try next time.'
+              }
             />
-          </section>
+          </MotionReveal>
 
-          <Button type='submit' className='w-full'>
-            {language === 'ko' ? '반추 저장' : 'Save reflection'}
-          </Button>
+          <MotionReveal delay={0.16}>
+            <Button type='submit' className='w-full'>
+              {isKorean ? '회고 저장' : 'Save reflection'}
+            </Button>
+          </MotionReveal>
         </form>
       </div>
     </AppShell>

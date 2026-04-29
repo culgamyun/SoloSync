@@ -1,3 +1,8 @@
+'use client';
+
+import { motion, useReducedMotion } from 'framer-motion';
+import { useId } from 'react';
+
 import { cn } from '@/lib/utils';
 
 const ringSizes = {
@@ -23,6 +28,8 @@ export function ScoreRing({
   const circumference = 2 * Math.PI * config.radius;
   const dashOffset = circumference - (score / 100) * circumference;
   const showDeltaInsideRing = typeof delta === 'number' && variant !== 'compact';
+  const shouldReduceMotion = useReducedMotion();
+  const gradientId = useId().replaceAll(':', '');
 
   return (
     <div className={cn('relative flex flex-col items-center justify-center', config.wrapper, className)}>
@@ -36,19 +43,21 @@ export function ScoreRing({
           fill='none'
           strokeWidth={config.stroke}
         />
-        <circle
+        <motion.circle
           cx='100'
           cy='100'
           r={config.radius}
           fill='none'
-          stroke='url(#solo-sync-ring)'
+          stroke={`url(#${gradientId})`}
           strokeLinecap='round'
           strokeWidth={config.stroke}
           strokeDasharray={circumference}
-          strokeDashoffset={dashOffset}
+          initial={shouldReduceMotion ? false : { strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: dashOffset }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
         />
         <defs>
-          <linearGradient id='solo-sync-ring' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <linearGradient id={gradientId} x1='0%' y1='0%' x2='100%' y2='100%'>
             <stop offset='0%' stopColor='#73A8EE' />
             <stop offset='100%' stopColor='#126B5A' />
           </linearGradient>
@@ -62,9 +71,14 @@ export function ScoreRing({
           {label ?? 'Social score'}
         </span>
         {showDeltaInsideRing ? (
-          <span className={cn('mt-3 font-data text-[12px] font-bold', delta >= 0 ? 'text-success' : 'text-reflection')}>
-            {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)}
-          </span>
+          <motion.span
+            className={cn('mt-3 font-data text-[12px] font-bold', delta >= 0 ? 'text-success' : 'text-reflection')}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.24, delay: 0.16 }}
+          >
+            {delta >= 0 ? '+' : '-'} {Math.abs(delta)}
+          </motion.span>
         ) : null}
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { ArrowRight, Check, Coffee, Compass, HeartHandshake } from 'lucide-react';
 
 import { updateChallengeStatusAction } from '@/actions/challenges';
+import { FieldNoteImage } from '@/components/common/field-note-image';
+import { MotionReveal } from '@/components/motion/reveal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,17 +35,24 @@ export function ChallengeList({
 }) {
   if (challenges.length === 0) {
     return (
-      <div className='rounded-md border border-line bg-surface-high px-5 py-6 text-sm text-muted-foreground'>
-        {locale === 'ko'
-          ? '아직 챌린지가 없어요. 온보딩을 마치면 첫 제안이 도착합니다.'
-          : 'No challenges yet. Finish onboarding to generate the first suggestions.'}
-      </div>
+      <MotionReveal className='rounded-md border border-line bg-surface-high px-5 py-6 text-sm text-muted-foreground'>
+        <FieldNoteImage
+          src='/images/field-notes/empty-state-field-note.webp'
+          className='mb-5 aspect-[4/3] shadow-none'
+          sizes='(max-width: 430px) 82vw, 340px'
+        />
+        <p>
+          {locale === 'ko'
+            ? '아직 챌린지가 없어요. 온보딩을 마치면 첫 제안이 도착합니다.'
+            : 'No challenges yet. Finish onboarding to generate the first suggestions.'}
+        </p>
+      </MotionReveal>
     );
   }
 
   return (
     <div className={cn(variant === 'home' ? 'space-y-4' : 'space-y-5')}>
-      {challenges.map((challenge) => {
+      {challenges.map((challenge, index) => {
         const Icon = categoryIcons[challenge.category];
         const xp = getChallengeXp(challenge.difficulty);
         const isMicroMission = challenge.missionKind === 'micro_social';
@@ -54,7 +63,10 @@ export function ChallengeList({
           : getChallengeCategoryLabel(challenge.category, locale);
 
         return (
-          <article
+          <MotionReveal
+            as='article'
+            interactive
+            delay={Math.min(index * 0.035, 0.14)}
             key={challenge.id}
             className='overflow-hidden rounded-lg border border-line bg-surface-high px-5 py-5 shadow-ambient transition hover:border-primary/30'
           >
@@ -87,7 +99,7 @@ export function ChallengeList({
             <div className='mt-4 flex flex-wrap items-center gap-2'>
               <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
               {isMicroMission && challenge.minimumWin ? (
-                  <span className='text-[11px] font-bold text-primary'>
+                <span className='text-[11px] font-bold text-primary'>
                   {locale === 'ko' ? `최소 성공: ${challenge.minimumWin}` : `Minimum win: ${challenge.minimumWin}`}
                 </span>
               ) : (
@@ -101,7 +113,9 @@ export function ChallengeList({
 
             {isMicroMission && challenge.safeLine ? (
               <div className='mt-4 rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-sm leading-6 text-muted-foreground'>
-                <span className='font-semibold text-foreground'>{locale === 'ko' ? '안전한 한마디' : 'Safe line'}: </span>
+                <span className='font-semibold text-foreground'>
+                  {locale === 'ko' ? '안전한 한마디' : 'Safe line'}:{' '}
+                </span>
                 &quot;{challenge.safeLine}&quot;
               </div>
             ) : null}
@@ -147,7 +161,7 @@ export function ChallengeList({
                 </form>
               ) : null}
             </div>
-          </article>
+          </MotionReveal>
         );
       })}
     </div>
