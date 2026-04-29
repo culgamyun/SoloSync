@@ -5,6 +5,8 @@ dist
 node_modules
 playwright-report
 test-results
+.codex-temp
+~
 .env
 .env.local
 .env*.local
