@@ -19,13 +19,14 @@ Related documents:
 - V1 implementation plan: `docs/01-plan/features/weekly-micro-mission-v1.plan.md`
 - Phase B readiness plan: `docs/01-plan/features/phase-b-readiness.plan.md`
 - Portfolio visual/motion polish plan: `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`
+- Portfolio accessibility/functional/security plan: `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`
 - Design system: `DESIGN.md`
 - Local environment guide: `ENV_LOCAL_SETUP.md`
 - Preview QA playbook: `docs/preview-qa-playbook.md`
 
 ## Current Slice Status
 
-Active slice: Portfolio readiness visual identity and motion polish on `codex/portfolio-readiness-audit`.
+Active slice: Portfolio readiness accessibility, functional demo hardening, and security/ops proof planning on `codex/portfolio-readiness-audit`.
 
 Phase B is merged to `main`. Remote Supabase migrations through `008_phase_b_analytics.sql` are applied.
 
@@ -36,6 +37,9 @@ Implementation order is locked:
 3. **5C Routine space and fear personalization** - merged to `main` 2026-04-22
 4. **7A Portfolio visual identity assets** - implemented and verified locally 2026-04-29
 5. **7B Expressive motion polish** - implemented and verified locally 2026-04-29
+6. **7C Accessibility and usability polish** - planned 2026-04-29
+7. **7D Portfolio demo flow hardening** - planned 2026-04-29
+8. **7E Security and ops proof** - planned 2026-04-29
 
 Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implemented and verified locally on `codex/preview-qa-hardening`, pending review/merge.
 
@@ -124,6 +128,14 @@ Slice 6A and 6B are merged to `main`. Slice 6C Preview QA hardening is implement
   - `scripts/preview-qa-smoke.mjs` and `npm run qa:preview -- --url https://...` add a stable preview smoke entrypoint.
   - `docs/preview-qa-playbook.md`, `README.md`, `.env.example`, and `ENV_LOCAL_SETUP.md` document the new flow.
   - `tests/unit/qa-runtime.test.ts` and `tests/unit/preview-qa-script.test.ts` cover the new runtime and script behavior.
+- Portfolio visual identity and motion polish was implemented and verified locally on 2026-04-29.
+  - `public/images/field-notes/` contains four field-note WebP assets for welcome, micro-mission context, progress stamp, and empty state.
+  - `FieldNoteImage` standardizes decorative image treatment, border, radius, aspect ratio, and sizing.
+  - `MotionReveal` adds reduced-motion-safe page and section reveal motion.
+  - Welcome, home, challenge detail, reflection, progress, and settings now use field-note assets or section reveal motion.
+  - Bottom navigation keeps lucide icons and uses a Framer Motion active indicator instead of generated raster decoration.
+  - `ScoreRing` animates stroke dashoffset while respecting reduced motion.
+  - Verified with lint, typecheck, unit tests, build, check, smoke E2E, and mobile/desktop Playwright visual QA.
 
 ## Verification Status
 
@@ -163,20 +175,24 @@ Environment caveats:
 
 ### Ready To Implement
 
-1. **7A Portfolio visual identity assets**
-   - Add project-bound field-note raster assets under `public/images/field-notes/`.
-   - Apply them to welcome, challenge detail, home/progress achievement moments, and reusable empty states.
-   - Keep generated art out of bottom navigation; navigation stays lucide-icon based.
-   - Detailed plan written in `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`.
-   - Implemented and verified locally on `codex/portfolio-readiness-audit`.
+1. **7C Accessibility and usability polish**
+   - 키보드만으로 welcome, home, challenges, challenge detail, reflection, progress, settings를 이동할 수 있는지 확인한다.
+   - focus-visible, aria-label, form label, radio card 선택 상태, bottom nav의 현재 위치 표시를 보강한다.
+   - touch target과 텍스트 줄바꿈을 다시 점검한다.
+   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
 
-2. **7B Expressive motion polish**
-   - Add reduced-motion-safe page/section reveals, active tab motion, card/tap feedback, and score ring animation.
-   - Keep durations short and avoid bounce/shimmer patterns that make the app feel like therapy, dating, or generic wellness software.
-   - Detailed plan written in `docs/01-plan/features/portfolio-visual-motion-polish.plan.md`.
-   - Implemented and verified locally on `codex/portfolio-readiness-audit`.
+2. **7D Portfolio demo flow hardening**
+   - 데모 리뷰어가 2분 안에 핵심 경험을 완료할 수 있도록 auth bypass, challenge adjustment, reflection submit, progress 확인 플로우를 강화한다.
+   - duplicate reflection/idempotency를 E2E로 직접 검증한다.
+   - portfolio demo path 문서와 checkpoint의 검증 항목을 최신화한다.
+   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
 
-3. **6C Preview QA hardening**
+3. **7E Security and ops proof**
+   - QA bypass production 차단, service role client leakage 방지, RLS coverage, audit 결과, preview smoke 준비 상태를 증빙한다.
+   - CSP는 즉시 enforce하지 않고 report-only/backlog로 다룬다.
+   - 상세 계획은 `docs/01-plan/features/portfolio-accessibility-functional-security.plan.md`에 작성했다.
+
+4. **6C Preview QA hardening**
    - Make preview verification documented and repeatable beyond local QA bypass flows.
    - Detailed plan written in `docs/01-plan/features/post-phase-b-preview-qa.plan.md`.
    - Implemented locally on `codex/preview-qa-hardening`.
