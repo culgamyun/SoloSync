@@ -14,10 +14,7 @@ test.describe('portfolio demo flow', () => {
     await page.locator('a[href$="/challenges/challenge-1/reflect"]').click();
     await expect(page.locator('input[name="outcome"]')).toHaveCount(3);
 
-    await page.locator('input[name="outcome"][value="greeted"]').check({ force: true });
-    await page.locator('input[name="moodBefore"][value="2"]').check({ force: true });
-    await page.locator('input[name="moodAfter"][value="4"]').check({ force: true });
-    await page.locator('input[name="difficultyFelt"][value="3"]').check({ force: true });
+    await page.getByText('눈 마주치고 인사했어요').click();
     await page.locator('textarea[name="reflectionText"]').fill('작게 인사했고, 다음에도 같은 장소에서 다시 시도해볼 수 있겠다.');
     await page.getByRole('button', { name: /회고 저장|Save reflection/ }).click();
 
@@ -28,7 +25,7 @@ test.describe('portfolio demo flow', () => {
   test('keeps repeated reflection submission safe in demo mode', async ({ page }) => {
     async function submitReflectionAgain() {
       await page.goto('/ko/challenges/challenge-1/reflect');
-      await page.locator('input[name="outcome"][value="said_line"]').check({ force: true });
+      await page.getByText('한마디까지 건넸어요').click();
       await page.locator('textarea[name="reflectionText"]').fill('같은 회고를 다시 보내도 데모 흐름은 깨지지 않아야 한다.');
       await page.getByRole('button', { name: /회고 저장|Save reflection/ }).click();
       await expect(page).toHaveURL(/\/ko\/progress$/);

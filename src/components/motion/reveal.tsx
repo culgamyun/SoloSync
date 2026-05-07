@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useAnimationControls, useReducedMotion } from 'framer-motion';
+import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -29,18 +30,32 @@ export function MotionReveal({
   interactive = false
 }: MotionRevealProps) {
   const shouldReduceMotion = useReducedMotion();
+  const controls = useAnimationControls();
   const Component = motionComponents[as];
+
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      controls.set({ opacity: 1, y: 0 });
+      return;
+    }
+
+    controls.set({ opacity: 0, y });
+    void controls.start({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.32,
+        delay,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    });
+  }, [controls, delay, shouldReduceMotion, y]);
 
   return (
     <Component
       className={cn(className)}
-      initial={shouldReduceMotion ? false : { opacity: 0, y }}
-      animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.32,
-        delay,
-        ease: [0.22, 1, 0.36, 1]
-      }}
+      initial={false}
+      animate={controls}
       whileHover={interactive && !shouldReduceMotion ? { y: -2, scale: 1.006 } : undefined}
       whileTap={interactive && !shouldReduceMotion ? { scale: 0.992 } : undefined}
     >

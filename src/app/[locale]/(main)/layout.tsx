@@ -2,6 +2,7 @@
 import { redirect } from 'next/navigation';
 
 import { TabBar } from '@/components/common/tab-bar';
+import { MotionPageTransition } from '@/components/motion/page-transition';
 import { getViewer } from '@/lib/server/app-data';
 
 export default async function MainLayout({
@@ -24,7 +25,7 @@ export default async function MainLayout({
 
   return (
     <>
-      {children}
+      <MotionPageTransition>{children}</MotionPageTransition>
       <TabBar />
     </>
   );

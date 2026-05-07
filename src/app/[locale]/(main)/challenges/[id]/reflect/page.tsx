@@ -1,8 +1,8 @@
 import { submitReflectionAction } from '@/actions/challenges';
+import { ReflectionSubmitButton } from '@/components/challenges/reflection-submit-button';
 import { AppShell } from '@/components/common/app-shell';
 import { MobileHeader } from '@/components/common/mobile-header';
 import { MotionReveal } from '@/components/motion/reveal';
-import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { getChallengeDetail } from '@/lib/server/app-data';
 import type { ChallengeReflectionOutcome } from '@/types/challenge';
@@ -179,9 +179,7 @@ export default async function ChallengeReflectionPage({
           </MotionReveal>
 
           <MotionReveal delay={0.16}>
-            <Button type='submit' className='w-full'>
-              {isKorean ? '회고 저장' : 'Save reflection'}
-            </Button>
+            <ReflectionSubmitButton locale={language} />
           </MotionReveal>
         </form>
       </div>
