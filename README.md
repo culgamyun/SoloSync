@@ -37,9 +37,23 @@ SoloSync는 Next.js와 Supabase 기반의 hosted-first PWA입니다. 제품의 �
 
 ## 포트폴리오 데모 경로
 
+한 줄 소개: SoloSync는 작은 관계 루틴을 주간 micro-mission으로 실천하게 돕는 PWA입니다.
+
 로컬 포트폴리오 walkthrough는 `/ko/welcome`에서 시작해 login을 지나 home, challenges, mission detail, reflection, progress, settings 순서로 보면 좋습니다. Supabase 프로젝트가 설정되어 있지 않아도 SoloSync는 demo 데이터를 제공하므로 weekly micro-mission 경험을 바로 둘러볼 수 있습니다.
 
 실제 인증 없이 브라우저나 Playwright로 검증하려면 local 또는 preview 환경에서만 `SOLOSYNC_QA_AUTH_BYPASS=true`를 설정하고 `/api/qa/auth-bypass?next=/ko/home`을 여세요. 이 bypass는 production runtime에서 명시적으로 차단되며, 실제 production 데모에는 절대 활성화하면 안 됩니다.
+
+최근 검증된 preview deployment:
+
+- Deployment: `solosyncapp-4v4csk7eo-culgamyuns-projects.vercel.app`
+- Git branch: `codex/portfolio-readiness-audit`
+- Git commit: `73e9562`
+- 검증일: 2026-05-07
+- 결과: preview smoke 21개, portfolio/accessibility E2E 4개 통과
+
+Vercel Authentication이 켜진 preview는 임시 share URL이 필요합니다. share URL은 만료되므로 포트폴리오에 장기 공개 링크를 넣을 때는 새 share URL을 발급하거나, 별도의 공개 demo deployment를 준비하세요.
+
+포트폴리오용 스크린샷은 `docs/portfolio/screenshots/`에 캡처해 둡니다.
 
 ## 주요 명령어
 

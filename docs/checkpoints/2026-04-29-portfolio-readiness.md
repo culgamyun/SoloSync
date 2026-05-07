@@ -8,6 +8,8 @@ SoloSync는 채용 또는 클라이언트 리뷰용 포트폴리오 데모에 �
 
 처음 보는 리뷰어도 로컬에서 welcome, login/demo bypass, home, challenge list, mission detail, reflection, progress, settings를 지나 핵심 루프까지 도달할 수 있습니다.
 
+포트폴리오 한 줄 소개: SoloSync는 작은 관계 루틴을 주간 micro-mission으로 실천하게 돕는 PWA입니다.
+
 전체 readiness: 8.6 / 10
 
 ## 점수
@@ -106,3 +108,14 @@ SoloSync는 채용 또는 클라이언트 리뷰용 포트폴리오 데모에 �
 - `npm run test:e2e:portfolio` - 통과, 4 tests
 - `npm run security:check` - 통과, 0 vulnerabilities
 - 모바일 390px와 데스크톱에서 welcome, home, challenges, mission detail, reflection, progress, settings를 샘플링했고 console error, horizontal overflow, active navigation issue가 발견되지 않았습니다. 스크린샷은 `test-results/portfolio-7c-7e/screenshots/`에 캡처했습니다.
+
+## 2026-05-07 공개 패키징
+
+- 최신 검증 preview deployment: `solosyncapp-4v4csk7eo-culgamyuns-projects.vercel.app`
+- Preview branch: `codex/portfolio-readiness-audit`
+- Preview commit: `73e9562`
+- Vercel share URL 만료: 2026-05-07 23:04:57 KST 기준으로 새 access URL 발급 완료
+- Preview smoke: 21 tests 통과
+- Preview portfolio/accessibility E2E: 4 tests 통과
+- Production deployment는 QA auth bypass가 차단되어 로그인 화면으로 보호되는 것을 확인했습니다. 이는 의도한 보안 동작입니다.
+- 포트폴리오 스크린샷은 `docs/portfolio/screenshots/`에 캡처했습니다.
