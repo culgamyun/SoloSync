@@ -25,7 +25,18 @@ const serverSchema = z.object({
   SOLOSYNC_QA_AUTH_BYPASS: z.union([z.literal('true'), z.literal('false')]).catch('false')
 });
 
-export const publicEnv = publicSchema.parse(process.env);
+const rawPublicEnv = {
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL: process.env.NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL,
+  NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+  NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
+  NEXT_PUBLIC_ENABLE_APPLE_AUTH: process.env.NEXT_PUBLIC_ENABLE_APPLE_AUTH,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN
+};
+
+export const publicEnv = publicSchema.parse(rawPublicEnv);
 export const serverEnv = serverSchema.parse(process.env);
 export const QA_AUTH_BYPASS_COOKIE = 'solosync_qa_auth_bypass';
 

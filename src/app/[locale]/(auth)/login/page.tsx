@@ -17,7 +17,7 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
           <h1 className='mx-auto max-w-[18rem] break-keep font-display text-[2.45rem] font-bold leading-[1.08] tracking-normal'>
             {locale === 'ko' ? '관계 루틴 시작하기' : 'Start your weekly relationship routine'}
           </h1>
-          <p className='mx-auto mt-5 max-w-[19rem] text-[15px] leading-7 text-muted-foreground'>
+          <p className='mx-auto mt-5 max-w-[21rem] break-keep text-[15px] leading-7 text-muted-foreground'>
             {locale === 'ko'
               ? '점수, 챌린지, 코칭 기록을 저장하려면 로그인하세요.'
               : 'Sign in to save your score, weekly challenges and coaching history.'}
