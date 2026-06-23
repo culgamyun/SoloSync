@@ -7,12 +7,12 @@ export default async function NotificationSettingsPage({ params }: { params: Pro
 
   return (
     <AppShell padded={false} header={<MobileHeader title={locale === 'ko' ? '알림' : 'Notifications'} backHref='/settings' centered />}>
-      <div className='px-5 pb-10 pt-6'>
-        <div className='rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
-          <h2 className='font-display text-[1.3rem] font-bold'>
+      <div className='bg-[#fbf6ed] px-5 pb-10 pt-6'>
+        <div className='rounded-lg border border-[#e8ded2] bg-white/74 p-5 shadow-ambient'>
+          <h2 className='font-display text-[1.3rem] font-bold text-[#22251f]'>
             {locale === 'ko' ? '알림 리듬' : 'Notification rhythm'}
           </h2>
-          <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+          <p className='mt-2 text-sm leading-6 text-[#777268]'>
             {locale === 'ko'
               ? '주간 챌린지 생성과 체크인 시점에 맞춰 푸시를 보냅니다.'
               : 'Push nudges arrive when weekly challenges and check-ins are ready.'}

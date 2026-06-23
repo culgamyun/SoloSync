@@ -2,6 +2,7 @@
 
 import 'server-only';
 
+import { buildPreferredMicroMissionSeed } from '@/lib/challenges/profile-personalization';
 import { getSupabaseFunctionsUrl, serverEnv } from '@/lib/env';
 import { calculateBreakdown, sumBreakdown } from '@/lib/utils/score';
 import type { OnboardingAnalysis, OnboardingDraft } from '@/types/onboarding';
@@ -38,6 +39,7 @@ export async function requestOnboardingAnalysis(
 }
 
 export function createFallbackOnboardingAnalysis(payload: OnboardingDraft, locale: string): OnboardingAnalysis {
+  const preferredMissionSeed = buildPreferredMicroMissionSeed(locale, payload.routineSpaces ?? [], payload.socialFears ?? []);
   const breakdown = calculateBreakdown({
     completedChallengesLast4Weeks: 0,
     totalChallengesLast4Weeks: 0,
@@ -54,19 +56,18 @@ export function createFallbackOnboardingAnalysis(payload: OnboardingDraft, local
         ? '처음부터 크게 바꾸기보다 부담이 낮은 연결 하나를 꾸준히 만드는 편이 가장 잘 맞아 보여요.'
         : 'A low-pressure, repeatable connection will likely move your score faster than trying to change everything at once.',
     firstChallenge: {
-      title:
-        locale === 'ko' ? '이번 주 안부 메시지 1개 보내기' : 'Send one thoughtful check-in this week',
-      description:
-        locale === 'ko'
-          ? '오랫동안 연락하지 않은 사람 한 명에게 구체적인 안부 메시지를 보내보세요.'
-          : 'Reach out to one person you have drifted from and make the message specific.',
+      title: preferredMissionSeed.title,
+      description: preferredMissionSeed.description,
       difficulty: 'easy',
-      category: 'maintain',
-      conversation_starters:
-        locale === 'ko'
-          ? ['문득 네 생각이 났어.', '요즘 어떻게 지내?', '이번 주에 잠깐 커피 어때?']
-          : ['I thought of you this week.', 'How have you been really?', 'Want to grab coffee sometime soon?'],
-      estimated_time: '10min'
+      category: 'reach_out',
+      conversation_starters: preferredMissionSeed.conversationStarters,
+      estimated_time: '10min',
+      mission_kind: 'micro_social',
+      mission_context: preferredMissionSeed.missionContext,
+      safe_line: preferredMissionSeed.safeLine,
+      minimum_win: preferredMissionSeed.minimumWin,
+      fear: preferredMissionSeed.fear,
+      reframe: preferredMissionSeed.reframe
     }
   };
 }

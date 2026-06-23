@@ -19,14 +19,16 @@ const initialDraft: OnboardingDraft = {
     colleagues: 4
   },
   goals: ['deepen_existing'],
-  comfortLevel: 'medium'
+  comfortLevel: 'medium',
+  routineSpaces: ['cafe'],
+  socialFears: ['being_judged']
 };
 
 type OnboardingState = {
   draft: OnboardingDraft;
   updateDraft: (patch: Partial<OnboardingDraft>) => void;
   updateRelationshipMap: (key: keyof OnboardingDraft['relationshipMap'], value: number) => void;
-  toggleListValue: (field: 'barriers' | 'goals', value: string) => void;
+  toggleListValue: (field: 'barriers' | 'goals' | 'routineSpaces' | 'socialFears', value: string) => void;
   reset: () => void;
 };
 
@@ -47,7 +49,7 @@ export const useOnboardingStore = create<OnboardingState>()(
         })),
       toggleListValue: (field, value) =>
         set((state) => {
-          const values = state.draft[field];
+          const values = (state.draft[field] ?? []) as string[];
           return {
             draft: {
               ...state.draft,

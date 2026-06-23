@@ -5,9 +5,15 @@ import { useState, useTransition } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { getSupabaseFunctionsUrl } from '@/lib/env';
 import { quickReplies } from '@/lib/constants/coach';
+import type { ChallengeRecord } from '@/types/challenge';
 import type { CoachMessage, CoachSessionType, CoachStreamEvent } from '@/types/coach';
 
-export function useCoachStream(initialMessages: CoachMessage[], sessionType: CoachSessionType, locale: string) {
+export function useCoachStream(
+  initialMessages: CoachMessage[],
+  sessionType: CoachSessionType,
+  locale: string,
+  suggestedContext: ChallengeRecord[] = []
+) {
   const [messages, setMessages] = useState<CoachMessage[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -67,8 +73,20 @@ export function useCoachStream(initialMessages: CoachMessage[], sessionType: Coa
           },
           body: JSON.stringify({
             sessionType,
+            locale,
             message: prompt,
-            history: nextHistory
+            history: nextHistory,
+            suggestedContext: suggestedContext.slice(0, 2).map((challenge) => ({
+              title: challenge.title,
+              description: challenge.description,
+              missionKind: challenge.missionKind,
+              missionContext: challenge.missionContext,
+              safeLine: challenge.safeLine,
+              minimumWin: challenge.minimumWin,
+              fear: challenge.fear,
+              reframe: challenge.reframe,
+              status: challenge.status
+            }))
           })
         });
 

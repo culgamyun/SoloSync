@@ -22,7 +22,7 @@ export function AppShell({
   return (
     <main
       className={cn(
-        'app-shell-frame mx-auto flex min-h-screen w-full max-w-[430px] flex-col overflow-hidden border-x border-line md:my-5 md:min-h-[calc(100svh-2.5rem)] md:rounded-lg md:border md:shadow-sanctuary',
+        'app-shell-frame mx-auto flex min-h-screen w-full max-w-[430px] flex-col overflow-hidden bg-background md:my-5 md:min-h-[calc(100svh-2.5rem)] md:rounded-[28px] md:border md:border-line md:shadow-sanctuary',
         surfaceClassName,
         className
       )}
@@ -31,7 +31,7 @@ export function AppShell({
       <div
         className={cn(
           'flex-1',
-          padded && 'px-5 pb-10 pt-6',
+          padded && 'px-5 pb-10 pt-5',
           tabBarInset && 'pb-32',
           contentClassName
         )}

@@ -1,3 +1,5 @@
+import { ArrowRight, CalendarCheck2, MessageCircleHeart, Sparkles } from 'lucide-react';
+
 import { AppShell } from '@/components/common/app-shell';
 import { ChallengeList } from '@/components/challenges/challenge-list';
 import { Button } from '@/components/ui/button';
@@ -36,18 +38,28 @@ export default async function ChallengesPage({
   const displayName = viewer?.displayName ?? (locale === 'ko' ? '당신' : 'you');
 
   return (
-    <AppShell>
-      <section>
-        <p className='font-data text-[12px] font-bold tracking-normal text-primary/80'>
-          {locale === 'ko' ? '성장을 위한 발걸음' : 'Practical momentum'}
-        </p>
-        <h1 className='mt-3 whitespace-pre-line break-keep text-balance font-display text-[2.35rem] font-bold leading-[1.04] tracking-normal text-foreground'>
-          {locale === 'ko' ? `${displayName}님의\n새로운 도전들` : 'Your next real-world\nchallenges'}
+    <AppShell contentClassName='bg-[#fbf6ed] px-5 pb-32 pt-5'>
+      <section className='relative overflow-hidden rounded-lg bg-[#8f9b84] px-5 py-5 text-white shadow-float'>
+        <div className='absolute -right-8 -top-12 h-28 w-28 rounded-full border border-white/18' />
+        <div className='flex items-center gap-3'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-full bg-white/86 text-[#8f9b84] shadow-sm'>
+            <CalendarCheck2 className='h-5 w-5' aria-hidden />
+          </div>
+          <p className='font-data text-[12px] font-bold uppercase text-white/74'>
+            {locale === 'ko' ? '이번 주 루틴' : 'Weekly routine'}
+          </p>
+        </div>
+        <h1 className='mt-5 whitespace-pre-line break-keep text-balance font-display text-[1.82rem] font-bold leading-[1.06] text-white'>
+          {locale === 'ko' ? `${displayName}님의\n관계 미션` : 'Your relationship\nmissions'}
         </h1>
-        <div className='editorial-rule' />
+        <p className='mt-3 max-w-[18rem] text-[13px] leading-5 text-white/82'>
+          {locale === 'ko'
+            ? '오늘 할 수 있는 가장 작은 연결부터 고르세요.'
+            : 'Choose the smallest connection you can make today.'}
+        </p>
       </section>
 
-      <div className='no-scrollbar mt-8 flex gap-3 overflow-x-auto pb-2'>
+      <div className='no-scrollbar mt-6 flex gap-3 overflow-x-auto pb-2'>
         {filters.map((filter) => {
           const active = filter.key === activeFilter;
           return (
@@ -57,8 +69,8 @@ export default async function ChallengesPage({
               className={cn(
                 'whitespace-nowrap rounded-md border px-5 py-3 text-sm font-bold transition',
                 active
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-line bg-surface-high text-muted-foreground hover:bg-surface-low'
+                  ? 'border-accent bg-accent text-white shadow-ambient'
+                  : 'border-[#e5dbcf] bg-white/72 text-[#777268] hover:bg-white'
               )}
             >
               {filter.label[locale === 'en' ? 'en' : 'ko']}
@@ -71,17 +83,23 @@ export default async function ChallengesPage({
         <ChallengeList challenges={filtered} locale={locale} variant='list' />
       </div>
 
-      <section className='mt-8 overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
-        <div className='relative px-5 py-6 text-primary-foreground'>
-          <div className='absolute bottom-[-28px] right-[-18px] text-[9rem] font-bold text-white/10'>★</div>
-          <p className='font-data text-[11px] font-bold uppercase tracking-normal text-white/60'>
+      <section className='mt-8 overflow-hidden rounded-lg border border-[#e8ded2] bg-white/74 shadow-float'>
+        <div className='relative px-5 py-6 text-[#22251f]'>
+          <div className='absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-[#f5ded6] text-accent'>
+            <Sparkles className='h-6 w-6' aria-hidden />
+          </div>
+          <p className='font-data text-[11px] font-bold uppercase text-accent'>
             {locale === 'ko' ? '다음 연결 추천' : 'Next move'}
           </p>
-          <h2 className='mt-3 max-w-[12rem] whitespace-pre-line break-keep font-display text-[1.8rem] font-bold leading-[1.04] tracking-normal'>
-            {locale === 'ko' ? '함께 성장하는\n솔로들의 챌린지 엿보기' : 'See what the coach\nsuggests next'}
+          <h2 className='mt-3 max-w-[15rem] whitespace-pre-line break-keep font-display text-[1.75rem] font-bold leading-[1.08]'>
+            {locale === 'ko' ? '막히면 코치가\n더 작은 버전으로 줄여줘요' : 'If it feels heavy,\nthe coach scales it down'}
           </h2>
-          <Button asChild variant='secondary' className='mt-6 bg-white/18 text-white hover:bg-white/24'>
-            <Link href='/coach'>{locale === 'ko' ? '코치 열기' : 'Open coach'}</Link>
+          <Button asChild variant='secondary' className='mt-6 rounded-lg border-[#e8ded2] bg-[#fffaf2] text-[#22251f] hover:bg-white'>
+            <Link href='/coach'>
+              <MessageCircleHeart className='h-4 w-4' aria-hidden />
+              {locale === 'ko' ? '코치 열기' : 'Open coach'}
+              <ArrowRight className='h-4 w-4' aria-hidden />
+            </Link>
           </Button>
         </div>
       </section>

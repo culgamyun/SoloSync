@@ -5,29 +5,29 @@
 @tailwind utilities;
 
 :root {
-  --background: 105 29% 97%;
-  --foreground: 140 9% 14%;
-  --surface: 105 29% 97%;
-  --surface-low: 137 26% 95%;
+  --background: 38 52% 96%;
+  --foreground: 96 8% 13%;
+  --surface: 38 52% 96%;
+  --surface-low: 34 48% 92%;
   --surface-high: 0 0% 100%;
-  --surface-soft: 137 26% 95%;
-  --muted: 137 26% 95%;
-  --muted-foreground: 143 6% 43%;
-  --border: 133 13% 86%;
+  --surface-soft: 33 44% 90%;
+  --muted: 33 44% 90%;
+  --muted-foreground: 92 6% 41%;
+  --border: 31 28% 84%;
   --input: 0 0% 100%;
-  --ring: 169 71% 25%;
-  --line: 133 13% 86%;
-  --primary: 169 71% 25%;
+  --ring: 168 70% 25%;
+  --line: 31 28% 84%;
+  --primary: 168 70% 25%;
   --primary-foreground: 0 0% 98%;
-  --secondary: 214 78% 69%;
-  --secondary-foreground: 215 23% 15%;
-  --accent: 6 48% 53%;
+  --secondary: 84 12% 58%;
+  --secondary-foreground: 95 10% 18%;
+  --accent: 15 59% 62%;
   --accent-foreground: 0 0% 98%;
-  --observation: 214 78% 69%;
-  --reflection: 6 48% 53%;
-  --peach: 6 48% 53%;
-  --mint: 137 26% 95%;
-  --sun: 214 78% 69%;
+  --observation: 84 12% 58%;
+  --reflection: 15 59% 62%;
+  --peach: 15 59% 62%;
+  --mint: 84 16% 84%;
+  --sun: 38 70% 73%;
   --success: 159 60% 31%;
   --warning: 46 100% 35%;
   --danger: 351 65% 57%;
@@ -84,10 +84,9 @@ body {
     system-ui,
     sans-serif;
   background-image:
-    linear-gradient(hsla(var(--line), 0.42) 1px, transparent 1px),
-    linear-gradient(90deg, hsla(var(--line), 0.42) 1px, transparent 1px),
+    radial-gradient(circle at 12% 0%, hsla(var(--peach), 0.12), transparent 28rem),
     linear-gradient(180deg, hsl(var(--background)), hsl(var(--surface-low)));
-  background-size: 32px 32px, 32px 32px, auto;
+  background-size: auto;
 }
 
 main {
@@ -114,10 +113,7 @@ a {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    linear-gradient(hsla(var(--line), 0.36) 1px, transparent 1px),
-    linear-gradient(90deg, hsla(var(--line), 0.36) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background: linear-gradient(180deg, hsla(var(--surface-high), 0.52), transparent 18rem);
 }
 
 .cta-gradient {

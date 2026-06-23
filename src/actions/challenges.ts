@@ -10,6 +10,7 @@ import {
 } from '@/lib/challenges/micro-mission-adjustments';
 import { getSuggestedWeekLabel } from '@/lib/server/app-data';
 import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
+import { refreshSocialHealthScore } from '@/lib/server/score-rollup';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/types';
 import { getChallengeXp, getReflectionXp, getLevelFromXp } from '@/lib/utils/xp';
@@ -76,6 +77,18 @@ function redirectToProgress(locale: string): never {
   redirectTo(`/${locale}/progress`);
 }
 
+async function refreshScoreSafely(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  locale: string
+) {
+  try {
+    await refreshSocialHealthScore(supabase, userId, locale);
+  } catch {
+    // Score refresh should never block the core mission/reflection flow.
+  }
+}
+
 export async function updateChallengeStatusAction(formData: FormData) {
   const locale = String(formData.get('locale') ?? 'ko');
   const challengeId = String(formData.get('challengeId'));
@@ -127,6 +140,10 @@ export async function updateChallengeStatusAction(formData: FormData) {
     });
   }
 
+  if (nextStatus === 'completed' || nextStatus === 'skipped') {
+    await refreshScoreSafely(supabase, user.id, locale);
+  }
+
   revalidatePath(`/${locale}/home`);
   revalidatePath(`/${locale}/challenges`);
   revalidatePath(`/${locale}/progress`);
@@ -172,6 +189,7 @@ export async function submitReflectionAction(formData: FormData) {
     .maybeSingle();
 
   if (!insertedReflection) {
+    await refreshScoreSafely(supabase, user.id, locale);
     revalidatePath(`/${locale}/challenges`);
     revalidatePath(`/${locale}/progress`);
     redirectToProgress(locale);
@@ -184,6 +202,8 @@ export async function submitReflectionAction(formData: FormData) {
     xp,
     level: getLevelFromXp(xp).id
   });
+
+  await refreshScoreSafely(supabase, user.id, locale);
 
   revalidatePath(`/${locale}/challenges`);
   revalidatePath(`/${locale}/progress`);
@@ -212,6 +232,8 @@ export async function submitWeeklyCheckInAction(formData: FormData) {
     energy_score: Number(formData.get('energyScore') ?? 3),
     note: String(formData.get('note') ?? '')
   });
+
+  await refreshScoreSafely(supabase, user.id, locale);
 
   revalidatePath(`/${locale}/home`);
   revalidatePath(`/${locale}/progress`);
@@ -258,8 +280,21 @@ export async function adjustMicroMissionAction(formData: FormData) {
     redirectTo(getChallengeDetailHref(locale, challengeId, { adjustmentError: 'completed' }));
   }
 
+  let routineSpaces: string[] = [];
+
+  try {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('routine_spaces')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    routineSpaces = profile?.routine_spaces ?? [];
+  } catch {
+    routineSpaces = [];
+  }
+
   const currentMission = mapChallengeRowToRecord(challenge);
-  const nextMission = buildAdjustedMicroMission(currentMission, requestType, locale);
+  const nextMission = buildAdjustedMicroMission(currentMission, requestType, locale, routineSpaces);
 
   const { error: adjustmentInsertError } = await supabase.from('challenge_mission_adjustments').insert({
     challenge_id: challenge.id,

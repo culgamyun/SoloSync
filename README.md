@@ -1,96 +1,119 @@
 # SoloSync
 
-SoloSync는 Next.js와 Supabase 기반의 hosted-first PWA입니다. 제품의 현재 초점은 AI 기반 소셜 헬스 코치이며, 핵심 사용 경험은 매주 하나의 작은 관계 루틴을 실행하는 weekly micro-mission입니다. 졸업, 이사, 전역, 이직 이후 관계가 얕아진 사람이 일상 공간에서 부담 낮은 사회적 연습을 다시 시작하도록 돕습니다.
+SoloSync는 현실의 관계를 다시 움직이게 만드는 AI 소셜 헬스 코치입니다.
 
-이 제품은 데이팅, 모임 매칭, 친구 추천, 치료 앱이 아닙니다. 사용자가 안전한 한 문장을 고르고, 아주 작은 행동을 시도하고, 미션이 실제로 일어나지 않았더라도 수치심 없이 회고하도록 돕습니다. 목표는 "내 삶은 관계적으로 막혔다"는 생각에 대한 작은 반례를 하나씩 만드는 것입니다.
+졸업, 이사, 전역, 이직, 재택 생활처럼 자연스럽게 사람을 만날 계기가 줄어든 시기에, 사용자가 부담 낮은 관계 루틴을 한 주에 하나씩 실행하도록 돕습니다. 목표는 더 많은 사람을 만나게 하는 것이 아니라, 이미 삶 안에 있는 사람들과의 연결을 조금 덜 미루게 만드는 것입니다.
+
+## 한 줄 소개
+
+SoloSync는 안부, 대화, 회고를 작은 주간 micro-mission으로 바꿔 주는 PWA입니다.
+
+## 문제
+
+사회적 관계가 약해질 때 사람들은 보통 거창한 해결책을 떠올립니다. 모임에 나가야 한다거나, 새로운 친구를 만들어야 한다거나, 더 적극적인 사람이 되어야 한다고 느낍니다.
+
+하지만 실제로 필요한 첫 행동은 훨씬 작을 때가 많습니다.
+
+- 오랫동안 연락하지 않은 사람에게 짧은 안부를 보내기
+- 자주 마주치는 사람에게 한 문장 더 건네기
+- 약속을 잡지 못했더라도 왜 막혔는지 수치심 없이 돌아보기
+- 다음 주에는 더 쉬운 장소, 더 짧은 문장, 더 낮은 난이도로 다시 시도하기
+
+SoloSync는 이 작은 행동을 제품의 중심 경험으로 만듭니다.
+
+## 대상 사용자
+
+SoloSync는 관계가 완전히 끊어진 사람보다, 관계를 다시 시작하고 싶지만 어디서부터 해야 할지 막막한 사람을 위한 제품입니다.
+
+- 졸업이나 이직 이후 친구와 자연스럽게 멀어진 사람
+- 이사 후 새로운 동네에서 관계 루틴이 없는 사람
+- 재택근무나 혼자 사는 생활이 길어져 대화 기회가 줄어든 사람
+- 모임 앱이나 데이팅 앱은 부담스럽지만, 일상 속 연결은 회복하고 싶은 사람
+- 사교성이 부족해서가 아니라 시작 비용이 커서 연락을 미루는 사람
+
+## 제품 경험
+
+SoloSync의 기본 흐름은 단순합니다.
+
+1. 사용자는 온보딩에서 현재 생활 리듬, 관계 상태, 부담스러운 상황, 편한 장소를 답합니다.
+2. SoloSync는 사용자의 소셜 헬스 상태를 가볍게 분석하고 첫 주간 micro-mission을 제안합니다.
+3. 사용자는 이번 주에 실행 가능한 작은 관계 행동을 확인합니다.
+4. 미션이 부담스러우면 더 쉬운 문장, 더 짧은 행동, 다른 장소로 조정합니다.
+5. 실행 후에는 성공 여부보다 실제로 어떤 일이 있었는지 회고합니다.
+6. 다음 주에는 이전 결과를 바탕으로 더 현실적인 미션을 받습니다.
+
+## 핵심 기능
+
+### Social Health Score
+
+사용자의 관계 상태를 하나의 점수로 단순화하되, 점수 자체보다 변화 방향을 보여주는 데 초점을 둡니다. 연결 빈도, 관계 다양성, 챌린지 실행, 주관적 만족도를 함께 반영합니다.
+
+### Weekly Micro-Mission
+
+매주 하나의 작은 관계 행동을 제안합니다. 미션은 거창한 이벤트가 아니라 실제 생활 속에서 가능한 행동이어야 합니다.
+
+예시는 다음과 같습니다.
+
+- "퇴근 후 자주 들르는 카페에서 직원에게 오늘 추천 메뉴를 물어보기"
+- "오래 연락하지 않은 친구에게 부담 없는 안부 한 문장 보내기"
+- "같은 팀 동료에게 점심 메뉴를 같이 고르자고 말해보기"
+
+### Safe Line
+
+사용자가 바로 쓸 수 있는 짧은 문장을 제공합니다. 관계 행동에서 가장 큰 부담은 무엇을 말해야 할지 모르는 순간이므로, SoloSync는 미션마다 안전한 시작 문장을 함께 제안합니다.
+
+### Minimum Win
+
+미션의 성공 기준을 낮게 잡습니다. 긴 대화를 나누거나 약속을 잡는 것이 아니라, 한 문장을 보냈거나 인사를 건넨 것만으로도 충분한 진전으로 봅니다.
+
+### Mission Adjustment
+
+미션이 너무 크거나 장소가 맞지 않으면 조정할 수 있습니다. SoloSync는 사용자를 밀어붙이기보다, 실행 가능한 크기로 다시 줄이는 것을 중요하게 봅니다.
+
+### Reflection
+
+회고는 성공과 실패를 가르는 평가가 아닙니다. 사용자가 실제로 무엇을 했는지, 무엇이 막혔는지, 다음에는 어떤 크기로 다시 시도할 수 있는지를 기록합니다.
+
+### AI Coach
+
+코치는 감정 분석이나 긴 상담보다 다음 행동을 찾는 데 집중합니다. 사용자가 막힌 이유를 말하면, 코치는 더 작고 구체적인 행동으로 다시 번역합니다.
+
+## 제품 원칙
+
+SoloSync는 데이팅 앱이 아닙니다.
+
+SoloSync는 친구 추천 앱이 아닙니다.
+
+SoloSync는 치료 앱이 아닙니다.
+
+SoloSync는 사용자가 더 외향적인 사람이 되도록 요구하지 않습니다. 대신 지금의 성향, 생활 반경, 에너지 수준 안에서 가능한 가장 작은 연결 행동을 찾습니다.
+
+## 성공의 정의
+
+SoloSync에서 성공은 큰 변화가 아닙니다.
+
+- 연락을 미루던 사람에게 한 문장을 보낸 것
+- 대화를 오래 이어가지 못했어도 먼저 인사한 것
+- 미션을 하지 못한 이유를 비난 없이 기록한 것
+- 다음 주에는 더 쉬운 행동으로 다시 시도하기로 한 것
+
+이런 작은 반례가 쌓이면, 사용자는 "나는 관계적으로 막혀 있다"는 생각에서 조금씩 벗어날 수 있습니다.
 
 ## 현재 제품 범위
 
-- 챌린지 목록, 상세, 회고 플로우 안의 weekly micro-mission
-- 미션 맥락, safe line, minimum win, fear, reframe 필드
-- `greeted`, `said_line`, `could_not_do_it` 회고 결과
-- Supabase가 설정되지 않았을 때 동작하는 demo fallback 데이터
-- 브라우저와 Playwright 검증을 위한 개발 전용 QA auth bypass
-- "실패/스킵 후 다음 주에 돌아온 사용자"를 보는 return report RPC
+현재 SoloSync는 주간 micro-mission 경험을 중심으로 구성되어 있습니다.
 
-## 기술 스택
+- 온보딩 기반 소셜 헬스 분석
+- 개인화된 주간 micro-mission
+- 미션 상세, safe line, minimum win, reframe
+- 미션 난이도와 맥락 조정
+- 실행 결과 회고
+- 소셜 헬스 점수와 진행 추이
+- AI 코치 대화
+- 한국어와 영어 지원
 
-- Next.js App Router + TypeScript strict
-- Tailwind CSS + 가벼운 shadcn-style UI primitives
-- next-intl (`ko` / `en`)
-- Supabase Auth / Postgres / Edge Functions
-- AI 점수화, 코칭, 챌린지 생성을 위한 Gemini
-- 온보딩 draft 상태를 위한 Zustand
-- 점수 히스토리를 위한 Recharts
-- Web Push service worker
-- Vitest와 Playwright
+## 방향
 
-## 설정
+SoloSync의 장기 방향은 사용자의 일상 속 관계 회복 루틴이 되는 것입니다.
 
-1. `.env.example`을 `.env.local`로 복사하고 Supabase, Gemini, 선택 VAPID/Sentry 값을 채웁니다.
-2. `npm install`로 의존성을 설치합니다.
-3. Supabase 프로젝트에 `supabase/migrations`의 SQL 파일을 적용하거나, 프로젝트를 link한 뒤 `npx supabase db push`를 실행합니다.
-4. `supabase/functions` 아래의 Edge Functions를 배포합니다.
-5. `npm run dev`로 로컬 개발 서버를 실행합니다.
-
-자세한 로컬 환경 설정은 `ENV_LOCAL_SETUP.md`를 참고하세요.
-
-## 포트폴리오 데모 경로
-
-한 줄 소개: SoloSync는 작은 관계 루틴을 주간 micro-mission으로 실천하게 돕는 PWA입니다.
-
-로컬 포트폴리오 walkthrough는 `/ko/welcome`에서 시작해 login을 지나 home, challenges, mission detail, reflection, progress, settings 순서로 보면 좋습니다. Supabase 프로젝트가 설정되어 있지 않아도 SoloSync는 demo 데이터를 제공하므로 weekly micro-mission 경험을 바로 둘러볼 수 있습니다.
-
-실제 인증 없이 브라우저나 Playwright로 검증하려면 local 또는 preview 환경에서만 `SOLOSYNC_QA_AUTH_BYPASS=true`를 설정하고 `/api/qa/auth-bypass?next=/ko/home`을 여세요. 이 bypass는 production runtime에서 명시적으로 차단되며, 실제 production 데모에는 절대 활성화하면 안 됩니다.
-
-최근 검증된 preview deployment:
-
-- Deployment: `solosyncapp-4v4csk7eo-culgamyuns-projects.vercel.app`
-- Git branch: `codex/portfolio-readiness-audit`
-- Git commit: `73e9562`
-- 검증일: 2026-05-07
-- 결과: preview smoke 21개, portfolio/accessibility E2E 4개 통과
-
-Vercel Authentication이 켜진 preview는 임시 share URL이 필요합니다. share URL은 만료되므로 포트폴리오에 장기 공개 링크를 넣을 때는 새 share URL을 발급하거나, 별도의 공개 demo deployment를 준비하세요.
-
-포트폴리오용 스크린샷은 `docs/portfolio/screenshots/`에 캡처해 둡니다.
-
-## 주요 명령어
-
-- `npm run dev` - 로컬 Next.js 서버를 실행합니다.
-- `npm run check` - lint, typecheck, unit test를 한 번에 실행합니다.
-- `npm run test:e2e` - 3100번 포트의 QA auth-bypass 개발 서버를 대상으로 Playwright를 실행합니다.
-- `npm run test:e2e:smoke` - 안정적인 로컬 Chromium smoke flow를 실행합니다.
-- `npm run test:e2e:portfolio` - 접근성/포트폴리오 데모 플로우를 Chromium으로 검증합니다.
-- `npm run qa:preview -- --url https://...` - preview URL을 대상으로 smoke flow를 실행합니다.
-- `npm run security:check` - service role key client 노출, Supabase RLS coverage, production dependency audit를 확인합니다.
-- `npm run build` - production Next.js build를 생성합니다.
-
-## 주요 경로
-
-- `src/app/[locale]` - locale별 앱 라우트
-- `src/actions` - 온보딩, 챌린지, 회고, 설정 server actions
-- `src/lib/server/app-data.ts` - demo fallback과 서버 데이터 조회
-- `src/lib/server/demo-mode.ts` - QA/demo-mode 사용자 컨텍스트
-- `src/app/api/qa/auth-bypass/route.ts` - non-production QA login bypass
-- `supabase/migrations` - schema, RLS, helper functions, return report RPC
-- `supabase/functions` - AI, 점수화, 챌린지, 알림 Edge Functions
-- `tests/e2e/smoke.spec.ts` - localized app shell과 micro-mission 경로 smoke coverage
-
-## 프로젝트 문서
-
-- `DESIGN.md` - SoloSync 디자인 시스템과 제품 UI guardrails
-- `docs/01-plan/weekly-micro-mission-roadmap.md` - 제품 방향과 우선순위
-- `docs/weekly-micro-mission-worklog.md` - 현재 실행 상태와 backlog
-- `docs/01-plan/features/weekly-micro-mission-v1.plan.md` - 구현 계획과 엔지니어링 결정
-- `docs/checkpoints/` - 날짜별 handoff snapshot
-- `docs/preview-qa-playbook.md` - 반복 가능한 local/preview QA flow
-- `docs/security-ops-proof.md` - 포트폴리오용 보안 및 운영 증빙
-
-## 참고 사항
-
-- Supabase env vars가 없으면 앱은 demo 데이터로 fallback되어 UI를 계속 탐색할 수 있습니다.
-- `SOLOSYNC_QA_AUTH_BYPASS=true`는 local/test 환경에서만 사용하세요. Production은 bypass route를 거부합니다.
-- Preview smoke에서도 `SOLOSYNC_QA_AUTH_BYPASS=true`를 사용할 수 있지만, preview deployment에서만 허용하고 실제 production에는 쓰지 않습니다.
-- Apple auth는 `NEXT_PUBLIC_ENABLE_APPLE_AUTH`로 feature-gate되어 있습니다.
-- Push notification은 유효한 VAPID keys와 배포된 service worker가 필요합니다.
+더 많은 기능을 추가하는 것보다, 매주 하나의 작은 행동을 실제로 하게 만드는 경험을 더 정교하게 만드는 데 집중합니다. 사용자가 앱 안에서 오래 머무는 것보다, 앱 밖의 실제 사람에게 한 번 더 연결되는 것이 더 중요한 지표입니다.

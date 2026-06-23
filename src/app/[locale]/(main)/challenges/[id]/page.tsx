@@ -104,16 +104,16 @@ export default async function ChallengeDetailPage({
       tabBarInset={false}
       header={<MobileHeader title={isKorean ? '챌린지 상세' : 'Challenge details'} backHref='/challenges' centered />}
     >
-      <div className='px-5 pb-10 pt-6'>
-        <MotionReveal as='section' className='overflow-hidden rounded-lg border border-primary bg-primary shadow-float'>
-          <div className='px-5 py-7 text-primary-foreground'>
-            <div className='flex h-12 w-12 items-center justify-center rounded-md border border-white/25 bg-white/12'>
+      <div className='bg-[#fbf6ed] px-5 pb-10 pt-6'>
+        <MotionReveal as='section' className='overflow-hidden rounded-lg bg-[#8f9b84] shadow-float'>
+          <div className='px-5 py-7 text-white'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-full bg-white/86 text-[#8f9b84]'>
               <Icon className='h-6 w-6' />
             </div>
-            <p className='mt-5 font-data text-[11px] font-bold uppercase tracking-normal text-white/70'>
+            <p className='mt-5 font-data text-[11px] font-bold uppercase text-white/72'>
               {getChallengeCategoryLabel(challenge.category, locale)}
             </p>
-            <h1 className='mt-3 break-keep font-display text-[2.15rem] font-bold leading-[1.08] tracking-normal'>
+            <h1 className='mt-3 break-keep font-display text-[2.15rem] font-bold leading-[1.08]'>
               {challenge.title}
             </h1>
             <p className='mt-4 max-w-[17rem] text-[15px] leading-7 text-white/84'>{challenge.description}</p>
@@ -130,13 +130,13 @@ export default async function ChallengeDetailPage({
         </MotionReveal>
 
         {adjustedType ? (
-          <MotionReveal className='mt-6 rounded-lg border border-success/20 bg-success/10 px-4 py-3 text-sm font-medium leading-6 text-success'>
+          <MotionReveal className='mt-6 rounded-lg border border-[#dde2d4] bg-[#f1f4ea] px-4 py-3 text-sm font-medium leading-6 text-[#62705d]'>
             {adjustmentBannerCopy[language][adjustedType]}
           </MotionReveal>
         ) : null}
 
         {adjustmentError ? (
-          <MotionReveal className='mt-6 rounded-lg border border-reflection/20 bg-reflection/10 px-4 py-3 text-sm font-medium leading-6 text-reflection'>
+          <MotionReveal className='mt-6 rounded-lg border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium leading-6 text-accent'>
             {adjustmentError === 'completed' ? adjustmentErrorCopy[language].completed : adjustmentErrorCopy[language].default}
           </MotionReveal>
         ) : null}
@@ -145,7 +145,7 @@ export default async function ChallengeDetailPage({
           <MotionReveal
             as='section'
             delay={0.08}
-            className='mt-8 overflow-hidden rounded-lg border border-line bg-surface-high shadow-ambient'
+            className='mt-8 overflow-hidden rounded-lg border border-[#e8ded2] bg-white/74 shadow-ambient'
           >
             <FieldNoteImage
               src='/images/field-notes/micro-mission-field-note.webp'
@@ -153,39 +153,39 @@ export default async function ChallengeDetailPage({
               sizes='(max-width: 430px) 100vw, 430px'
             />
             <div className='p-5'>
-              <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
+              <p className='font-data text-[12px] font-bold uppercase text-accent'>
                 {isKorean ? '이번 주 작은 접촉' : "This week's micro-mission"}
               </p>
-              <h2 className='mt-2 font-display text-[1.3rem] font-bold tracking-normal'>
+              <h2 className='mt-2 font-display text-[1.3rem] font-bold text-[#22251f]'>
                 {isKorean ? '작게 시작해도 충분해요' : 'Small counts here'}
               </h2>
               <div className='mt-5 space-y-3 text-sm leading-6'>
                 {challenge.missionContext ? (
                   <div className='rounded-md border border-line bg-surface-low px-4 py-3'>
-                    <span className='font-semibold text-foreground'>{isKorean ? '장소' : 'Context'}: </span>
-                    <span className='text-muted-foreground'>{challenge.missionContext}</span>
+                    <span className='font-semibold text-[#22251f]'>{isKorean ? '장소' : 'Context'}: </span>
+                    <span className='text-[#777268]'>{challenge.missionContext}</span>
                   </div>
                 ) : null}
                 {challenge.minimumWin ? (
-                  <div className='rounded-md border border-primary/20 bg-primary/10 px-4 py-3'>
-                    <span className='font-semibold text-secondary'>{isKorean ? '최소 성공' : 'Minimum win'}: </span>
-                    <span className='text-secondary'>{challenge.minimumWin}</span>
+                  <div className='rounded-md border border-accent/20 bg-accent/10 px-4 py-3'>
+                    <span className='font-semibold text-accent'>{isKorean ? '최소 성공' : 'Minimum win'}: </span>
+                    <span className='text-accent'>{challenge.minimumWin}</span>
                   </div>
                 ) : null}
                 {challenge.safeLine ? (
-                  <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3'>
-                    <span className='font-semibold text-foreground'>{isKorean ? '안전한 한마디' : 'Safe line'}: </span>
-                    <span className='text-muted-foreground'>&quot;{challenge.safeLine}&quot;</span>
+                  <div className='rounded-md border border-[#dde2d4] bg-[#f1f4ea] px-4 py-3'>
+                    <span className='font-semibold text-[#22251f]'>{isKorean ? '안전한 한마디' : 'Safe line'}: </span>
+                    <span className='text-[#66705f]'>&quot;{challenge.safeLine}&quot;</span>
                   </div>
                 ) : null}
                 {challenge.fear ? (
-                  <div className='rounded-md border border-reflection/20 bg-reflection/10 px-4 py-3'>
-                    <span className='font-semibold text-primary'>{isKorean ? '걱정' : 'Fear'}: </span>
-                    <span className='text-primary'>{challenge.fear}</span>
+                  <div className='rounded-md border border-[#f1ddd2] bg-[#fff4ed] px-4 py-3'>
+                    <span className='font-semibold text-[#9a7445]'>{isKorean ? '걱정' : 'Fear'}: </span>
+                    <span className='text-[#9a7445]'>{challenge.fear}</span>
                   </div>
                 ) : null}
                 {challenge.reframe ? (
-                  <div className='rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-muted-foreground'>
+                  <div className='rounded-md border border-[#dde2d4] bg-[#f1f4ea] px-4 py-3 text-[#66705f]'>
                     {challenge.reframe}
                   </div>
                 ) : null}
@@ -196,14 +196,14 @@ export default async function ChallengeDetailPage({
           <MotionReveal
             as='section'
             delay={0.08}
-            className='mt-8 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'
+            className='mt-8 rounded-lg border border-[#e8ded2] bg-white/74 p-5 shadow-ambient'
           >
             <h2 className='font-display text-[1.3rem] font-bold tracking-normal'>
               {isKorean ? '대화 시작 문장' : 'Conversation starters'}
             </h2>
             <div className='mt-4 space-y-3'>
               {challenge.conversationStarters.map((starter) => (
-                <div key={starter} className='rounded-md border border-line bg-surface-low px-4 py-3 text-sm leading-6 text-muted-foreground'>
+                <div key={starter} className='rounded-md border border-[#e8ded2] bg-[#fffaf2] px-4 py-3 text-sm leading-6 text-[#777268]'>
                   {starter}
                 </div>
               ))}
@@ -215,15 +215,15 @@ export default async function ChallengeDetailPage({
           <MotionReveal
             as='section'
             delay={0.12}
-            className='mt-6 rounded-lg border border-line bg-surface-high p-5 shadow-ambient'
+            className='mt-6 rounded-lg border border-[#e8ded2] bg-white/74 p-5 shadow-ambient'
           >
-            <p className='font-data text-[12px] font-bold uppercase tracking-normal text-primary/70'>
+            <p className='font-data text-[12px] font-bold uppercase text-accent'>
               {isKorean ? '너무 크다면' : 'If this feels too much'}
             </p>
-            <h2 className='mt-2 font-display text-[1.2rem] font-bold tracking-normal'>
+            <h2 className='mt-2 font-display text-[1.2rem] font-bold text-[#22251f]'>
               {isKorean ? '이번 주 연결은 망치지 않게 줄여볼 수 있어요' : 'You can scale this down without losing the week'}
             </h2>
-            <p className='mt-3 text-sm leading-6 text-muted-foreground'>
+            <p className='mt-3 text-sm leading-6 text-[#777268]'>
               {isKorean
                 ? '조금 더 작게, 장소 바꾸기, 더 짧은 한마디 중 하나로 다시 맞출 수 있어요.'
                 : 'Choose a smaller version, a different place, or a safer line.'}

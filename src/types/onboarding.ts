@@ -25,6 +25,8 @@ export type OnboardingDraft = {
   relationshipMap: RelationshipMap;
   goals: string[];
   comfortLevel: ComfortLevel;
+  routineSpaces: RoutineSpace[];
+  socialFears: SocialFear[];
 };
 
 export type OnboardingAnalysis = {
@@ -43,5 +45,11 @@ export type OnboardingAnalysis = {
     category: 'reach_out' | 'deepen' | 'explore' | 'maintain';
     conversation_starters: string[];
     estimated_time: '10min' | '30min' | '1hr' | '2hr+';
+    mission_kind?: 'standard' | 'micro_social';
+    mission_context?: string | null;
+    safe_line?: string | null;
+    minimum_win?: string | null;
+    fear?: string | null;
+    reframe?: string | null;
   };
 };

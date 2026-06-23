@@ -51,7 +51,7 @@ export function ChallengeList({
   }
 
   return (
-    <div className={cn(variant === 'home' ? 'space-y-4' : 'space-y-5')}>
+    <div className={cn(variant === 'home' ? 'space-y-3' : 'space-y-4')}>
       {challenges.map((challenge, index) => {
         const Icon = categoryIcons[challenge.category];
         const xp = getChallengeXp(challenge.difficulty);
@@ -68,10 +68,10 @@ export function ChallengeList({
             interactive
             delay={Math.min(index * 0.035, 0.14)}
             key={challenge.id}
-            className='overflow-hidden rounded-lg border border-line bg-surface-high px-5 py-5 shadow-ambient transition hover:border-primary/30'
+            className='overflow-hidden rounded-lg border border-[#e8ded2] bg-white/74 px-4 py-4 shadow-ambient transition hover:-translate-y-0.5 hover:border-accent/35 hover:bg-white'
           >
             <div className='relative'>
-              <div className='absolute right-0 top-0 whitespace-nowrap rounded bg-observation/18 px-3 py-1.5 font-data text-[11px] font-bold leading-none text-foreground'>
+              <div className='absolute right-0 top-0 whitespace-nowrap rounded-md bg-[#f4e4cf] px-3 py-1.5 font-data text-[11px] font-bold leading-none text-[#9a7445]'>
                 +{xp} XP
               </div>
               <div className='flex flex-wrap items-center gap-2 pr-20'>
@@ -81,7 +81,7 @@ export function ChallengeList({
                 </Badge>
                 <Badge variant='neutral'>{getEstimatedTimeLabel(challenge.estimatedTime, locale)}</Badge>
               </div>
-              <div className='mt-4 flex h-10 w-10 items-center justify-center rounded-md border border-line bg-surface-low text-primary'>
+              <div className='mt-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#e7eade] text-[#62705d]'>
                 <Icon className='h-5 w-5' />
               </div>
               <h3
@@ -94,17 +94,17 @@ export function ChallengeList({
               </h3>
             </div>
 
-            <p className='mt-3 break-words text-[14px] leading-6 text-muted-foreground'>{challenge.description}</p>
+            <p className='mt-3 break-words text-[14px] leading-6 text-[#777268]'>{challenge.description}</p>
 
             <div className='mt-4 flex flex-wrap items-center gap-2'>
               <Badge variant='ghost'>{getChallengeStatusLabel(challenge.status, locale)}</Badge>
               {isMicroMission && challenge.minimumWin ? (
-                <span className='text-[11px] font-bold text-primary'>
+                <span className='text-[11px] font-bold text-[#126b5a]'>
                   {locale === 'ko' ? `최소 성공: ${challenge.minimumWin}` : `Minimum win: ${challenge.minimumWin}`}
                 </span>
               ) : (
                 challenge.conversationStarters.slice(0, variant === 'home' ? 1 : 2).map((starter) => (
-                  <span key={starter} className='text-[11px] text-muted-foreground'>
+                  <span key={starter} className='text-[11px] text-[#8e877c]'>
                     &quot;{starter}&quot;
                   </span>
                 ))
@@ -112,7 +112,7 @@ export function ChallengeList({
             </div>
 
             {isMicroMission && challenge.safeLine ? (
-              <div className='mt-4 rounded-md border border-observation/25 bg-observation/10 px-4 py-3 text-sm leading-6 text-muted-foreground'>
+              <div className='mt-4 rounded-md border border-[#dde2d4] bg-[#f1f4ea] px-4 py-3 text-sm leading-6 text-[#66705f]'>
                 <span className='font-semibold text-foreground'>
                   {locale === 'ko' ? '안전한 한마디' : 'Safe line'}:{' '}
                 </span>

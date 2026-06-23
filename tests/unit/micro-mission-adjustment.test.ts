@@ -54,6 +54,14 @@ describe('micro mission adjustments', () => {
     expect(adjusted.estimatedTime).toBe('10min');
   });
 
+  it('uses a saved preferred routine space when switching places', () => {
+    const adjusted = buildAdjustedMicroMission(baseChallenge, 'different_space', 'ko', ['gym']);
+
+    expect(adjusted.title).toContain('헬스장');
+    expect(adjusted.missionContext).toContain('헬스장');
+    expect(adjusted.safeLine).toBe('안녕하세요.');
+  });
+
   it('uses a shorter safer line while keeping the mission active', () => {
     const adjusted = buildAdjustedMicroMission(baseChallenge, 'safer_line', 'ko');
 

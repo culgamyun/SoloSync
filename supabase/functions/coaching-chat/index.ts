@@ -20,8 +20,10 @@ Deno.serve(async (request) => {
 
   const payload = await request.json();
   const sessionType = payload.sessionType ?? 'coaching';
+  const locale = payload.locale === 'en' ? 'en' : 'ko';
   const history = payload.history ?? [];
   const message = payload.message ?? '';
+  const suggestedContext = Array.isArray(payload.suggestedContext) ? payload.suggestedContext.slice(0, 2) : [];
 
   const { data: insertedSession } = await supabase
     .from('coaching_sessions')
@@ -38,10 +40,12 @@ Deno.serve(async (request) => {
   }
 
   const fallback =
-    'Take the smallest real-world action available. One specific message or invitation is better than planning without contact.';
+    locale === 'ko'
+      ? '오늘 가능한 가장 작은 실제 행동 하나로 줄여볼게요. 눈인사, 짧은 한마디, 또는 다음 시도 계획 중 하나만 정하면 충분합니다.'
+      : 'Take the smallest real-world action available. One specific message or invitation is better than planning without contact.';
   const reply = await generateText(
-    'You are SoloSync\'s social health coach. Give one practical response that leads to a real-world human interaction.',
-    { sessionType, message, history },
+    'You are SoloSync\'s social health coach. Use the current mission context when present. Give one practical response that leads to a real-world human interaction. Prefer smaller versions, safe lines, and if-then plans over broad encouragement. Do not diagnose or give medical advice.',
+    { sessionType, locale, message, history, suggestedContext },
     fallback
   );
 

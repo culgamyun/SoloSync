@@ -17,8 +17,8 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
 
   return (
     <AppShell padded={false} header={<MobileHeader title={language === 'ko' ? '프로필' : 'Profile'} backHref='/settings' centered />}>
-      <div className='px-5 pb-10 pt-6'>
-        <form action={updateProfileAction} className='space-y-5 rounded-[2rem] bg-white/84 p-5 shadow-ambient'>
+      <div className='bg-[#fbf6ed] px-5 pb-10 pt-6'>
+        <form action={updateProfileAction} className='space-y-5 rounded-lg border border-[#e8ded2] bg-white/74 p-5 shadow-ambient'>
           <input type='hidden' name='locale' value={locale} />
 
           <div>
@@ -41,7 +41,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
             <select
               name='comfortLevel'
               defaultValue={snapshot.profile?.comfortLevel ?? 'medium'}
-              className='flex h-14 w-full rounded-[1.3rem] border border-transparent bg-white/92 px-5 py-3 text-[15px] text-foreground shadow-ambient outline-none'
+              className='flex h-12 w-full rounded-md border border-line bg-white/76 px-4 py-3 text-[15px] text-foreground shadow-sm outline-none'
             >
               {comfortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -51,7 +51,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
             </select>
           </div>
 
-          <section className='space-y-3 rounded-xl border border-line bg-surface-high p-4'>
+          <section className='space-y-3 rounded-lg border border-[#e8ded2] bg-[#fffaf2] p-4'>
             <div>
               <h2 className='font-display text-[1.1rem] font-bold tracking-normal'>
                 {language === 'ko' ? '자주 지나는 생활 공간' : 'Routine spaces'}
@@ -72,7 +72,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
                     defaultChecked={selectedRoutineSpaces.has(option.value)}
                     className='peer sr-only'
                   />
-                  <span className='inline-flex min-h-11 items-center whitespace-nowrap rounded-md border border-line bg-surface-low px-4 py-2 text-sm font-semibold text-muted-foreground transition peer-checked:border-primary/30 peer-checked:bg-primary/10 peer-checked:text-primary'>
+                  <span className='inline-flex min-h-11 items-center whitespace-nowrap rounded-md border border-[#e8ded2] bg-white/72 px-4 py-2 text-sm font-semibold text-[#777268] transition peer-checked:border-accent/30 peer-checked:bg-accent/10 peer-checked:text-accent'>
                     {option.label[language]}
                   </span>
                 </label>
@@ -80,7 +80,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
             </div>
           </section>
 
-          <section className='space-y-3 rounded-xl border border-line bg-surface-high p-4'>
+          <section className='space-y-3 rounded-lg border border-[#e8ded2] bg-[#fffaf2] p-4'>
             <div>
               <h2 className='font-display text-[1.1rem] font-bold tracking-normal'>
                 {language === 'ko' ? '가장 부담되는 순간' : 'Social fears'}
@@ -101,7 +101,7 @@ export default async function ProfileSettingsPage({ params }: { params: Promise<
                     defaultChecked={selectedSocialFears.has(option.value)}
                     className='peer sr-only'
                   />
-                  <span className='inline-flex min-h-11 items-center whitespace-nowrap rounded-md border border-line bg-surface-low px-4 py-2 text-sm font-semibold text-muted-foreground transition peer-checked:border-observation/30 peer-checked:bg-observation/16 peer-checked:text-foreground'>
+                  <span className='inline-flex min-h-11 items-center whitespace-nowrap rounded-md border border-[#e8ded2] bg-white/72 px-4 py-2 text-sm font-semibold text-[#777268] transition peer-checked:border-[#8f9b84]/40 peer-checked:bg-[#e7eade] peer-checked:text-[#4f5c48]'>
                     {option.label[language]}
                   </span>
                 </label>

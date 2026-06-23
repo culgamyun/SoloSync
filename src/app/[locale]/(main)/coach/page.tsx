@@ -20,7 +20,12 @@ export default async function CoachPage({ params }: { params: Promise<{ locale: 
         />
       }
     >
-      <ChatPanel initialMessages={snapshot.messages} locale={locale} sessionType='coaching' />
+      <ChatPanel
+        initialMessages={snapshot.messages}
+        locale={locale}
+        sessionType='coaching'
+        suggestedContext={snapshot.suggestedContext}
+      />
     </AppShell>
   );
 }

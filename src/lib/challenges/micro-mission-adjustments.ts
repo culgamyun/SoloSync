@@ -1,7 +1,8 @@
 import type { ChallengeAdjustmentRequestType, ChallengeRecord } from '@/types/challenge';
+import type { RoutineSpace } from '@/types/onboarding';
 
 type SupportedLocale = 'ko' | 'en';
-type RoutineSpaceKey = 'cafe' | 'convenience_store';
+type RoutineSpaceKey = RoutineSpace;
 
 export type ChallengeMissionSnapshot = Pick<
   ChallengeRecord,
@@ -51,6 +52,30 @@ const routineSpaceCatalog: Record<
       differentSpaceTitle: '편의점에서 계산 전에 짧게 인사하기',
       saferLineTitle: '편의점에서 짧게 인사하기',
       saferLine: '안녕하세요.'
+    },
+    gym: {
+      label: '헬스장',
+      context: '자주 가는 헬스장',
+      smallerTitle: '헬스장에서 같은 시간대 사람에게 고개 끄덕이기',
+      differentSpaceTitle: '헬스장에서 같은 시간대 사람에게 짧게 인사하기',
+      saferLineTitle: '헬스장에서 짧게 인사하기',
+      saferLine: '안녕하세요.'
+    },
+    beauty_salon: {
+      label: '미용실',
+      context: '자주 가는 미용실',
+      smallerTitle: '미용실에서 들어갈 때 눈인사만 하기',
+      differentSpaceTitle: '미용실에서 짧게 인사하고 앉기',
+      saferLineTitle: '미용실에서 안전한 한마디 하기',
+      saferLine: '안녕하세요. 오늘도 잘 부탁드려요.'
+    },
+    office_building: {
+      label: '회사 건물',
+      context: '회사 건물 로비나 엘리베이터 앞',
+      smallerTitle: '회사 건물에서 고개 끄덕이고 지나가기',
+      differentSpaceTitle: '회사 건물에서 짧게 인사하기',
+      saferLineTitle: '회사 건물에서 부담 낮은 인사하기',
+      saferLine: '안녕하세요.'
     }
   },
   en: {
@@ -68,6 +93,30 @@ const routineSpaceCatalog: Record<
       smallerTitle: 'Make eye contact before paying at the convenience store',
       differentSpaceTitle: 'Say a quick hello before paying',
       saferLineTitle: 'Use a short hello at the convenience store',
+      saferLine: 'Hi.'
+    },
+    gym: {
+      label: 'gym',
+      context: 'The gym you already go to',
+      smallerTitle: 'Nod to someone at the gym',
+      differentSpaceTitle: 'Say a quick hello at the gym',
+      saferLineTitle: 'Use a short hello at the gym',
+      saferLine: 'Hi.'
+    },
+    beauty_salon: {
+      label: 'beauty salon',
+      context: 'A salon you already visit',
+      smallerTitle: 'Make eye contact when you arrive at the salon',
+      differentSpaceTitle: 'Say a quick hello at the salon',
+      saferLineTitle: 'Use a safer line at the salon',
+      saferLine: 'Hi. Good to see you again.'
+    },
+    office_building: {
+      label: 'office building',
+      context: 'The office lobby or elevator area',
+      smallerTitle: 'Nod to someone in your office building',
+      differentSpaceTitle: 'Say a quick hello in your office building',
+      saferLineTitle: 'Use a low-pressure hello in your office building',
       saferLine: 'Hi.'
     }
   }
@@ -104,12 +153,28 @@ function detectRoutineSpaceKey(value: string | null | undefined): RoutineSpaceKe
   }
 
   const normalized = value.toLowerCase();
+  if (normalized === 'cafe' || normalized === 'convenience_store' || normalized === 'gym' || normalized === 'beauty_salon' || normalized === 'office_building') {
+    return normalized as RoutineSpaceKey;
+  }
+
   if (normalized.includes('카페') || normalized.includes('cafe')) {
     return 'cafe';
   }
 
   if (normalized.includes('편의점') || normalized.includes('convenience')) {
     return 'convenience_store';
+  }
+
+  if (normalized.includes('헬스') || normalized.includes('gym')) {
+    return 'gym';
+  }
+
+  if (normalized.includes('미용실') || normalized.includes('salon')) {
+    return 'beauty_salon';
+  }
+
+  if (normalized.includes('회사') || normalized.includes('오피스') || normalized.includes('office') || normalized.includes('elevator')) {
+    return 'office_building';
   }
 
   return null;

@@ -56,14 +56,14 @@ export function ScoreBreakdown({
     return (
       <div className='grid grid-cols-2 gap-3'>
         {items.map((item) => (
-          <div key={item.key} className='rounded-md border border-line bg-surface-high px-4 py-3'>
+          <div key={item.key} className='rounded-md border border-[#e8ded2] bg-white/72 px-4 py-3'>
             <div className='flex items-center justify-between font-data text-[13px] font-bold'>
               <span>
                 {item.icon} {item.value}
               </span>
-              <span className='text-[11px] text-muted-foreground'>/25</span>
+              <span className='text-[11px] text-[#8e877c]'>/25</span>
             </div>
-            <p className='mt-2 text-[11px] text-muted-foreground'>{item.label}</p>
+            <p className='mt-2 text-[11px] text-[#777268]'>{item.label}</p>
           </div>
         ))}
       </div>
@@ -75,12 +75,12 @@ export function ScoreBreakdown({
       {items.map((item) => (
         <div key={item.key} className='space-y-3'>
           <div className='flex items-center justify-between gap-3'>
-            <span className='text-[13px] font-semibold text-foreground'>
+            <span className='text-[13px] font-semibold text-[#22251f]'>
               {item.icon} {item.label}
             </span>
-            <span className='font-data text-[12px] font-bold text-muted-foreground'>{item.value}/25</span>
+            <span className='font-data text-[12px] font-bold text-[#8e877c]'>{item.value}/25</span>
           </div>
-          <div className='h-2 overflow-hidden rounded bg-surface-soft'>
+          <div className='h-2 overflow-hidden rounded bg-[#f1e6da]'>
             <div className={cn('h-full rounded', item.tone)} style={{ width: `${item.percent}%` }} />
           </div>
           {item.key === 'challenge_completion' && item.value <= 2 ? (

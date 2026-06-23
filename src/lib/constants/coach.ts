@@ -1,6 +1,6 @@
 export const quickReplies = {
-  ko: ['조금 더 알려줘', '응원이 필요해', '작은 미션을 줘'],
-  en: ['Tell me more', 'I need encouragement', 'Give me a challenge']
+  ko: ['오늘 가능한 버전으로 줄여줘', 'if-then 계획으로 바꿔줘', '실패해도 되는 기준을 정해줘'],
+  en: ['Make it doable today', 'Turn it into an if-then plan', 'Set a minimum win']
 } as const;
 
 export const crisisKeywords = [

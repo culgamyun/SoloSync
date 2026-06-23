@@ -8,6 +8,7 @@ import { completeOnboardingAction } from '@/actions/onboarding';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { routineSpaceOptions, socialFearOptions } from '@/lib/challenges/profile-personalization';
 import { barrierOptions, comfortOptions, goalOptions, livingSituationOptions } from '@/lib/constants/social';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { cn } from '@/lib/utils';
@@ -85,6 +86,8 @@ export function OnboardingFlow({ step, locale }: { step: number; locale: string 
   const [isPending, startTransition] = useTransition();
   const { draft, updateDraft, updateRelationshipMap, toggleListValue } = useOnboardingStore();
   const language = locale === 'en' ? 'en' : 'ko';
+  const selectedRoutineSpaces = draft.routineSpaces ?? [];
+  const selectedSocialFears = draft.socialFears ?? [];
 
   const goTo = (nextStep: number) => {
     startTransition(() => {
@@ -346,6 +349,48 @@ export function OnboardingFlow({ step, locale }: { step: number; locale: string 
                 />
               ))}
             </div>
+
+            <section className='rounded-[1.7rem] bg-white/78 px-5 py-5 shadow-ambient'>
+              <h2 className='font-display text-xl font-bold'>
+                {language === 'ko' ? '이번 주 가장 현실적인 장소' : 'Most realistic place this week'}
+              </h2>
+              <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                {language === 'ko'
+                  ? '이미 지나치는 곳을 고르면 첫 미션이 덜 뜬금없어져요.'
+                  : 'Choose places that already exist in your routine.'}
+              </p>
+              <div className='mt-4 flex flex-wrap gap-3'>
+                {routineSpaceOptions.map((option) => (
+                  <SelectChip
+                    key={option.value}
+                    active={selectedRoutineSpaces.includes(option.value)}
+                    label={option.label[language]}
+                    onClick={() => toggleListValue('routineSpaces', option.value)}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <section className='rounded-[1.7rem] bg-white/78 px-5 py-5 shadow-ambient'>
+              <h2 className='font-display text-xl font-bold'>
+                {language === 'ko' ? '가장 부담되는 순간' : 'Hardest moment'}
+              </h2>
+              <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                {language === 'ko'
+                  ? '미션을 더 안전한 문장과 기준으로 맞추는 데만 사용합니다.'
+                  : 'This only tunes the mission tone and minimum win.'}
+              </p>
+              <div className='mt-4 flex flex-wrap gap-3'>
+                {socialFearOptions.map((option) => (
+                  <SelectChip
+                    key={option.value}
+                    active={selectedSocialFears.includes(option.value)}
+                    label={option.label[language]}
+                    onClick={() => toggleListValue('socialFears', option.value)}
+                  />
+                ))}
+              </div>
+            </section>
           </div>
         ) : null}
       </div>
@@ -376,6 +421,8 @@ export function OnboardingFlow({ step, locale }: { step: number; locale: string 
               <input type='hidden' name='relationshipMap' value={JSON.stringify(draft.relationshipMap)} />
               <input type='hidden' name='goals' value={draft.goals.join(',')} />
               <input type='hidden' name='comfortLevel' value={draft.comfortLevel} />
+              <input type='hidden' name='routineSpaces' value={selectedRoutineSpaces.join(',')} />
+              <input type='hidden' name='socialFears' value={selectedSocialFears.join(',')} />
               <Button type='submit' size='lg' className='min-w-[14rem]' disabled={isPending}>
                 {language === 'ko' ? '소셜 헬스 분석하기' : 'Analyze my social health'}
               </Button>

@@ -9,18 +9,29 @@ async function calculateForUser(supabase: ReturnType<typeof createServiceClient>
   const fourWeeksAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 28).toISOString();
   const twoWeeksAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 14).toISOString();
 
-  const [profileResult, challengeResult, reflectionResult] = await Promise.all([
+  const [profileResult, challengeResult, reflectionResult, checkInResult] = await Promise.all([
     supabase.from('user_profiles').select('*').eq('user_id', userId).maybeSingle(),
     supabase.from('challenges').select('*').eq('user_id', userId).gte('created_at', fourWeeksAgo),
-    supabase.from('challenge_reflections').select('*').eq('user_id', userId).gte('created_at', twoWeeksAgo)
+    supabase.from('challenge_reflections').select('*').eq('user_id', userId).gte('created_at', twoWeeksAgo),
+    supabase.from('weekly_check_ins').select('*').eq('user_id', userId).gte('created_at', twoWeeksAgo)
   ]);
 
-  const completedCount = (challengeResult.data ?? []).filter((item) => item.status === 'completed').length;
+  const completedChallengeIds = new Set((challengeResult.data ?? []).filter((item) => item.status === 'completed').map((item) => item.id));
+  const partialSuccessIds = new Set(
+    (reflectionResult.data ?? [])
+      .filter((item) => item.outcome === 'greeted' || item.outcome === 'said_line')
+      .map((item) => item.challenge_id)
+      .filter(Boolean)
+  );
+  const completedCount = new Set([...completedChallengeIds, ...partialSuccessIds]).size;
   const totalCount = challengeResult.data?.length ?? 0;
   const relationshipDiversity = Math.min(25, countNonZeroRelationships(profileResult.data?.relationship_map as Record<string, number>) * 6);
   const connectionFrequency = Math.min(25, completedCount * 3);
   const challengeCompletion = totalCount > 0 ? Math.round((completedCount / totalCount) * 25) : 0;
-  const moodValues = (reflectionResult.data ?? []).map((item) => item.mood_after).filter(Boolean) as number[];
+  const moodValues = [
+    ...((reflectionResult.data ?? []).map((item) => item.mood_after).filter(Boolean) as number[]),
+    ...((checkInResult.data ?? []).map((item) => item.satisfaction_score).filter(Boolean) as number[])
+  ];
   const moodAverage = moodValues.length > 0 ? moodValues.reduce((sum, value) => sum + value, 0) / moodValues.length : 2.5;
   const satisfaction = Math.round((moodAverage / 5) * 25);
   const breakdown = {

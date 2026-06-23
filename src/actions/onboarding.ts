@@ -4,6 +4,11 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { requestOnboardingAnalysis, getWeekContext } from '@/lib/ai/client';
+import {
+  buildPreferredMicroMissionSeed,
+  filterRoutineSpaces,
+  filterSocialFears
+} from '@/lib/challenges/profile-personalization';
 import { shouldUseDemoDataForRequest } from '@/lib/server/demo-mode';
 import { createClient } from '@/lib/supabase/server';
 import type { OnboardingDraft, RelationshipMap } from '@/types/onboarding';
@@ -22,7 +27,17 @@ function parseDraft(formData: FormData): OnboardingDraft {
     goals: String(formData.get('goals') ?? '')
       .split(',')
       .filter(Boolean),
-    comfortLevel: (formData.get('comfortLevel') as OnboardingDraft['comfortLevel']) ?? 'medium'
+    comfortLevel: (formData.get('comfortLevel') as OnboardingDraft['comfortLevel']) ?? 'medium',
+    routineSpaces: filterRoutineSpaces(
+      String(formData.get('routineSpaces') ?? '')
+        .split(',')
+        .filter(Boolean)
+    ),
+    socialFears: filterSocialFears(
+      String(formData.get('socialFears') ?? '')
+        .split(',')
+        .filter(Boolean)
+    )
   };
 }
 
@@ -45,6 +60,24 @@ export async function completeOnboardingAction(formData: FormData) {
 
   const analysis = await requestOnboardingAnalysis(draft, locale);
   const { weekNumber, weekStartDate } = getWeekContext();
+  const preferredMissionSeed = buildPreferredMicroMissionSeed(locale, draft.routineSpaces, draft.socialFears);
+  const shouldUsePreferredFirstMission = draft.routineSpaces.length > 0 || draft.socialFears.length > 0;
+  const firstChallenge = shouldUsePreferredFirstMission
+    ? {
+        title: preferredMissionSeed.title,
+        description: preferredMissionSeed.description,
+        difficulty: 'easy' as const,
+        category: 'reach_out' as const,
+        estimated_time: '10min' as const,
+        conversation_starters: preferredMissionSeed.conversationStarters,
+        mission_kind: 'micro_social' as const,
+        mission_context: preferredMissionSeed.missionContext,
+        safe_line: preferredMissionSeed.safeLine,
+        minimum_win: preferredMissionSeed.minimumWin,
+        fear: preferredMissionSeed.fear,
+        reframe: preferredMissionSeed.reframe
+      }
+    : analysis.firstChallenge;
 
   await supabase.from('users').upsert({
     id: user.id,
@@ -64,7 +97,9 @@ export async function completeOnboardingAction(formData: FormData) {
     relationship_map: draft.relationshipMap,
     barriers: draft.barriers,
     goals: draft.goals,
-    comfort_level: draft.comfortLevel
+    comfort_level: draft.comfortLevel,
+    routine_spaces: draft.routineSpaces,
+    social_fears: draft.socialFears
   });
 
   await supabase.from('social_health_scores').insert({
@@ -78,12 +113,18 @@ export async function completeOnboardingAction(formData: FormData) {
     user_id: user.id,
     week_number: weekNumber,
     week_start_date: weekStartDate,
-    title: analysis.firstChallenge.title,
-    description: analysis.firstChallenge.description,
-    difficulty: analysis.firstChallenge.difficulty,
-    category: analysis.firstChallenge.category,
-    estimated_time: analysis.firstChallenge.estimated_time,
-    conversation_starters: analysis.firstChallenge.conversation_starters
+    title: firstChallenge.title,
+    description: firstChallenge.description,
+    difficulty: firstChallenge.difficulty,
+    category: firstChallenge.category,
+    estimated_time: firstChallenge.estimated_time,
+    conversation_starters: firstChallenge.conversation_starters,
+    mission_kind: firstChallenge.mission_kind ?? 'standard',
+    mission_context: firstChallenge.mission_context ?? null,
+    safe_line: firstChallenge.safe_line ?? null,
+    minimum_win: firstChallenge.minimum_win ?? null,
+    fear: firstChallenge.fear ?? null,
+    reframe: firstChallenge.reframe ?? null
   });
 
   await supabase.from('streaks').upsert({

@@ -22,7 +22,7 @@ export function MobileHeader({
   centered?: boolean;
 }) {
   return (
-    <header className={cn('glass-nav sticky top-0 z-30 border-b border-line px-5 py-4', className)}>
+    <header className={cn('sticky top-0 z-30 border-b border-line bg-background/92 px-5 py-4 backdrop-blur-xl', className)}>
       <div className='grid min-h-11 grid-cols-[44px,1fr,44px] items-center gap-3'>
         <div className='flex justify-start'>
           {backHref ? (
@@ -37,7 +37,7 @@ export function MobileHeader({
         </div>
         <div className={cn('min-w-0', centered && 'text-center')}>
           {subtitle ? (
-            <p className='truncate font-data text-[11px] font-bold uppercase tracking-normal text-primary/70'>
+            <p className='truncate font-data text-[11px] font-bold uppercase text-accent'>
               {subtitle}
             </p>
           ) : null}

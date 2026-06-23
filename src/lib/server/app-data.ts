@@ -339,11 +339,15 @@ export const getProgressSnapshot = cache(async () => {
   };
 });
 
-export const getCoachSnapshot = cache(async () => ({
-  viewer: await getViewer(),
-  messages: demoMessages,
-  suggestedContext: demoChallenges.slice(0, 2)
-}));
+export const getCoachSnapshot = cache(async () => {
+  const home = await getHomeSnapshot();
+
+  return {
+    viewer: home.viewer,
+    messages: demoMessages,
+    suggestedContext: home.challenges.slice(0, 2)
+  };
+});
 
 export const getProfileSnapshot = cache(async () => {
   const viewer = await getViewer();

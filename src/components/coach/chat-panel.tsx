@@ -6,28 +6,40 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useCoachStream } from '@/hooks/useCoach';
 import { cn } from '@/lib/utils';
+import type { ChallengeRecord } from '@/types/challenge';
 import type { CoachMessage, CoachSessionType } from '@/types/coach';
 
 export function ChatPanel({
   initialMessages,
   locale,
-  sessionType
+  sessionType,
+  suggestedContext = []
 }: {
   initialMessages: CoachMessage[];
   locale: string;
   sessionType: CoachSessionType;
+  suggestedContext?: ChallengeRecord[];
 }) {
   const { messages, input, setInput, sendMessage, isPending, error, quickReplies } = useCoachStream(
     initialMessages,
     sessionType,
-    locale
+    locale,
+    suggestedContext
   );
+  const language = locale === 'en' ? 'en' : 'ko';
+  const currentMission = suggestedContext.find((challenge) => challenge.missionKind === 'micro_social') ?? suggestedContext[0];
+  const missionReplies = currentMission
+    ? language === 'ko'
+      ? ['더 작게', '한마디', '회고 도움']
+      : ['Smaller', 'Safe line', 'Reflect']
+    : [];
+  const visibleQuickReplies = missionReplies.length > 0 ? missionReplies : quickReplies.slice(0, 3);
 
   return (
-    <div className='flex min-h-[calc(100svh-8.75rem)] flex-col'>
-      <div className='flex-1 space-y-4 overflow-y-auto px-4 pb-6 pt-4'>
+    <div className='flex h-[calc(100svh-89px)] flex-col bg-[#fbf6ed]'>
+      <div className='flex-1 space-y-4 overflow-y-auto px-4 pb-4 pt-4'>
         <div className='flex justify-center'>
-          <span className='rounded border border-line bg-surface-low px-3 py-1 font-data text-[11px] font-bold text-muted-foreground'>
+          <span className='rounded-md border border-[#e8ded2] bg-white/72 px-3 py-1 font-data text-[11px] font-bold text-[#777268]'>
             {locale === 'ko' ? '코칭 세션이 시작되었어요' : 'Coaching session started'}
           </span>
         </div>
@@ -39,18 +51,18 @@ export function ChatPanel({
               <div className={cn('max-w-[88%]', assistant ? 'space-y-2' : 'space-y-1')}>
                 {assistant ? (
                   <div className='flex items-center gap-2 px-1'>
-                    <div className='flex h-7 w-7 items-center justify-center rounded-md border border-observation/25 bg-observation/16 text-foreground'>
+                    <div className='flex h-7 w-7 items-center justify-center rounded-md bg-[#e7eade] text-[#62705d]'>
                       <Sparkles className='h-3.5 w-3.5' />
                     </div>
-                    <span className='text-[11px] font-bold text-secondary'>AI 코치</span>
+                    <span className='text-[11px] font-bold text-[#62705d]'>AI 코치</span>
                   </div>
                 ) : null}
                 <div
                   className={cn(
-                    'rounded-md border px-4 py-3 text-[15px] leading-7 shadow-ambient',
+                    'rounded-lg border px-4 py-3 text-[15px] leading-7 shadow-ambient',
                     assistant
-                      ? 'border-line bg-surface-high text-foreground'
-                      : 'border-primary/20 bg-primary/10 text-primary'
+                      ? 'border-[#e8ded2] bg-white/78 text-[#22251f]'
+                      : 'border-accent/20 bg-accent text-white'
                   )}
                 >
                   <p className='whitespace-pre-wrap'>{message.content}</p>
@@ -61,15 +73,15 @@ export function ChatPanel({
         })}
       </div>
 
-      <div className='glass-nav mt-auto border-t border-line px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4'>
+      <div className='mt-auto shrink-0 border-t border-[#e8ded2] bg-[#fffaf2] px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-4'>
         <div className='no-scrollbar flex gap-2 overflow-x-auto pb-3'>
-          {quickReplies.map((chip) => (
+          {visibleQuickReplies.map((chip) => (
             <Button key={chip} type='button' variant='chip' size='sm' onClick={() => void sendMessage(chip)}>
               {chip}
             </Button>
           ))}
         </div>
-        <div className='rounded-lg border border-line bg-surface-high p-2 shadow-ambient'>
+        <div className='rounded-lg border border-[#e8ded2] bg-white/80 p-2 shadow-ambient'>
           <div className='flex items-end gap-2'>
             <Textarea
               value={input}
@@ -87,7 +99,7 @@ export function ChatPanel({
               <SendHorizontal aria-hidden='true' className='h-5 w-5' strokeWidth={2.5} />
             </Button>
           </div>
-          <p className='px-3 pb-2 text-[12px] text-muted-foreground'>
+          <p className='px-3 pb-2 text-[12px] text-[#777268]'>
             {error ??
               (locale === 'ko'
                 ? '코치는 실제 사람에게 닿는 다음 행동을 우선합니다.'
